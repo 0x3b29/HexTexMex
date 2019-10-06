@@ -19,6 +19,12 @@ public class SpawnTiles : MonoBehaviour
     private const float newRockProbability = 0.010f;
     private const float adjacentRockProbability = 0.20f;
 
+    private const int minMountainCount = 15;
+    private const int maxMountainCount = 20;
+    private const float maxMountainHeight = 5f;
+    private const float minMountainSlope = .1f;
+    private const float maxMountainSlope = .5f;
+
     private Tile[] tiles;
 
     // Start is called before the first frame update
@@ -107,6 +113,20 @@ public class SpawnTiles : MonoBehaviour
                 tile.isWater = true;
             }
         }
+
+        // Add Mountains
+
+        int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
+        Debug.Log("Attempting to add " + mountainCount + " mountains");
+        
+        for (int i = 0; i < mountainCount; i++)
+        {
+
+            tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope)); 
+
+
+        }
+
 
         // Set Trees
         for (int i = 0; i < x * y; i++)

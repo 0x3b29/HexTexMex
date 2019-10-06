@@ -78,4 +78,30 @@ public class Tile : MonoBehaviour
 
         return neighboursRockCount;
     }
+
+    public void setHeight(float height, float slope)
+    {
+        // If my height is heigher than the new height, bail out
+        if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
+        {
+            return;
+        }
+
+        // Set my height to the new height
+        Vector3 position = tileGameObject.transform.position;
+        position.y = height;
+        tileGameObject.transform.position = position;
+
+        // 5 % chance
+        if (Random.Range(0,1) < .05f)
+        {
+            // to decrease slope by a factor of 0 to 1/4 * slope
+            slope = slope - Random.Range( 0, 0.25f * slope);
+        }
+
+        foreach (Tile neighbour in getNeigbhours())
+        {
+            neighbour.setHeight(height - slope, slope);
+        }
+    }
 }
