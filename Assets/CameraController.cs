@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour {
             float xMovement = -mouseDelta.y * mouseSensitivity;
             float yMovement = mouseDelta.x * mouseSensitivity;
 
-            // Add movement 
+            // Set to new rotation
             transform.eulerAngles = new Vector3(transform.eulerAngles.x + xMovement, transform.eulerAngles.y + yMovement, 0);
         }
 
@@ -39,6 +39,7 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKey(KeyCode.S)) keyboardMovement += new Vector3(0, 0, -1);        
         if (Input.GetKey(KeyCode.D)) keyboardMovement += new Vector3(1, 0, 0);
 
+        // Add movement 
         transform.Translate(keyboardMovement * speed * Time.deltaTime);      
     }
 }
