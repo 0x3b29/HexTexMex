@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,14 +60,16 @@ public class SpawnTiles : MonoBehaviour
                 newTile = Instantiate(Resources.Load("Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
                 
+                GameObject hexagonGameObject = newTile.transform.Find("Hexagon").gameObject;
+
                 int grassKind = Mathf.RoundToInt(Random.Range(1f, 3f));
-                Material[] tileMats = newTile.transform.Find("Hexagon").GetComponent<Renderer>().materials;
+                Material[] tileMats = hexagonGameObject.transform.GetComponent<Renderer>().materials;
                 tileMats[1] = Resources.Load("Grass" + grassKind, typeof(Material)) as Material;
                 newTile.transform.Find("Hexagon").GetComponent<Renderer>().materials = tileMats;
 
                 // Attach tile script
                 tiles[tileCounter] = newTile.AddComponent<Tile>(); 
-                tiles[tileCounter].setInitialValues(i, j, newTile);
+                tiles[tileCounter].setInitialValues(i, j, newTile, hexagonGameObject);
 
                 tileCounter++;
             }

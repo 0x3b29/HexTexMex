@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
     public GameObject tileGameObject;
+    public GameObject hexagonGameObject;
     public Tile leftTile;
     public Tile rightTile;
     public Tile topLeftTile;
@@ -21,12 +22,13 @@ public class Tile : MonoBehaviour
     public bool isWell;
     public bool isRock;
 
-    public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject)
+    public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
         this.tileGameObject = tileGameObject;
+        this.hexagonGameObject = hexagonGameObject;
     }
 
     public List<Tile> getNeigbhours()
@@ -91,6 +93,11 @@ public class Tile : MonoBehaviour
         Vector3 position = tileGameObject.transform.position;
         position.y = height;
         tileGameObject.transform.position = position;
+
+        // Enlarge the hexagon to give them all the same bottom level
+        Vector3 scale = hexagonGameObject.transform.localScale;
+        scale.y = 1 + height / 2;
+        hexagonGameObject.transform.localScale = scale;
 
         foreach (Tile neighbour in getNeigbhours())
         {
