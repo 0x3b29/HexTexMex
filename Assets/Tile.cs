@@ -92,15 +92,9 @@ public class Tile : MonoBehaviour
         position.y = height;
         tileGameObject.transform.position = position;
 
-        // 5 % chance
-        if (Random.Range(0,1f) < .05f)
-        {
-            slope = slope - Random.Range(0.75f * slope, 1.25f * slope);
-        }
-
         foreach (Tile neighbour in getNeigbhours())
         {
-            neighbour.setHeight(height - slope, slope);
+            neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
         }
     }
 }
