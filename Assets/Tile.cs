@@ -95,8 +95,7 @@ public class Tile : MonoBehaviour
         // 5 % chance
         if (Random.Range(0,1f) < .05f)
         {
-            // to decrease slope by a factor of 0 to 1/4 * slope
-            slope = slope - Random.Range( 0, 0.25f * slope);
+            slope = slope - Random.Range(0.75f * slope, 1.25f * slope);
         }
 
         foreach (Tile neighbour in getNeigbhours())
