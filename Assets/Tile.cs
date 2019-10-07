@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -93,7 +93,7 @@ public class Tile : MonoBehaviour
         tileGameObject.transform.position = position;
 
         // 5 % chance
-        if (Random.Range(0,1) < .05f)
+        if (Random.Range(0,1f) < .05f)
         {
             // to decrease slope by a factor of 0 to 1/4 * slope
             slope = slope - Random.Range( 0, 0.25f * slope);
