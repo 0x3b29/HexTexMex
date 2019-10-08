@@ -102,8 +102,9 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
+
         // Set Water
-        for(int i = 0; i < x * y; i++)
+        for (int i = 0; i < x * y; i++)
         {
             Tile tile = tiles[i];
 
