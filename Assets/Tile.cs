@@ -16,6 +16,7 @@ public class Tile : MonoBehaviour
     public int xCoordinate;
     public int yCoordinate;
 
+    public bool isActive;
     public bool isWater;
     public bool isForest;
     public bool isWheat;
@@ -102,6 +103,39 @@ public class Tile : MonoBehaviour
         foreach (Tile neighbour in getNeigbhours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
+        }
+    }
+
+    private float health = 0;
+    public void setHealth(float health, float slope)
+    {
+        // If my health is heigher than the new health, bail out
+        if (this.health >= health || health <= 0 || slope < 0.01)
+        {
+            return;
+        }
+
+        // Set my health to the new health
+        this.health = health;
+
+        // Add my health to the tilescale to create a cloud island effect
+        Vector3 scale = this.tileGameObject.transform.localScale;
+        scale.y += (health / 100);
+        this.tileGameObject.transform.localScale = scale;
+
+        // Set health to neighbours
+        foreach (Tile neighbour in getNeigbhours())
+        {
+            neighbour.setHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
+        }
+    }
+
+    public void checkHealth()
+    {
+        if (health <= 0)
+        {
+            tileGameObject.SetActive(false);
+            isActive = false;
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +24,9 @@ public class SpawnTiles : MonoBehaviour
     private const float maxMountainHeight = 2f;
     private const float minMountainSlope = .1f;
     private const float maxMountainSlope = .5f;
+
+    private const float maxTileHealth = 100f;
+    private const float tileHealthSlope = 5f;
 
     private Tile[] tiles;
 
@@ -59,7 +62,7 @@ public class SpawnTiles : MonoBehaviour
 
                 newTile = Instantiate(Resources.Load("Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
-                
+
                 GameObject hexagonGameObject = newTile.transform.Find("Hexagon").gameObject;
 
                 int grassKind = Mathf.RoundToInt(Random.Range(1f, 3f));
@@ -102,6 +105,12 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
+        // Generate roundish shape
+        GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth(maxTileHealth, tileHealthSlope);
+        for (int i = 0; i < x * y; i++)
+        {
+            tiles[i].checkHealth();
+        }
 
         // Set Water
         for (int i = 0; i < x * y; i++)
