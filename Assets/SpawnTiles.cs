@@ -40,7 +40,7 @@ public class SpawnTiles : MonoBehaviour
         Material stone = Resources.Load("Stone", typeof(Material)) as Material;
 
         Material[] waterTile = new Material[2];
-        waterTile[0] = water;
+        waterTile[0] = earth;
         waterTile[1] = water;
 
         Material[] earthTile = new Material[2];
@@ -48,7 +48,7 @@ public class SpawnTiles : MonoBehaviour
         earthTile[1] = earth;
 
         Material[] stoneTile = new Material[2];
-        stoneTile[0] = stone;
+        stoneTile[0] = earth;
         stoneTile[1] = stone;
 
         int tileCounter = 0;
