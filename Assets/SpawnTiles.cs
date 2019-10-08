@@ -19,9 +19,9 @@ public class SpawnTiles : MonoBehaviour
     private const float newRockProbability = 0.010f;
     private const float adjacentRockProbability = 0.20f;
 
-    private const int minMountainCount = 15;
+    private const int minMountainCount = 0;
     private const int maxMountainCount = 20;
-    private const float maxMountainHeight = 5f;
+    private const float maxMountainHeight = 2f;
     private const float minMountainSlope = .1f;
     private const float maxMountainSlope = .5f;
 
