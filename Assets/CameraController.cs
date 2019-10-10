@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
 public class CameraController : MonoBehaviour {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -32,7 +31,7 @@ public class Tile : MonoBehaviour
         this.hexagonGameObject = hexagonGameObject;
     }
 
-    public List<Tile> getNeigbhours()
+    public List<Tile> getNeighbours()
     {
         List <Tile> neighbourList = new List<Tile>();
 
@@ -50,7 +49,7 @@ public class Tile : MonoBehaviour
     {
         int neighboursWaterCount = 0;
 
-        foreach (Tile tile in getNeigbhours())
+        foreach (Tile tile in getNeighbours())
         {
             if (tile.isWater) neighboursWaterCount++;
         }
@@ -62,7 +61,7 @@ public class Tile : MonoBehaviour
     {
         int neighboursTreeCount = 0;
 
-        foreach (Tile tile in getNeigbhours())
+        foreach (Tile tile in getNeighbours())
         {
             if (tile.isForest) neighboursTreeCount++;
         }
@@ -74,7 +73,7 @@ public class Tile : MonoBehaviour
     {
         int neighboursRockCount = 0;
 
-        foreach (Tile tile in getNeigbhours())
+        foreach (Tile tile in getNeighbours())
         {
             if (tile.isRock) neighboursRockCount++;
         }
@@ -100,7 +99,7 @@ public class Tile : MonoBehaviour
         scale.y = 1 + height / 2;
         hexagonGameObject.transform.localScale = scale;
 
-        foreach (Tile neighbour in getNeigbhours())
+        foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
         }
@@ -124,7 +123,7 @@ public class Tile : MonoBehaviour
         this.tileGameObject.transform.localScale = scale;
 
         // Set health to neighbours
-        foreach (Tile neighbour in getNeigbhours())
+        foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
         }
