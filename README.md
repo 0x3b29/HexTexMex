@@ -19,10 +19,10 @@ First implementation of a POC random map generation with water, forests, (animat
 ![alt text](Assets/Images/Screenshot1.png "Screenshot 1")
 
 **Screenshot 2**
-![alt text](Assets/Images/Screenshot1.png "Screenshot 2")
+![alt text](Assets/Images/Screenshot2.png "Screenshot 2")
 
 **Screenshot 3**
-![alt text](Assets/Images/Screenshot1.png "Screenshot 3")
+![alt text](Assets/Images/Screenshot3.png "Screenshot 3")
 
 **Screenshot 4**
-![alt text](Assets/Images/Screenshot1.png "Screenshot 4")
+![alt text](Assets/Images/Screenshot4.png "Screenshot 4")
