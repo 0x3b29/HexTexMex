@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
@@ -26,12 +27,17 @@ public class SpawnTiles : MonoBehaviour
     private const float maxTileHealth = 100f;
     private const float tileHealthSlope = 5f;
 
+    private const int minBoatCount = 1;
+    private const int maxBoatCount = 15;
+
     private Tile[] tiles;
+    private List<Tile> waterTiles;
 
     // Start is called before the first frame update
     void Start()
     {
         tiles = new Tile[x * y];
+        waterTiles = new List<Tile>();
 
         Material water = Resources.Load("Water", typeof(Material)) as Material;
         Material earth = Resources.Load("Earth", typeof(Material)) as Material;
@@ -57,7 +63,7 @@ public class SpawnTiles : MonoBehaviour
             for (int j = 0; j < y; j++)
             {
                 GameObject newTile;
-
+                
                 newTile = Instantiate(Resources.Load("Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
 
@@ -117,27 +123,33 @@ public class SpawnTiles : MonoBehaviour
 
             float waterProbability = newWaterProbability + (adjacentWaterProbability * tile.neighboursWaterCount());
 
-            if (Random.Range(0f, 1f) < waterProbability)
+            if (Random.Range(0f, 1f) < waterProbability && tile.isActive)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = waterTile;
                 tile.isWater = true;
+                waterTiles.Add(tile);
             }
         }
 
-        // Add Mountains
+        // Add boats
+        for (int i = 0; i < Random.Range(minBoatCount, maxBoatCount); i++)
+        {
+            // Spawn boat at a random active water tile
+            Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
 
+            GameObject boat = Instantiate(Resources.Load("boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
+            boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
+        }
+
+        // Add Mountains
         int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
         Debug.Log("Attempting to add " + mountainCount + " mountains");
         
         for (int i = 0; i < mountainCount; i++)
         {
-
-            tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope)); 
-
-
+            tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
         }
-
-
+        
         // Set Trees
         for (int i = 0; i < x * y; i++)
         {

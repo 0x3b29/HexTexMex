@@ -24,6 +24,8 @@ public class Tile : MonoBehaviour
 
     public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
+        this.isActive = true;
+
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
@@ -135,6 +137,28 @@ public class Tile : MonoBehaviour
         {
             tileGameObject.SetActive(false);
             isActive = false;
+        }
+    }
+
+    public Tile getRandomWaterNeighbour()
+    {
+        List<Tile> waterTiles = new List<Tile>();
+
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.isWater && tile.isActive)
+            {
+                waterTiles.Add(tile);
+            }
+        }
+
+        if (waterTiles.Count == 0)
+        {
+            return this;
+        }
+        else
+        {
+            return waterTiles.ToArray()[Random.Range(0, waterTiles.Count)];
         }
     }
 }
