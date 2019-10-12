@@ -27,6 +27,9 @@ public class SpawnTiles : MonoBehaviour
     private const float maxTileHealth = 100f;
     private const float tileHealthSlope = 5f;
 
+    private const int minBoatCount = 1;
+    private const int maxBoatCount = 15;
+
     private Tile[] tiles;
     private List<Tile> waterTiles;
 
@@ -129,12 +132,13 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Add boats
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < Random.Range(minBoatCount, maxBoatCount); i++)
         {
+            // Spawn boat at a random active water tile
             Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
 
             GameObject boat = Instantiate(Resources.Load("boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
-            boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour());
+            boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
         }
 
         // Add Mountains
