@@ -24,7 +24,7 @@ public class InputHandler : MonoBehaviour
             {
                 Debug.Log(hit.transform.gameObject.name);
 
-                GameObject woodHouse = Instantiate(Resources.Load("Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
+                GameObject woodHouse = Instantiate(Resources.Load(prefabFolder + "Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
                 woodHouse.transform.parent = hit.transform.gameObject.transform;
                 woodHouse.name = "woodHouse";
 
