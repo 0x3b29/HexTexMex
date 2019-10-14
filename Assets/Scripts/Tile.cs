@@ -21,6 +21,7 @@ public class Tile : MonoBehaviour
     public bool isWheat;
     public bool isWell;
     public bool isRock;
+    public bool isWoodhouse;
 
     public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
@@ -81,6 +82,11 @@ public class Tile : MonoBehaviour
         }
 
         return neighboursRockCount;
+    }
+
+    public bool isFree()
+    {
+        return isActive && !isWater && !isForest && !isWheat && !isWell && !isRock && !isWoodhouse;
     }
 
     public void setHeight(float height, float slope)

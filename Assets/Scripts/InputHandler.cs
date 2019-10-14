@@ -1,34 +1,59 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
+    Material materialBuildAllowed;
+    Material materialBuildDenied;
+
+    GameObject tileHighlighter;
+
     // Start is called before the first frame update
     void Start()
     {
+        materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
+        materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
         
+        tileHighlighter = Instantiate(Resources.Load(Constants.prefabFolder + "Torus Parent") as GameObject, new Vector3(), Quaternion.identity);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            Debug.Log("Mouse down");
-
             if (Physics.Raycast(ray, out hit, 100))
             {
-                Debug.Log(hit.transform.gameObject.name);
+            if (hit.transform.gameObject.name.Equals("Hexagon"))
+            {
+                tileHighlighter.SetActive(true);
+                tileHighlighter.transform.position = hit.transform.gameObject.transform.position;
 
+                Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
+
+                if (tile.isFree())
+                {
+                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
                 GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
                 woodHouse.transform.parent = hit.transform.gameObject.transform;
                 woodHouse.name = "woodHouse";
-
+                        tile.isWoodhouse = true;
+                    }
+                }
+                else
+                {
+                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildDenied;
+                }
             }
+            }
+        else
+        {
+            tileHighlighter.SetActive(false);
         }
     }
 }
