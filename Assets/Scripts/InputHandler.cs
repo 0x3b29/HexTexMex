@@ -41,6 +41,11 @@ public class InputHandler : MonoBehaviour
                     {
                 GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
                 woodHouse.transform.parent = hit.transform.gameObject.transform;
+
+                        Quaternion rotation = woodHouse.transform.rotation;
+                        rotation.eulerAngles = new Vector3(0,Random.Range(0,360),0);
+                        woodHouse.transform.rotation = rotation;
+
                 woodHouse.name = "woodHouse";
                         tile.isWoodhouse = true;
                     }
