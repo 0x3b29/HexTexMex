@@ -122,6 +122,8 @@ public class Tile : MonoBehaviour
             // Eg deleting this tiles road to left also deletes the left's
             // tile road to the right.
 
+            // TODO: Fix stray roads left attached to buildings
+
             // Top Left
             if (roadToTopLeftTile)
             {
