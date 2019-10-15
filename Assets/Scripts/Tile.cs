@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -99,6 +99,11 @@ public class Tile : MonoBehaviour
         return isActive && !isWater && !forest && !wheat && !well && !rock && !woodhouse && !isRoad;
     }
 
+    public void destroyFeature()
+    {
+
+    }
+
     public void addRoad()
     {
         // Function is only called when player placed a road
@@ -179,6 +184,25 @@ public class Tile : MonoBehaviour
 
         // Return the object for storage and later use
         return roadPiece;
+    }
+
+    public void placeHouse()
+    {
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        woodHouse.transform.parent = tileGameObject.transform;
+
+        Quaternion rotation = woodHouse.transform.rotation;
+        rotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+        woodHouse.transform.rotation = rotation;
+
+        woodHouse.name = "woodHouse";
+        this.woodhouse = woodHouse;
+        checkRoads();
+
+        foreach (Tile tile in getNeighbours())
+        {
+            tile.checkRoads();
+        }
     }
 
     public void setHeight(float height, float slope)

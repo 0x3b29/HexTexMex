@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,46 +37,45 @@ public class InputHandler : MonoBehaviour
                 tileHighlighter.transform.position = hit.transform.gameObject.transform.position;
 
                 Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
+                string selected = BuildingSelect.options[BuildingSelect.value].text;
 
-                if (tile.isFree())
+                bool actionAllowed = false;
+
+                if (tile.isFree() && selected.Equals("Road"))
                 {
+                    actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        if (BuildingSelect.options[BuildingSelect.value].text.Equals("Road"))
-                        {
                             tile.addRoad();
                         }
-                        else if (BuildingSelect.options[BuildingSelect.value].text.Equals("House"))
+                }
+                
+                if (tile.isFree() && selected.Equals("House"))
                         {
-                            GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
-                            woodHouse.transform.parent = hit.transform.gameObject.transform;
+                    actionAllowed = true;
+                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
-                            Quaternion rotation = woodHouse.transform.rotation;
-                            rotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
-                            woodHouse.transform.rotation = rotation;
-
-                            woodHouse.name = "woodHouse";
-                            tile.woodhouse = woodHouse;
-                            tile.checkRoads();
-
-                            foreach (Tile neighbourTile in tile.getNeighbours())
+                    if (Input.GetMouseButtonDown(0))
                             {
-                                neighbourTile.checkRoads();
+                        tile.placeHouse();
                             }
                         }
-                        else if (BuildingSelect.options[BuildingSelect.value].text.Equals("Destroy"))
-                        {
 
-                        }
-                        else
+                if ((tile.isRoad || tile.woodhouse) && selected.Equals("Destroy"))
                         {
-                            Debug.Log(BuildingSelect.options[BuildingSelect.value].text + " is an unknown building type");
-                        }
+                    actionAllowed = true;
+                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
+
+                    if (Input.GetMouseButtonDown(0))
+                        {
+                        tile.destroyFeature();
                     }
                 }
-                else
+
+                // If tile and action did not match for any case, show a red marker 
+                if (!actionAllowed)
                 {
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildDenied;
                 }
