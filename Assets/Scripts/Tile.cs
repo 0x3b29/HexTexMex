@@ -17,15 +17,14 @@ public class Tile : MonoBehaviour
 
     public bool isActive;
     public bool isWater;
-    public bool isForest;
-    public bool isWheat;
-    public bool isWell;
-    public bool isRock;
-    public bool isWoodhouse;
+
+    public GameObject forest;
+    public GameObject wheat;
+    public GameObject well;
+    public GameObject rock;
+    public GameObject woodhouse;
 
     public bool isRoad;
-    public int roadPieces = 0;
-
     public GameObject roadToLeftTile;
     public GameObject roadToRightTile;
     public GameObject roadToTopLeftTile;
@@ -77,7 +76,7 @@ public class Tile : MonoBehaviour
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.isForest) neighboursTreeCount++;
+            if (tile.forest) neighboursTreeCount++;
         }
 
         return neighboursTreeCount;
@@ -89,7 +88,7 @@ public class Tile : MonoBehaviour
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.isRock) neighboursRockCount++;
+            if (tile.rock) neighboursRockCount++;
         }
 
         return neighboursRockCount;
@@ -97,7 +96,7 @@ public class Tile : MonoBehaviour
 
     public bool isFree()
     {
-        return isActive && !isWater && !isForest && !isWheat && !isWell && !isRock && !isWoodhouse && !isRoad;
+        return isActive && !isWater && !forest && !wheat && !well && !rock && !woodhouse && !isRoad;
     }
 
     public void addRoad()
@@ -125,37 +124,37 @@ public class Tile : MonoBehaviour
         lastFrameRoadCheck = Time.frameCount;
 
         // Check right
-        if (!roadToRightTile && (rightTile.isRoad || rightTile.isWoodhouse))
+        if (!roadToRightTile && (rightTile.isRoad || rightTile.woodhouse))
         {
             roadToRightTile = spawnRoad(180);
         }
 
         // Check left
-        if (!roadToLeftTile && (leftTile.isRoad || leftTile.isWoodhouse))
+        if (!roadToLeftTile && (leftTile.isRoad || leftTile.woodhouse))
         {
             roadToLeftTile = spawnRoad(0);
         }
 
         // Check upper right
-        if (!roadToTopRightTile && (topRightTile.isRoad || topRightTile.isWoodhouse))
+        if (!roadToTopRightTile && (topRightTile.isRoad || topRightTile.woodhouse))
         {
             roadToTopRightTile = spawnRoad(120);
         }
 
         // Check upper left
-        if (!roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.isWoodhouse))
+        if (!roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.woodhouse))
         {
             roadToTopLeftTile = spawnRoad(60);
         }
 
         // Check lower right
-        if (!roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.isWoodhouse))
+        if (!roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.woodhouse))
         {
             roadToLowerRightTile= spawnRoad(-120);
         }
 
         // Check lower left
-        if (!roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.isWoodhouse))
+        if (!roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.woodhouse))
         {
             roadToLowerLeftTile = spawnRoad(-60);
         }

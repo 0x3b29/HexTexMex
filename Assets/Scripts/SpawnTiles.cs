@@ -160,7 +160,6 @@ public class SpawnTiles : MonoBehaviour
             if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
-                tile.isForest = true;
 
                 GameObject newTree;
                 string treeToSpawn;
@@ -182,6 +181,8 @@ public class SpawnTiles : MonoBehaviour
                 newTree = Instantiate(Resources.Load(Constants.prefabFolder + treeToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity); //Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f)
                 newTree.transform.parent = tile.tileGameObject.transform;
                 newTree.name = "Tree";
+
+                tile.forest = newTree;
             }
         }
 
@@ -190,12 +191,14 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.isForest && Random.Range(0f, 1f) < wellProbability)
+            if (!tile.isWater && !tile.forest && Random.Range(0f, 1f) < wellProbability)
             {
                 GameObject well;
                 well = Instantiate(Resources.Load(Constants.prefabFolder + "Well") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
                 well.transform.parent = tile.tileGameObject.transform;
                 well.name = "Well";
+
+                tile.well = well;
             }
         }
 
@@ -204,15 +207,16 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.isForest && !tile.isWell && Random.Range(0f, 1f) < wheatProbability)
+            if (!tile.isWater && !tile.forest && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
-                tile.isWheat = true;
-
+                
                 GameObject WheatParent;
                 WheatParent = Instantiate(Resources.Load(Constants.prefabFolder + "WheatParent") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
                 WheatParent.transform.parent = tile.tileGameObject.transform;
                 WheatParent.name = "WheatParent";
+
+                tile.wheat = WheatParent;
             }
         }
 
@@ -222,12 +226,11 @@ public class SpawnTiles : MonoBehaviour
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.neighboursRockCount());
 
-            if (!tile.isWater && !tile.isForest && !tile.isWell && !tile.isWheat && Random.Range(0f, 1f) < RockProbability)
+            if (!tile.isWater && !tile.forest && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
-                tile.isRock = true;
                 
-                GameObject Rock;
+                GameObject rock;
                 string rockToSpawn;
                 int neighboursRockCount = tile.neighboursRockCount();
 
@@ -248,9 +251,11 @@ public class SpawnTiles : MonoBehaviour
                     rockToSpawn = "FourStones";
                 }
 
-                Rock = Instantiate(Resources.Load(Constants.prefabFolder + rockToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
-                Rock.transform.parent = tile.tileGameObject.transform;
-                Rock.name = "Rock";
+                rock = Instantiate(Resources.Load(Constants.prefabFolder + rockToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
+                rock.transform.parent = tile.tileGameObject.transform;
+                rock.name = "Rock";
+
+                tile.rock = rock;
             }
         }
     }

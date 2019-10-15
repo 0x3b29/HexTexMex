@@ -58,14 +58,18 @@ public class InputHandler : MonoBehaviour
                             woodHouse.transform.rotation = rotation;
 
                             woodHouse.name = "woodHouse";
-                            tile.isWoodhouse = true;
+                            tile.woodhouse = woodHouse;
                             tile.checkRoads();
 
                             foreach (Tile neighbourTile in tile.getNeighbours())
                             {
                                 neighbourTile.checkRoads();
                             }
-                        } 
+                        }
+                        else if (BuildingSelect.options[BuildingSelect.value].text.Equals("Destroy"))
+                        {
+
+                        }
                         else
                         {
                             Debug.Log(BuildingSelect.options[BuildingSelect.value].text + " is an unknown building type");
