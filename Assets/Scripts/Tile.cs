@@ -25,6 +25,7 @@ public class Tile : MonoBehaviour
     public GameObject woodhouse;
 
     public bool isRoad;
+    public GameObject roadCenter;
     public GameObject roadToLeftTile;
     public GameObject roadToRightTile;
     public GameObject roadToTopLeftTile;
@@ -107,7 +108,7 @@ public class Tile : MonoBehaviour
     public void addRoad()
     {
         // Function is only called when player placed a road
-        GameObject roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
 
         isRoad = true;
