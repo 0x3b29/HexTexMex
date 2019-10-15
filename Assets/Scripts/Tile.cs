@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -102,7 +102,80 @@ public class Tile : MonoBehaviour
 
     public void destroyFeature()
     {
+        if (woodhouse)
+        {
+            Destroy(woodhouse);
+            woodhouse = null;
+        }
 
+        if (isRoad)
+        {
+            isRoad = false;
+
+            // Remove center piece
+            Destroy(roadCenter);
+            roadCenter = null;
+
+            // Check if this tile has a road in a given direction.
+            // If so, delete that road, and also the counterpart on the
+            // tile that this tiles road was connected to.
+            // Eg deleting this tiles road to left also deletes the left's
+            // tile road to the right.
+
+            // Top Left
+            if (roadToTopLeftTile)
+            {
+                Destroy(roadToTopLeftTile);
+                roadToTopLeftTile = null;
+                Destroy(topLeftTile.roadToLowerRightTile);
+                topLeftTile.roadToLowerRightTile = null;
+            }
+
+            // Top Right
+            if (roadToTopRightTile)
+            {
+                Destroy(roadToTopRightTile);
+                roadToTopRightTile = null;
+                Destroy(topRightTile.roadToLowerLeftTile);
+                topRightTile.roadToLowerLeftTile = null;
+            }
+
+            // Left
+            if (roadToLeftTile)
+            {
+                Destroy(roadToLeftTile);
+                roadToLeftTile = null;
+                Destroy(leftTile.roadToRightTile);
+                leftTile.roadToRightTile = null;
+            }
+
+            // Right
+            if (roadToRightTile)
+            {
+                Destroy(roadToRightTile);
+                roadToRightTile = null;
+                Destroy(rightTile.roadToLeftTile);
+                rightTile.roadToLeftTile = null;
+            }
+
+            // Lower left
+            if (roadToLowerLeftTile)
+            {
+                Destroy(roadToLowerLeftTile);
+                roadToLowerLeftTile = null;
+                Destroy(lowerLeftTile.roadToTopRightTile);
+                lowerLeftTile.roadToTopRightTile = null;
+            }
+
+            // Lower right
+            if (roadToLowerRightTile)
+            {
+                Destroy(roadToLowerRightTile);
+                roadToLowerRightTile = null;
+                Destroy(lowerRightTile.roadToTopLeftTile);
+                lowerRightTile.roadToTopLeftTile = null;
+            }
+        }
     }
 
     public void addRoad()
@@ -110,7 +183,7 @@ public class Tile : MonoBehaviour
         // Function is only called when player placed a road
         roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
-
+        
         isRoad = true;
 
         // Actual roadPieces are only placed by the checkRoad function
