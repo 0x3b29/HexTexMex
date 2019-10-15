@@ -23,6 +23,17 @@ public class Tile : MonoBehaviour
     public bool isRock;
     public bool isWoodhouse;
 
+    public bool isRoad;
+    public int roadPieces = 0;
+
+    public GameObject roadToLeftTile;
+    public GameObject roadToRightTile;
+    public GameObject roadToTopLeftTile;
+    public GameObject roadToTopRightTile;
+    public GameObject roadToLowerLeftTile;
+    public GameObject roadToLowerRightTile;
+
+
     public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
         this.isActive = true;
@@ -86,7 +97,89 @@ public class Tile : MonoBehaviour
 
     public bool isFree()
     {
-        return isActive && !isWater && !isForest && !isWheat && !isWell && !isRock && !isWoodhouse;
+        return isActive && !isWater && !isForest && !isWheat && !isWell && !isRock && !isWoodhouse && !isRoad;
+    }
+
+    public void addRoad()
+    {
+        // Function is only called when player placed a road
+        GameObject roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        roadCenter.transform.parent = tileGameObject.transform;
+
+        isRoad = true;
+
+        // Actual roadPieces are only placed by the checkRoad function
+        checkRoads();  
+    }
+
+    public int lastFrameRoadCheck;
+    public void checkRoads()
+    {
+        // Only proceed if tile has a road 
+        // never check the same tile twice during one click
+        if (!isRoad || Time.frameCount == lastFrameRoadCheck)
+        {
+            return;
+        }
+
+        lastFrameRoadCheck = Time.frameCount;
+
+        // Check right
+        if (!roadToRightTile && (rightTile.isRoad || rightTile.isWoodhouse))
+        {
+            roadToRightTile = spawnRoad(180);
+        }
+
+        // Check left
+        if (!roadToLeftTile && (leftTile.isRoad || leftTile.isWoodhouse))
+        {
+            roadToLeftTile = spawnRoad(0);
+        }
+
+        // Check upper right
+        if (!roadToTopRightTile && (topRightTile.isRoad || topRightTile.isWoodhouse))
+        {
+            roadToTopRightTile = spawnRoad(120);
+        }
+
+        // Check upper left
+        if (!roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.isWoodhouse))
+        {
+            roadToTopLeftTile = spawnRoad(60);
+        }
+
+        // Check lower right
+        if (!roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.isWoodhouse))
+        {
+            roadToLowerRightTile= spawnRoad(-120);
+        }
+
+        // Check lower left
+        if (!roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.isWoodhouse))
+        {
+            roadToLowerLeftTile = spawnRoad(-60);
+        }
+
+        // Check all the neighbour tiles
+        foreach (Tile tile in getNeighbours())
+        {
+            tile.checkRoads();
+        }
+    }
+
+    private GameObject spawnRoad(float roadRotation)
+    {
+        // Spawn the roadpiece
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        roadPiece.transform.parent = tileGameObject.transform;
+
+        // Turn it to face the correct neighbour
+        Quaternion rotation = roadPiece.transform.rotation;
+        rotation.eulerAngles = new Vector3(0, roadRotation, 0);
+        roadPiece.transform.rotation = rotation;
+
+        // Return the object for storage and later use
+        return roadPiece;
     }
 
     public void setHeight(float height, float slope)
