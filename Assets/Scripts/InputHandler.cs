@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class InputHandler : MonoBehaviour
 
     GameObject tileHighlighter;
 
+    Dropdown BuildingSelect;
+
     // Start is called before the first frame update
     void Start()
     {
+        BuildingSelect = GameObject.Find("Dropdown").GetComponent<Dropdown>();
+
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
         
@@ -39,15 +44,25 @@ public class InputHandler : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
+                        if (BuildingSelect.options[BuildingSelect.value].text.Equals("Road"))
+                        {
+                        }
+                        else if (BuildingSelect.options[BuildingSelect.value].text.Equals("House"))
+                        {
                 GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, hit.transform.position, Quaternion.identity);
                 woodHouse.transform.parent = hit.transform.gameObject.transform;
 
                         Quaternion rotation = woodHouse.transform.rotation;
-                        rotation.eulerAngles = new Vector3(0,Random.Range(0,360),0);
+                            rotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
                         woodHouse.transform.rotation = rotation;
 
                 woodHouse.name = "woodHouse";
                         tile.isWoodhouse = true;
+                        } 
+                        else
+                        {
+                            Debug.Log(BuildingSelect.options[BuildingSelect.value].text + " is an unknown building type");
+                        }
                     }
                 }
                 else
