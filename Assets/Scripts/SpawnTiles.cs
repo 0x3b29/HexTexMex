@@ -39,9 +39,9 @@ public class SpawnTiles : MonoBehaviour
         tiles = new Tile[x * y];
         waterTiles = new List<Tile>();
 
-        Material water = Resources.Load("Water", typeof(Material)) as Material;
-        Material earth = Resources.Load("Earth", typeof(Material)) as Material;
-        Material stone = Resources.Load("Stone", typeof(Material)) as Material;
+        Material water = Resources.Load(Constants.materialsFolder + "Water", typeof(Material)) as Material;
+        Material earth = Resources.Load(Constants.materialsFolder + "Earth", typeof(Material)) as Material;
+        Material stone = Resources.Load(Constants.materialsFolder + "Stone", typeof(Material)) as Material;
 
         Material[] waterTile = new Material[2];
         waterTile[0] = earth;
@@ -64,14 +64,14 @@ public class SpawnTiles : MonoBehaviour
             {
                 GameObject newTile;
                 
-                newTile = Instantiate(Resources.Load("Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
+                newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
 
                 GameObject hexagonGameObject = newTile.transform.Find("Hexagon").gameObject;
 
                 int grassKind = Mathf.RoundToInt(Random.Range(1f, 3f));
                 Material[] tileMats = hexagonGameObject.transform.GetComponent<Renderer>().materials;
-                tileMats[1] = Resources.Load("Grass" + grassKind, typeof(Material)) as Material;
+                tileMats[1] = Resources.Load(Constants.materialsFolder + "Grass" + grassKind, typeof(Material)) as Material;
                 newTile.transform.Find("Hexagon").GetComponent<Renderer>().materials = tileMats;
 
                 // Attach tile script
@@ -137,7 +137,7 @@ public class SpawnTiles : MonoBehaviour
             // Spawn boat at a random active water tile
             Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
 
-            GameObject boat = Instantiate(Resources.Load("boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
+            GameObject boat = Instantiate(Resources.Load(Constants.prefabFolder + "boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
             boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
         }
 
@@ -160,7 +160,6 @@ public class SpawnTiles : MonoBehaviour
             if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
-                tile.isForest = true;
 
                 GameObject newTree;
                 string treeToSpawn;
@@ -179,9 +178,11 @@ public class SpawnTiles : MonoBehaviour
                     treeToSpawn = "ThreeTreeParent";
                 }
 
-                newTree = Instantiate(Resources.Load(treeToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity); //Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f)
+                newTree = Instantiate(Resources.Load(Constants.prefabFolder + treeToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity); //Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f)
                 newTree.transform.parent = tile.tileGameObject.transform;
                 newTree.name = "Tree";
+
+                tile.forest = newTree;
             }
         }
 
@@ -190,12 +191,14 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.isForest && Random.Range(0f, 1f) < wellProbability)
+            if (!tile.isWater && !tile.forest && Random.Range(0f, 1f) < wellProbability)
             {
                 GameObject well;
-                well = Instantiate(Resources.Load("Well") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
+                well = Instantiate(Resources.Load(Constants.prefabFolder + "Well") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
                 well.transform.parent = tile.tileGameObject.transform;
                 well.name = "Well";
+
+                tile.well = well;
             }
         }
 
@@ -204,15 +207,16 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.isForest && !tile.isWell && Random.Range(0f, 1f) < wheatProbability)
+            if (!tile.isWater && !tile.forest && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
-                tile.isWheat = true;
-
+                
                 GameObject WheatParent;
-                WheatParent = Instantiate(Resources.Load("WheatParent") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
+                WheatParent = Instantiate(Resources.Load(Constants.prefabFolder + "WheatParent") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
                 WheatParent.transform.parent = tile.tileGameObject.transform;
                 WheatParent.name = "WheatParent";
+
+                tile.wheat = WheatParent;
             }
         }
 
@@ -222,12 +226,11 @@ public class SpawnTiles : MonoBehaviour
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.neighboursRockCount());
 
-            if (!tile.isWater && !tile.isForest && !tile.isWell && !tile.isWheat && Random.Range(0f, 1f) < RockProbability)
+            if (!tile.isWater && !tile.forest && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
-                tile.isRock = true;
                 
-                GameObject Rock;
+                GameObject rock;
                 string rockToSpawn;
                 int neighboursRockCount = tile.neighboursRockCount();
 
@@ -248,9 +251,11 @@ public class SpawnTiles : MonoBehaviour
                     rockToSpawn = "FourStones";
                 }
 
-                Rock = Instantiate(Resources.Load(rockToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
-                Rock.transform.parent = tile.tileGameObject.transform;
-                Rock.name = "Rock";
+                rock = Instantiate(Resources.Load(Constants.prefabFolder + rockToSpawn) as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
+                rock.transform.parent = tile.tileGameObject.transform;
+                rock.name = "Rock";
+
+                tile.rock = rock;
             }
         }
     }

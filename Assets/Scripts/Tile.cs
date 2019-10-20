@@ -17,10 +17,22 @@ public class Tile : MonoBehaviour
 
     public bool isActive;
     public bool isWater;
-    public bool isForest;
-    public bool isWheat;
-    public bool isWell;
-    public bool isRock;
+
+    public GameObject forest;
+    public GameObject wheat;
+    public GameObject well;
+    public GameObject rock;
+    public GameObject woodhouse;
+
+    public bool isRoad;
+    public GameObject roadCenter;
+    public GameObject roadToLeftTile;
+    public GameObject roadToRightTile;
+    public GameObject roadToTopLeftTile;
+    public GameObject roadToTopRightTile;
+    public GameObject roadToLowerLeftTile;
+    public GameObject roadToLowerRightTile;
+
 
     public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
@@ -65,7 +77,7 @@ public class Tile : MonoBehaviour
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.isForest) neighboursTreeCount++;
+            if (tile.forest) neighboursTreeCount++;
         }
 
         return neighboursTreeCount;
@@ -77,10 +89,196 @@ public class Tile : MonoBehaviour
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.isRock) neighboursRockCount++;
+            if (tile.rock) neighboursRockCount++;
         }
 
         return neighboursRockCount;
+    }
+
+    public bool isFree()
+    {
+        return isActive && !isWater && !forest && !wheat && !well && !rock && !woodhouse && !isRoad;
+    }
+
+    public void destroyFeature()
+    {
+        if (woodhouse)
+        {
+            Destroy(woodhouse);
+            woodhouse = null;
+        }
+
+        if (isRoad)
+        {
+            isRoad = false;
+
+            // Remove center piece
+            Destroy(roadCenter);
+            roadCenter = null;
+
+            // Check if this tile has a road in a given direction.
+            // If so, delete that road, and also the counterpart on the
+            // tile that this tiles road was connected to.
+            // Eg deleting this tiles road to left also deletes the left's
+            // tile road to the right.
+
+            // TODO: Fix stray roads left attached to buildings
+
+            // Top Left
+            if (roadToTopLeftTile)
+            {
+                Destroy(roadToTopLeftTile);
+                roadToTopLeftTile = null;
+                Destroy(topLeftTile.roadToLowerRightTile);
+                topLeftTile.roadToLowerRightTile = null;
+            }
+
+            // Top Right
+            if (roadToTopRightTile)
+            {
+                Destroy(roadToTopRightTile);
+                roadToTopRightTile = null;
+                Destroy(topRightTile.roadToLowerLeftTile);
+                topRightTile.roadToLowerLeftTile = null;
+            }
+
+            // Left
+            if (roadToLeftTile)
+            {
+                Destroy(roadToLeftTile);
+                roadToLeftTile = null;
+                Destroy(leftTile.roadToRightTile);
+                leftTile.roadToRightTile = null;
+            }
+
+            // Right
+            if (roadToRightTile)
+            {
+                Destroy(roadToRightTile);
+                roadToRightTile = null;
+                Destroy(rightTile.roadToLeftTile);
+                rightTile.roadToLeftTile = null;
+            }
+
+            // Lower left
+            if (roadToLowerLeftTile)
+            {
+                Destroy(roadToLowerLeftTile);
+                roadToLowerLeftTile = null;
+                Destroy(lowerLeftTile.roadToTopRightTile);
+                lowerLeftTile.roadToTopRightTile = null;
+            }
+
+            // Lower right
+            if (roadToLowerRightTile)
+            {
+                Destroy(roadToLowerRightTile);
+                roadToLowerRightTile = null;
+                Destroy(lowerRightTile.roadToTopLeftTile);
+                lowerRightTile.roadToTopLeftTile = null;
+            }
+        }
+    }
+
+    public void addRoad()
+    {
+        // Function is only called when player placed a road
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        roadCenter.transform.parent = tileGameObject.transform;
+        
+        isRoad = true;
+
+        // Actual roadPieces are only placed by the checkRoad function
+        checkRoads();  
+    }
+
+    public int lastFrameRoadCheck;
+    public void checkRoads()
+    {
+        // Only proceed if tile has a road 
+        // never check the same tile twice during one click
+        if (!isRoad || Time.frameCount == lastFrameRoadCheck)
+        {
+            return;
+        }
+
+        lastFrameRoadCheck = Time.frameCount;
+
+        // Check right
+        if (!roadToRightTile && (rightTile.isRoad || rightTile.woodhouse))
+        {
+            roadToRightTile = spawnRoad(180);
+        }
+
+        // Check left
+        if (!roadToLeftTile && (leftTile.isRoad || leftTile.woodhouse))
+        {
+            roadToLeftTile = spawnRoad(0);
+        }
+
+        // Check upper right
+        if (!roadToTopRightTile && (topRightTile.isRoad || topRightTile.woodhouse))
+        {
+            roadToTopRightTile = spawnRoad(120);
+        }
+
+        // Check upper left
+        if (!roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.woodhouse))
+        {
+            roadToTopLeftTile = spawnRoad(60);
+        }
+
+        // Check lower right
+        if (!roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.woodhouse))
+        {
+            roadToLowerRightTile= spawnRoad(-120);
+        }
+
+        // Check lower left
+        if (!roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.woodhouse))
+        {
+            roadToLowerLeftTile = spawnRoad(-60);
+        }
+
+        // Check all the neighbour tiles
+        foreach (Tile tile in getNeighbours())
+        {
+            tile.checkRoads();
+        }
+    }
+
+    private GameObject spawnRoad(float roadRotation)
+    {
+        // Spawn the roadpiece
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        roadPiece.transform.parent = tileGameObject.transform;
+
+        // Turn it to face the correct neighbour
+        Quaternion rotation = roadPiece.transform.rotation;
+        rotation.eulerAngles = new Vector3(0, roadRotation, 0);
+        roadPiece.transform.rotation = rotation;
+
+        // Return the object for storage and later use
+        return roadPiece;
+    }
+
+    public void placeHouse()
+    {
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        woodHouse.transform.parent = tileGameObject.transform;
+
+        Quaternion rotation = woodHouse.transform.rotation;
+        rotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+        woodHouse.transform.rotation = rotation;
+
+        woodHouse.name = "woodHouse";
+        this.woodhouse = woodHouse;
+        checkRoads();
+
+        foreach (Tile tile in getNeighbours())
+        {
+            tile.checkRoads();
+        }
     }
 
     public void setHeight(float height, float slope)
