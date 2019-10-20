@@ -6,7 +6,7 @@ public class SpawnTiles : MonoBehaviour
     private const int x = 60;
     private const int y = 60;
 
-    private const float newWaterProbability = 0.007f;
+    private const float newWaterProbability = 0.003f;
     private const float adjacentWaterProbability = 0.35f;
 
     private const float newTreeProbability = 0.015f;
@@ -36,6 +36,10 @@ public class SpawnTiles : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // For development have a fixed board
+        // TODO all maps should be dynamically generated
+        Random.InitState(42);
+        
         tiles = new Tile[x * y];
         waterTiles = new List<Tile>();
 
@@ -110,11 +114,11 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Generate roundish shape
-        GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth(maxTileHealth, tileHealthSlope);
+        /*GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth(maxTileHealth, tileHealthSlope);
         for (int i = 0; i < x * y; i++)
         {
             tiles[i].checkHealth();
-        }
+        }*/
 
         // Set Water
         for (int i = 0; i < x * y; i++)
@@ -142,13 +146,13 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Add Mountains
-        int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
+        /*int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
         Debug.Log("Attempting to add " + mountainCount + " mountains");
         
         for (int i = 0; i < mountainCount; i++)
         {
             tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
-        }
+        }*/
         
         // Set Trees
         for (int i = 0; i < x * y; i++)
@@ -187,7 +191,7 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Set Wells
-        for (int i = 0; i < x * y; i++)
+        /*for (int i = 0; i < x * y; i++)
         {
             Tile tile = tiles[i];
 
@@ -200,7 +204,7 @@ public class SpawnTiles : MonoBehaviour
 
                 tile.well = well;
             }
-        }
+        }*/
 
         // Set Wheat
         for (int i = 0; i < x * y; i++)

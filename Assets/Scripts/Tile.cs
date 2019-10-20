@@ -283,13 +283,13 @@ public class Tile : MonoBehaviour
 
     public void setHeight(float height, float slope)
     {
-        // If my height is heigher than the new height, bail out
+        /*// If my current height is higher than the new height, bail out
         if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
         {
             return;
         }
 
-        // Set my height to the new height
+        // Set height to the new height
         Vector3 position = tileGameObject.transform.position;
         position.y = height;
         tileGameObject.transform.position = position;
@@ -302,13 +302,13 @@ public class Tile : MonoBehaviour
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
-        }
+        }*/
     }
 
     private float health = 0;
     public void setHealth(float health, float slope)
     {
-        // If my health is heigher than the new health, bail out
+        // If my health is higher than the new health, bail out
         if (this.health >= health || health <= 0 || slope < 0.01)
         {
             return;
@@ -333,8 +333,8 @@ public class Tile : MonoBehaviour
     {
         if (health <= 0)
         {
-            tileGameObject.SetActive(false);
-            isActive = false;
+            //tileGameObject.SetActive(false);
+            //isActive = false;
         }
     }
 
