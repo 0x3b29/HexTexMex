@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
-    private const int x = 60;
-    private const int y = 60;
+    private const int x = 30;
+    private const int y = 30;
 
     private const float newWaterProbability = 0.003f;
     private const float adjacentWaterProbability = 0.35f;
