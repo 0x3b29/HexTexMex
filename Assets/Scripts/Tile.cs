@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Tile : MonoBehaviour
 {
@@ -183,7 +185,8 @@ public class Tile : MonoBehaviour
     public void addRoad()
     {
         // Function is only called when player placed a road
-        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadCenterPlayer1" : "roadCenterPlayer2";
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
         
         isRoad = true;
@@ -250,7 +253,8 @@ public class Tile : MonoBehaviour
     private GameObject spawnRoad(float roadRotation)
     {
         // Spawn the roadpiece
-        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadPiecePlayer1" : "roadPiecePlayer2";
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadPiece.transform.parent = tileGameObject.transform;
 
         // Turn it to face the correct neighbour
@@ -264,7 +268,9 @@ public class Tile : MonoBehaviour
 
     public void placeHouse()
     {
-        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
+
         woodHouse.transform.parent = tileGameObject.transform;
 
         Quaternion rotation = woodHouse.transform.rotation;

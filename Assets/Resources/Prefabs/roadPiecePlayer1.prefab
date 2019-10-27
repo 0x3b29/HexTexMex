@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4026993814597128172}
   - component: {fileID: 7268326986723504917}
   m_Layer: 0
-  m_Name: roadPiece
+  m_Name: roadPiecePlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5243988174349660497, guid: e2f334bf13e215a4d8051e8ea3957bad, type: 3}
+  - {fileID: 2100000, guid: bf602ba10f574c94ca64c9f45a9a6992, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

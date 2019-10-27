@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-    private bool _player1Turn = true;
+    private static bool _player1Turn = true;
     
-    private float player1Wood = 5f;
-    private float player1Stone = 5f;
-    private float player1Wheat = 5f;
-    private float player2Wood = 5f;
-    private float player2Stone = 5f;
-    private float player2Wheat = 5f;
+    private static float player1Wood = 2f;
+    private static float player1Stone = 2f;
+    private static float player1Wheat = 1f;
+    private static float player2Wood = 2f;
+    private static float player2Stone = 2f;
+    private static float player2Wheat = 1f;
     
     public Text player1;
     public Text player1Resources;
@@ -59,5 +56,10 @@ public class TurnManager : MonoBehaviour
         player2Wood += 1f;
         player2Stone += 1f;
         player2Wheat += 1f;
+    }
+
+    public static bool isPlayer1Turn()
+    {
+        return _player1Turn;
     }
 }
