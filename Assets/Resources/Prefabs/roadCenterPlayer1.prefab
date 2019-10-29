@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8115636999323762791}
   - component: {fileID: 2565927749470272670}
   m_Layer: 0
-  m_Name: roadCenter
+  m_Name: roadCenterPlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5243988174349660497, guid: b2440494f5a82ab4dbfd52ceb9f856ec, type: 3}
+  - {fileID: 2100000, guid: bf602ba10f574c94ca64c9f45a9a6992, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

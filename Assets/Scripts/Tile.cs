@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Tile : MonoBehaviour
 {
@@ -183,7 +185,8 @@ public class Tile : MonoBehaviour
     public void addRoad()
     {
         // Function is only called when player placed a road
-        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadCenterPlayer1" : "roadCenterPlayer2";
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
         
         isRoad = true;
@@ -250,7 +253,8 @@ public class Tile : MonoBehaviour
     private GameObject spawnRoad(float roadRotation)
     {
         // Spawn the roadpiece
-        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadPiecePlayer1" : "roadPiecePlayer2";
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadPiece.transform.parent = tileGameObject.transform;
 
         // Turn it to face the correct neighbour
@@ -264,7 +268,9 @@ public class Tile : MonoBehaviour
 
     public void placeHouse()
     {
-        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse Parent") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
+
         woodHouse.transform.parent = tileGameObject.transform;
 
         Quaternion rotation = woodHouse.transform.rotation;
@@ -283,13 +289,13 @@ public class Tile : MonoBehaviour
 
     public void setHeight(float height, float slope)
     {
-        // If my height is heigher than the new height, bail out
+        /*// If my current height is higher than the new height, bail out
         if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
         {
             return;
         }
 
-        // Set my height to the new height
+        // Set height to the new height
         Vector3 position = tileGameObject.transform.position;
         position.y = height;
         tileGameObject.transform.position = position;
@@ -302,13 +308,13 @@ public class Tile : MonoBehaviour
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
-        }
+        }*/
     }
 
     private float health = 0;
     public void setHealth(float health, float slope)
     {
-        // If my health is heigher than the new health, bail out
+        // If my health is higher than the new health, bail out
         if (this.health >= health || health <= 0 || slope < 0.01)
         {
             return;
@@ -333,8 +339,8 @@ public class Tile : MonoBehaviour
     {
         if (health <= 0)
         {
-            tileGameObject.SetActive(false);
-            isActive = false;
+            //tileGameObject.SetActive(false);
+            //isActive = false;
         }
     }
 

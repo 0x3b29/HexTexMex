@@ -32,13 +32,22 @@ public class CameraController : MonoBehaviour {
 
         // Keyboard movement
         Vector3 keyboardMovement = new Vector3();
-
+        
+        // Zoom down / up with the scroll wheel
+        if (Input.mouseScrollDelta.y > 0.0f) keyboardMovement += new Vector3(0, -5, +10);
+        if (Input.mouseScrollDelta.y < 0.0f) keyboardMovement += new Vector3(0, +5, -10);
+        
+        // Fly over the board in all directions
         if (Input.GetKey(KeyCode.W)) keyboardMovement += new Vector3(0, 0, 1);
         if (Input.GetKey(KeyCode.A)) keyboardMovement += new Vector3(-1, 0, 0);
         if (Input.GetKey(KeyCode.S)) keyboardMovement += new Vector3(0, 0, -1);        
         if (Input.GetKey(KeyCode.D)) keyboardMovement += new Vector3(1, 0, 0);
+        
+        // Rotate Camera with Q & E
+        if (Input.GetKey(KeyCode.E)) transform.Rotate(Vector3.up * 100f * Time.deltaTime);
+        if (Input.GetKey(KeyCode.Q)) transform.Rotate(Vector3.down * 100f * Time.deltaTime);
 
         // Add movement 
-        transform.Translate(keyboardMovement * speed * Time.deltaTime);      
+        transform.Translate(keyboardMovement * speed * Time.deltaTime);
     }
 }

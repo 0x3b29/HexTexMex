@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,9 +24,15 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
+        {
+            // Do not perform ray casts through buttons and other GUI objects
+            return;
+        }
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
+        
         if (Physics.Raycast(ray, out hit, 100))
         {
             if (hit.transform.gameObject.name.Equals("Hexagon"))
