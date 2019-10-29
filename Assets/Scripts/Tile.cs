@@ -102,14 +102,113 @@ public class Tile : MonoBehaviour
         return isActive && !isWater && !forest && !wheat && !well && !rock && !woodhouse && !isRoad;
     }
 
+    private void deleteRoadsConnectingToThisTile()
+    {
+        // Check if a tile has a road to this one.
+        // If so, delete that road
+
+        // Top Left
+        if (topLeftTile && topLeftTile.roadToLowerRightTile)
+        {
+            Destroy(topLeftTile.roadToLowerRightTile);
+            topLeftTile.roadToLowerRightTile = null;
+        }
+
+        // Top Right
+        if (topRightTile && topRightTile.roadToLowerLeftTile)
+        {
+            Destroy(topRightTile.roadToLowerLeftTile);
+            topRightTile.roadToLowerLeftTile = null;
+        }
+
+        // Left
+        if (leftTile && leftTile.roadToRightTile)
+        {
+            Destroy(leftTile.roadToRightTile);
+            leftTile.roadToRightTile = null;
+        }
+
+        // Right
+        if (rightTile && rightTile.roadToLeftTile)
+        {
+            Destroy(rightTile.roadToLeftTile);
+            rightTile.roadToLeftTile = null;
+        }
+
+        // Lower left
+        if (lowerLeftTile && lowerLeftTile.roadToTopRightTile)
+        {
+            Destroy(lowerLeftTile.roadToTopRightTile);
+            lowerLeftTile.roadToTopRightTile = null;
+        }
+
+        // Lower right
+        if (lowerRightTile && lowerRightTile.roadToTopLeftTile)
+        {
+            Destroy(lowerRightTile.roadToTopLeftTile);
+            lowerRightTile.roadToTopLeftTile = null;
+        }
+    }
+
+    private void deleteRoadsConnectingFromThisTile()
+    {
+        // Check if this tile has a road in a given direction.
+        // If so, delete that road
+
+        // Top Left
+        if (roadToTopLeftTile)
+        {
+            Destroy(roadToTopLeftTile);
+            roadToTopLeftTile = null;
+        }
+
+        // Top Right
+        if (roadToTopRightTile)
+        {
+            Destroy(roadToTopRightTile);
+            roadToTopRightTile = null;
+        }
+
+        // Left
+        if (roadToLeftTile)
+        {
+            Destroy(roadToLeftTile);
+            roadToLeftTile = null;
+        }
+
+        // Right
+        if (roadToRightTile)
+        {
+            Destroy(roadToRightTile);
+            roadToRightTile = null;
+        }
+
+        // Lower left
+        if (roadToLowerLeftTile)
+        {
+            Destroy(roadToLowerLeftTile);
+            roadToLowerLeftTile = null;
+        }
+
+        // Lower right
+        if (roadToLowerRightTile)
+        {
+            Destroy(roadToLowerRightTile);
+            roadToLowerRightTile = null;
+        }
+    }
+
     public void destroyFeature()
     {
         if (woodhouse)
         {
             Destroy(woodhouse);
             woodhouse = null;
-        }
 
+            // Delete roads to this tile
+            deleteRoadsConnectingToThisTile();
+        }
+    
         if (isRoad)
         {
             isRoad = false;
@@ -118,67 +217,9 @@ public class Tile : MonoBehaviour
             Destroy(roadCenter);
             roadCenter = null;
 
-            // Check if this tile has a road in a given direction.
-            // If so, delete that road, and also the counterpart on the
-            // tile that this tiles road was connected to.
-            // Eg deleting this tiles road to left also deletes the left's
-            // tile road to the right.
-
-            // TODO: Fix stray roads left attached to buildings
-
-            // Top Left
-            if (roadToTopLeftTile)
-            {
-                Destroy(roadToTopLeftTile);
-                roadToTopLeftTile = null;
-                Destroy(topLeftTile.roadToLowerRightTile);
-                topLeftTile.roadToLowerRightTile = null;
-            }
-
-            // Top Right
-            if (roadToTopRightTile)
-            {
-                Destroy(roadToTopRightTile);
-                roadToTopRightTile = null;
-                Destroy(topRightTile.roadToLowerLeftTile);
-                topRightTile.roadToLowerLeftTile = null;
-            }
-
-            // Left
-            if (roadToLeftTile)
-            {
-                Destroy(roadToLeftTile);
-                roadToLeftTile = null;
-                Destroy(leftTile.roadToRightTile);
-                leftTile.roadToRightTile = null;
-            }
-
-            // Right
-            if (roadToRightTile)
-            {
-                Destroy(roadToRightTile);
-                roadToRightTile = null;
-                Destroy(rightTile.roadToLeftTile);
-                rightTile.roadToLeftTile = null;
-            }
-
-            // Lower left
-            if (roadToLowerLeftTile)
-            {
-                Destroy(roadToLowerLeftTile);
-                roadToLowerLeftTile = null;
-                Destroy(lowerLeftTile.roadToTopRightTile);
-                lowerLeftTile.roadToTopRightTile = null;
-            }
-
-            // Lower right
-            if (roadToLowerRightTile)
-            {
-                Destroy(roadToLowerRightTile);
-                roadToLowerRightTile = null;
-                Destroy(lowerRightTile.roadToTopLeftTile);
-                lowerRightTile.roadToTopLeftTile = null;
-            }
+            // Delete roads from and to this tile
+            deleteRoadsConnectingFromThisTile();
+            deleteRoadsConnectingToThisTile();
         }
     }
 
