@@ -208,37 +208,37 @@ public class Tile : MonoBehaviour
         lastFrameRoadCheck = Time.frameCount;
 
         // Check right
-        if (!roadToRightTile && (rightTile.isRoad || rightTile.woodhouse))
+        if (rightTile && !roadToRightTile && (rightTile.isRoad || rightTile.woodhouse))
         {
             roadToRightTile = spawnRoad(180);
         }
 
         // Check left
-        if (!roadToLeftTile && (leftTile.isRoad || leftTile.woodhouse))
+        if (leftTile && !roadToLeftTile && (leftTile.isRoad || leftTile.woodhouse))
         {
             roadToLeftTile = spawnRoad(0);
         }
 
         // Check upper right
-        if (!roadToTopRightTile && (topRightTile.isRoad || topRightTile.woodhouse))
+        if (topRightTile && !roadToTopRightTile && (topRightTile.isRoad || topRightTile.woodhouse))
         {
             roadToTopRightTile = spawnRoad(120);
         }
 
         // Check upper left
-        if (!roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.woodhouse))
+        if (topLeftTile && !roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.woodhouse))
         {
             roadToTopLeftTile = spawnRoad(60);
         }
 
         // Check lower right
-        if (!roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.woodhouse))
+        if (lowerRightTile && !roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.woodhouse))
         {
             roadToLowerRightTile= spawnRoad(-120);
         }
 
         // Check lower left
-        if (!roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.woodhouse))
+        if (lowerLeftTile && !roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.woodhouse))
         {
             roadToLowerLeftTile = spawnRoad(-60);
         }
