@@ -880,7 +880,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378330}
-        m_MethodName: endTurn
+        m_MethodName: EndTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1582,7 +1582,6 @@ GameObject:
   - component: {fileID: 1265519218}
   - component: {fileID: 1265519217}
   - component: {fileID: 1265519216}
-  - component: {fileID: 1265519220}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1676,18 +1675,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1265519220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265519215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 461fe88acffeade409b957761bb4ae25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1269926949
 GameObject:
   m_ObjectHideFlags: 0
@@ -2089,6 +2076,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1727378331}
+  - component: {fileID: 1727378333}
   - component: {fileID: 1727378330}
   - component: {fileID: 1727378332}
   m_Layer: 0
@@ -2110,11 +2098,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df49c3a48b57824f826cd6d3fc5b8f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 2076827848}
-  player1Resources: {fileID: 907754526}
-  player2: {fileID: 1956202765}
-  player2Resources: {fileID: 717300851}
-  turnIndicator: {fileID: 1158089244}
 --- !u!4 &1727378331
 Transform:
   m_ObjectHideFlags: 0
@@ -2141,6 +2124,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabc8994da6a5343b6c23705b6132ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1727378333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727378329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68ad5ca4b6d93d14d9aa1efd92aa9323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 0}
+  spawnTiles: {fileID: 0}
 --- !u!1 &1803570366
 GameObject:
   m_ObjectHideFlags: 0

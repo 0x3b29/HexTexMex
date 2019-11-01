@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player
 {
+    private string name;
     private Color color;
-
     private int wood;
     private int stone;
     private int wheat;
 
     private List<Tile> tilesWithHouses;
 
-    public Player (Color color, int wood, int stone, int wheat)
+    public Player (string name, Color color, int wood, int stone, int wheat)
     {
         tilesWithHouses = new List<Tile>();
 
+        this.name = name;
         this.color = color;
         this.wood = wood;
         this.stone = stone;
         this.wheat = wheat;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public Color GetColor()
     {
-        
+        return color;
     }
 
-    // Update is called once per frame
-    void Update()
+    public string GetName()
     {
-        
+        return name;
     }
 }

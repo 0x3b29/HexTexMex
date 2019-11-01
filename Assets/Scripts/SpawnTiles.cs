@@ -34,7 +34,7 @@ public class SpawnTiles : MonoBehaviour
     private List<Tile> waterTiles;
 
     // Start is called before the first frame update
-    void Start()
+    public void CreateMap()
     {
         // For development have a fixed board
         // TODO all maps should be dynamically generated
@@ -262,11 +262,5 @@ public class SpawnTiles : MonoBehaviour
                 tile.rock = rock;
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
