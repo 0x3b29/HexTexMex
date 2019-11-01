@@ -338,7 +338,7 @@ public class Tile : MonoBehaviour
 
     public void setHeight(float height, float slope)
     {
-        /*// If my current height is higher than the new height, bail out
+        // If my current height is higher than the new height, bail out
         if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
         {
             return;
@@ -357,7 +357,7 @@ public class Tile : MonoBehaviour
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
-        }*/
+        }
     }
 
     private float health = 0;
@@ -388,8 +388,8 @@ public class Tile : MonoBehaviour
     {
         if (health <= 0)
         {
-            //tileGameObject.SetActive(false);
-            //isActive = false;
+            tileGameObject.SetActive(false);
+            isActive = false;
         }
     }
 

@@ -27,13 +27,13 @@ public class GameManager : MonoBehaviour
     {
         // Create Players
         turnManager = GetComponent<TurnManager>();
-        turnManager.AddPlayer(new Player("Jerome", Color.red, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Jérôme", Color.red, 10, 10, 10));
         turnManager.AddPlayer(new Player("Olivier", Color.blue, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Gerard", Color.green, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Gérard", Color.green, 10, 10, 10));
 
         // Create Map to play on
         spawnTiles = GetComponent<SpawnTiles>();
-        spawnTiles.CreateMap();
+        spawnTiles.CreateMap(42, false, false);
     }
 
     // Update is called once per frame
