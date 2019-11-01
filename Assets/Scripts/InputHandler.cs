@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +30,13 @@ public class InputHandler : MonoBehaviour
             // Do not perform ray casts through buttons and other GUI objects
             return;
         }
-        
+
+        // Capture a screenshot with P
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ScreenCapture.CaptureScreenshot("Screenshots/" + System.DateTime.Now.ToString("dd-MM-yy_hh-mm-ss") + ".png");
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         
