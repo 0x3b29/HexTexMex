@@ -35,6 +35,8 @@ public class SpawnTiles : MonoBehaviour
 
     public void CreateMap(int seed, bool roundisShape, bool mountains)
     {
+        GameObject tilesContainer = GameObject.Find("Tiles");
+
         // For development have a fixed board
         Random.InitState(seed);
         
@@ -68,6 +70,7 @@ public class SpawnTiles : MonoBehaviour
                 
                 newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
+                newTile.transform.parent = tilesContainer.transform;
 
                 GameObject hexagonGameObject = newTile.transform.Find("Hexagon").gameObject;
 
