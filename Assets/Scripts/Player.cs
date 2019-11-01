@@ -32,4 +32,19 @@ public class Player
     {
         return name;
     }
+
+    public int GetStone()
+    {
+        return stone;
+    }
+
+    public int GetWood()
+    {
+        return wood;
+    }
+
+    public int GetWheat()
+    {
+        return wheat;
+    }
 }

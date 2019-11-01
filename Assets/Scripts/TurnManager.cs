@@ -7,6 +7,20 @@ public class TurnManager : MonoBehaviour
     private List<Player> players;
     private Player currentPlayer;
 
+    // UI references
+    private Text playername;
+    private Text stoneCount;
+    private Text woodCount;
+    private Text wheatCount;
+
+    public void Start()
+    {
+        playername = GameObject.Find("Text Playername").GetComponent<Text>();
+        stoneCount = GameObject.Find("Text Stone").GetComponent<Text>();
+        woodCount = GameObject.Find("Text Wood").GetComponent<Text>();
+        wheatCount = GameObject.Find("Text Wheat").GetComponent<Text>();
+    }
+
     public TurnManager()
     {
         players = new List<Player>();
@@ -14,12 +28,8 @@ public class TurnManager : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
-        if (currentPlayer == null)
-        {
-            currentPlayer = player;
-        }
-
         players.Add(player);
+        currentPlayer = player;
     }
 
     public void EndTurn()
@@ -36,6 +46,13 @@ public class TurnManager : MonoBehaviour
         }
 
         currentPlayer = players.ToArray()[index];
+
+        playername.text = currentPlayer.GetName();
+        stoneCount.text = currentPlayer.GetStone().ToString();
+        woodCount.text = currentPlayer.GetWood().ToString();
+        wheatCount.text = currentPlayer.GetWheat().ToString();
+        
+
         Debug.Log("Player " + currentPlayer.GetName() + " can now play");
     }
 
