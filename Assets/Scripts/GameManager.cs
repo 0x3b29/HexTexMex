@@ -27,8 +27,8 @@ public class GameManager : MonoBehaviour
     {
         // Create Players
         turnManager = GetComponent<TurnManager>();
-        turnManager.AddPlayer(new Player("Jérôme", Color.red, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Olivier", Color.blue, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Olivier", Color.red, 10, 10, 10));
         turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
         turnManager.EndTurn();
 
