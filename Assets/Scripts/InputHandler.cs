@@ -7,15 +7,11 @@ public class InputHandler : MonoBehaviour
     Material materialBuildAllowed;
     Material materialBuildDenied;
 
-    GameObject tileHighlighter;
-
-    Dropdown BuildingSelect;
+    GameObject tileHighlighter;   
 
     // Start is called before the first frame update
     void Start()
     {
-        BuildingSelect = GameObject.Find("Dropdown").GetComponent<Dropdown>();
-
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
 
@@ -25,9 +21,12 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Get selected building type
+        BuildingMode currentBuildingMode = GameManager.Instance.UIManager.getBuildingMode();
+
+        // Do not perform ray casts through buttons and other GUI objects
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
         {
-            // Do not perform ray casts through buttons and other GUI objects
             return;
         }
 
@@ -48,11 +47,10 @@ public class InputHandler : MonoBehaviour
                 tileHighlighter.transform.position = hit.transform.gameObject.transform.position;
 
                 Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
-                string selected = BuildingSelect.options[BuildingSelect.value].text;
 
                 bool actionAllowed = false;
 
-                if (tile.isFree() && selected.Equals("Road"))
+                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.Road))
                 {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
@@ -63,7 +61,7 @@ public class InputHandler : MonoBehaviour
                         }
                 }
                 
-                if (tile.isFree() && selected.Equals("House"))
+                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House))
                         {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
@@ -74,7 +72,7 @@ public class InputHandler : MonoBehaviour
                             }
                         }
 
-                if ((tile.isRoad || tile.woodhouse) && selected.Equals("Destroy"))
+                if ((tile.isRoad || tile.woodhouse) && currentBuildingMode.Equals(BuildingMode.Destroy))
                         {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;

@@ -21,19 +21,25 @@ public class GameManager : MonoBehaviour
 
     public TurnManager turnManager;
     public SpawnTiles spawnTiles;
+    public InputHandler inputHandler;
+    public UIManager UIManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Create Players
+        // Fetch Scripts
+        inputHandler = GetComponent<InputHandler>();
         turnManager = GetComponent<TurnManager>();
+        spawnTiles = GetComponent<SpawnTiles>();
+        UIManager = GetComponent<UIManager>();
+
+        // Create Players
         turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));
         turnManager.AddPlayer(new Player("Olivier", Color.red, 10, 10, 10));
         turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
         turnManager.EndTurn();
 
         // Create Map to play on
-        spawnTiles = GetComponent<SpawnTiles>();
         spawnTiles.CreateMap(42, false, false);
     }
 

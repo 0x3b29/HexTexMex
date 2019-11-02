@@ -7,21 +7,7 @@ public class TurnManager : MonoBehaviour
     private List<Player> players;
     private Player currentPlayer;
 
-    // UI references
-    private Text playername;
-    private Text stoneCount;
-    private Text woodCount;
-    private Text wheatCount;
-
-    public void Start()
-    {
-        playername = GameObject.Find("Text Playername").GetComponent<Text>();
-        stoneCount = GameObject.Find("Text Stone").GetComponent<Text>();
-        woodCount = GameObject.Find("Text Wood").GetComponent<Text>();
-        wheatCount = GameObject.Find("Text Wheat").GetComponent<Text>();
-    }
-
-    public TurnManager()
+    public void Awake()
     {
         players = new List<Player>();
     }
@@ -32,10 +18,10 @@ public class TurnManager : MonoBehaviour
         currentPlayer = player;
     }
 
+    // Function referenced in UI
     public void EndTurn()
     {
-        // Function gets called by player through a button
-        // Mainly hands over the game to the next player
+        // Hand over the game to the next player
 
         int index = players.IndexOf(currentPlayer);
         index += 1;
@@ -47,13 +33,9 @@ public class TurnManager : MonoBehaviour
 
         currentPlayer = players.ToArray()[index];
 
-        playername.text = currentPlayer.GetName();
-        stoneCount.text = currentPlayer.GetStone().ToString();
-        woodCount.text = currentPlayer.GetWood().ToString();
-        wheatCount.text = currentPlayer.GetWheat().ToString();
-        
-
-        Debug.Log("Player " + currentPlayer.GetName() + " can now play");
+        GameManager.Instance.UIManager.UpdatePlayername(currentPlayer.GetName());
+        GameManager.Instance.UIManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+        GameManager.Instance.UIManager.SetButtonColor(currentPlayer.GetColor());
     }
 
     public Color GetCurrentPlayerColor()
