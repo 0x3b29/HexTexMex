@@ -43,3 +43,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Include webgl-build
+!webgl-build/
+!webgl-build/*
