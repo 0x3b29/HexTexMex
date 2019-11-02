@@ -24,8 +24,8 @@ public class SpawnTiles : MonoBehaviour
     private const float minMountainSlope = .1f;
     private const float maxMountainSlope = .5f;
 
-    private const float maxTileHealth = 100f;
-    private const float tileHealthSlope = 5f;
+    private const float tileHealthFactor = 10f;
+    private const float tileHealthSlope = 13f;
 
     private const int minBoatCount = 1;
     private const int maxBoatCount = 15;
@@ -33,12 +33,12 @@ public class SpawnTiles : MonoBehaviour
     private Tile[] tiles;
     private List<Tile> waterTiles;
 
-    // Start is called before the first frame update
-    void Start()
+    public void CreateMap(int seed, bool roundisShape, bool mountains)
     {
+        GameObject tilesContainer = GameObject.Find("Tiles");
+
         // For development have a fixed board
-        // TODO all maps should be dynamically generated
-        Random.InitState(42);
+        Random.InitState(seed);
         
         tiles = new Tile[x * y];
         waterTiles = new List<Tile>();
@@ -70,6 +70,7 @@ public class SpawnTiles : MonoBehaviour
                 
                 newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
                 newTile.name = "Tile" + i + "-" + j;
+                newTile.transform.parent = tilesContainer.transform;
 
                 GameObject hexagonGameObject = newTile.transform.Find("Hexagon").gameObject;
 
@@ -114,11 +115,14 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Generate roundish shape
-        /*GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth(maxTileHealth, tileHealthSlope);
-        for (int i = 0; i < x * y; i++)
+        if (roundisShape)
         {
-            tiles[i].checkHealth();
-        }*/
+            GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
+            for (int i = 0; i < x * y; i++)
+            {
+                tiles[i].checkHealth();
+            }
+        }
 
         // Set Water
         for (int i = 0; i < x * y; i++)
@@ -146,13 +150,16 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Add Mountains
-        /*int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
-        Debug.Log("Attempting to add " + mountainCount + " mountains");
-        
-        for (int i = 0; i < mountainCount; i++)
+        if (mountains)
         {
-            tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
-        }*/
+            int mountainCount = Mathf.RoundToInt(Random.Range(minMountainCount, maxMountainCount));
+            Debug.Log("Attempting to add " + mountainCount + " mountains");
+        
+            for (int i = 0; i < mountainCount; i++)
+            {
+                tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
+            }
+        }
         
         // Set Trees
         for (int i = 0; i < x * y; i++)
@@ -262,11 +269,5 @@ public class SpawnTiles : MonoBehaviour
                 tile.rock = rock;
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

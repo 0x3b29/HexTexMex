@@ -226,10 +226,13 @@ public class Tile : MonoBehaviour
     public void addRoad()
     {
         // Function is only called when player placed a road
-        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadCenterPlayer1" : "roadCenterPlayer2";
-        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
+
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
-        
+
+        // Set the players color
+        HelperFunctions.colorizeGameObject(roadCenter, GameManager.Instance.turnManager.GetCurrentPlayerColor());
+
         isRoad = true;
 
         // Actual roadPieces are only placed by the checkRoad function
@@ -294,9 +297,11 @@ public class Tile : MonoBehaviour
     private GameObject spawnRoad(float roadRotation)
     {
         // Spawn the roadpiece
-        String resourceToLoad = TurnManager.isPlayer1Turn() ? "roadPiecePlayer1" : "roadPiecePlayer2";
-        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadPiece.transform.parent = tileGameObject.transform;
+
+        // Set the players color
+        HelperFunctions.colorizeGameObject(roadPiece, GameManager.Instance.turnManager.GetCurrentPlayerColor());
 
         // Turn it to face the correct neighbour
         Quaternion rotation = roadPiece.transform.rotation;
@@ -309,11 +314,14 @@ public class Tile : MonoBehaviour
 
     public void placeHouse()
     {
-        String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
-        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + resourceToLoad) as GameObject, tileGameObject.transform.position, Quaternion.identity);
-
+        // String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         woodHouse.transform.parent = tileGameObject.transform;
+        
+        // Set the players color
+        HelperFunctions.colorizeGameObject(woodHouse, GameManager.Instance.turnManager.GetCurrentPlayerColor());
 
+        // Randomly rotate house to add some variation
         Quaternion rotation = woodHouse.transform.rotation;
         rotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
         woodHouse.transform.rotation = rotation;
@@ -330,7 +338,7 @@ public class Tile : MonoBehaviour
 
     public void setHeight(float height, float slope)
     {
-        /*// If my current height is higher than the new height, bail out
+        // If my current height is higher than the new height, bail out
         if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
         {
             return;
@@ -349,7 +357,7 @@ public class Tile : MonoBehaviour
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
-        }*/
+        }
     }
 
     private float health = 0;
@@ -380,8 +388,8 @@ public class Tile : MonoBehaviour
     {
         if (health <= 0)
         {
-            //tileGameObject.SetActive(false);
-            //isActive = false;
+            tileGameObject.SetActive(false);
+            isActive = false;
         }
     }
 

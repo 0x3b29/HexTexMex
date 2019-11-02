@@ -1,65 +1,63 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-    private static bool _player1Turn = true;
-    
-    private static float player1Wood = 2f;
-    private static float player1Stone = 2f;
-    private static float player1Wheat = 1f;
-    private static float player2Wood = 2f;
-    private static float player2Stone = 2f;
-    private static float player2Wheat = 1f;
-    
-    public Text player1;
-    public Text player1Resources;
-    public Text player2;
-    public Text player2Resources;
-    public Text turnIndicator;
-    
-    // Start is called before the first frame update
-    void Start()
+    private List<Player> players;
+    private Player currentPlayer;
+
+    // UI references
+    private Text playername;
+    private Text stoneCount;
+    private Text woodCount;
+    private Text wheatCount;
+
+    public void Start()
     {
-        
+        playername = GameObject.Find("Text Playername").GetComponent<Text>();
+        stoneCount = GameObject.Find("Text Stone").GetComponent<Text>();
+        woodCount = GameObject.Find("Text Wood").GetComponent<Text>();
+        wheatCount = GameObject.Find("Text Wheat").GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public TurnManager()
     {
-        player1Resources.text = "Wood " + player1Wood + " - Stone " + player1Stone + " - Wheat " + player1Wheat;
-        player2Resources.text = "Wood " + player2Wood + " - Stone " + player2Stone + " - Wheat " + player2Wheat;
+        players = new List<Player>();
     }
 
-    public void endTurn()
+    public void AddPlayer(Player player)
     {
-        // Deselect single button on GUI...
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject (null);
-        
-        // End the turn
-        _player1Turn = !_player1Turn;
-        
-        // Adapt the turn indicator
-        if (_player1Turn)
+        players.Add(player);
+        currentPlayer = player;
+    }
+
+    public void EndTurn()
+    {
+        // Function gets called by player through a button
+        // Mainly hands over the game to the next player
+
+        int index = players.IndexOf(currentPlayer);
+        index += 1;
+
+        if (index >= players.Count)
         {
-            turnIndicator.text = "It is your turn " + player1.text + "!";            
+            index = 0;
         }
-        else
-        {
-            turnIndicator.text = "It is your turn " + player2.text + "!";
-        }
+
+        currentPlayer = players.ToArray()[index];
+
+        playername.text = currentPlayer.GetName();
+        stoneCount.text = currentPlayer.GetStone().ToString();
+        woodCount.text = currentPlayer.GetWood().ToString();
+        wheatCount.text = currentPlayer.GetWheat().ToString();
         
-        // Give everybody some additional resources independent of the current villages
-        player1Wood += 1f;
-        player1Stone += 1f;
-        player1Wheat += 1f;
-        player2Wood += 1f;
-        player2Stone += 1f;
-        player2Wheat += 1f;
+
+        Debug.Log("Player " + currentPlayer.GetName() + " can now play");
     }
 
-    public static bool isPlayer1Turn()
+    public Color GetCurrentPlayerColor()
     {
-        return _player1Turn;
+        return currentPlayer.GetColor();
     }
 }
