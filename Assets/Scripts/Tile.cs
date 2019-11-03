@@ -20,6 +20,8 @@ public class Tile : MonoBehaviour
     public bool isActive;
     public bool isWater;
 
+    public Player owner;
+
     public GameObject rock;
     public GameObject wood;
     public GameObject wheat;
@@ -210,6 +212,7 @@ public class Tile : MonoBehaviour
 
             // Also remove from player
             GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithHouse(this);
+            this.owner = null;
         }
     
         if (isRoad)
@@ -226,24 +229,57 @@ public class Tile : MonoBehaviour
 
             // Also remove from player
             GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithRoad(this);
+            this.owner = null;
         }
     }
 
-    public void addRoad()
+    public void addRoad(Player owner)
     {
         // Function is only called when player placed a road
-
         roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
 
         // Set the players color and assign tile to him
-        HelperFunctions.colorizeGameObject(roadCenter, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
-        GameManager.Instance.turnManager.GetCurrentPlayer().AddTileWithRoad(this);
+        HelperFunctions.colorizeGameObject(roadCenter, owner.GetColor());
+        owner.AddTileWithRoad(this);
+        this.owner = owner;
 
-        isRoad = true;
+        isRoad = true;      
 
         // Actual roadPieces are only placed by the checkRoad function
         checkRoads();  
+    }
+
+    private bool needConnection(Tile neighbourTile)
+    {
+        // This function checks if a roadpiece to the passed tile needs to be placed
+        // Test if tile exists
+        if (!neighbourTile)
+            return false;
+
+        // Test if tile is active
+        if (!neighbourTile.isActive)
+            return false;
+
+        // Test if the owner is the same
+        if (neighbourTile.owner != owner)
+            return false;
+
+        // Test if there is even a reason to have a road to this tile
+        if (!neighbourTile.isRoad && !neighbourTile.woodhouse)
+            return false;
+
+        // Test if there is already a road to the neighbour tile
+        if ((neighbourTile == topLeftTile && roadToTopLeftTile) ||
+            (neighbourTile == topRightTile && roadToTopRightTile) ||
+            (neighbourTile == leftTile && roadToLeftTile) ||
+            (neighbourTile == rightTile && roadToRightTile) ||
+            (neighbourTile == lowerLeftTile && roadToLowerLeftTile) ||
+            (neighbourTile == lowerRightTile && roadToLowerRightTile))
+            return false;
+
+        // Only if all of these tests pass, we need to put a roadpiece
+        return true;
     }
 
     public int lastFrameRoadCheck;
@@ -259,46 +295,32 @@ public class Tile : MonoBehaviour
         lastFrameRoadCheck = Time.frameCount;
 
         // Check right
-        if (rightTile && !roadToRightTile && (rightTile.isRoad || rightTile.woodhouse))
-        {
+        if (needConnection(rightTile))
             roadToRightTile = spawnRoad(180);
-        }
 
         // Check left
-        if (leftTile && !roadToLeftTile && (leftTile.isRoad || leftTile.woodhouse))
-        {
+        if (needConnection(leftTile))
             roadToLeftTile = spawnRoad(0);
-        }
 
         // Check upper right
-        if (topRightTile && !roadToTopRightTile && (topRightTile.isRoad || topRightTile.woodhouse))
-        {
+        if (needConnection(topRightTile))
             roadToTopRightTile = spawnRoad(120);
-        }
 
         // Check upper left
-        if (topLeftTile && !roadToTopLeftTile && (topLeftTile.isRoad || topLeftTile.woodhouse))
-        {
+        if (needConnection(topLeftTile))
             roadToTopLeftTile = spawnRoad(60);
-        }
 
         // Check lower right
-        if (lowerRightTile && !roadToLowerRightTile && (lowerRightTile.isRoad || lowerRightTile.woodhouse))
-        {
+        if (needConnection(lowerRightTile))
             roadToLowerRightTile= spawnRoad(-120);
-        }
 
         // Check lower left
-        if (lowerLeftTile && !roadToLowerLeftTile && (lowerLeftTile.isRoad || lowerLeftTile.woodhouse))
-        {
+        if (needConnection(lowerLeftTile))
             roadToLowerLeftTile = spawnRoad(-60);
-        }
 
-        // Check all the neighbour tiles
+        // Check all the neighbour tiles in a floodfill manner
         foreach (Tile tile in getNeighbours())
-        {
             tile.checkRoads();
-        }
     }
 
     private GameObject spawnRoad(float roadRotation)
@@ -319,15 +341,16 @@ public class Tile : MonoBehaviour
         return roadPiece;
     }
 
-    public void placeHouse()
+    public void placeHouse(Player owner)
     {
-        // String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
+        // Spawn the house
         GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         woodHouse.transform.parent = tileGameObject.transform;
 
         // Set the players color and assign tile to him
-        HelperFunctions.colorizeGameObject(woodHouse, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
-        GameManager.Instance.turnManager.GetCurrentPlayer().AddTileWithHouse(this);
+        HelperFunctions.colorizeGameObject(woodHouse, owner.GetColor());
+        owner.AddTileWithHouse(this);
+        this.owner = owner;
 
         // Randomly rotate house to add some variation
         Quaternion rotation = woodHouse.transform.rotation;

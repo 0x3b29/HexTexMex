@@ -53,6 +53,7 @@ public class InputHandler : MonoBehaviour
 
                 bool actionAllowed = false;
 
+                // Test if a road can be build on this tile
                 if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.Road) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getRoad()))
                 {
                     actionAllowed = true;
@@ -60,12 +61,13 @@ public class InputHandler : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        tile.addRoad();
+                        tile.addRoad(currentPlayer);
                         buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getRoad());
                         uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
-                
+
+                // Test if a house can be build on this tile
                 if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getWoodhouse()))
                 {
                     actionAllowed = true;
@@ -73,12 +75,13 @@ public class InputHandler : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        tile.placeHouse();
+                        tile.placeHouse(currentPlayer);
                         buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getWoodhouse());
                         uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
 
+                // Test if the constructed object can be destroyed
                 if ((tile.isRoad || tile.woodhouse) && currentBuildingMode.Equals(BuildingMode.Destroy))
                 {
                     actionAllowed = true;
