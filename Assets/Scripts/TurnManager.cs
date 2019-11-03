@@ -22,7 +22,6 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         // Hand over the game to the next player
-
         int index = players.IndexOf(currentPlayer);
         index += 1;
 
@@ -33,13 +32,44 @@ public class TurnManager : MonoBehaviour
 
         currentPlayer = players.ToArray()[index];
 
+        // Collect the ressources from the ressources on neighbouring house tiles
+        int totalStone = 0;
+        int totalWood = 0;
+        int totalWheat = 0;
+
+        foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
+        {
+            foreach(Tile neighbourtile in tile.getNeighbours())
+            {
+                if (neighbourtile.rock)
+                {
+                    totalStone += 1;
+                }
+
+                if (neighbourtile.wood)
+                {
+                    totalWood += 1;
+                }
+
+                if (neighbourtile.wheat)
+                {
+                    totalWheat += 1;
+                }
+            }
+        }
+
+        currentPlayer.AddStone(totalStone);
+        currentPlayer.AddWood(totalWood);
+        currentPlayer.AddWheat(totalWheat);
+
+        // Update UI
         GameManager.Instance.UIManager.UpdatePlayername(currentPlayer.GetName());
         GameManager.Instance.UIManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
         GameManager.Instance.UIManager.SetButtonColor(currentPlayer.GetColor());
     }
 
-    public Color GetCurrentPlayerColor()
+    public Player GetCurrentPlayer()
     {
-        return currentPlayer.GetColor();
+        return currentPlayer;
     }
 }
