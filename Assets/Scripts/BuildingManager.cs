@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +11,7 @@ public class BuildingManager : MonoBehaviour
     void Start()
     {
         woodHouse = new Building("Woodhouse", 3, 2, 1);
-        road = new Building("Woodhouse", 3, 2, 1);
-        woodHouse = new Building("Woodhouse", 3, 2, 1);
+        road = new Building("Road", 1, 1, 0);
     }
 
     public Building getWoodhouse()
