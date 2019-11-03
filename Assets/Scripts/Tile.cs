@@ -20,10 +20,10 @@ public class Tile : MonoBehaviour
     public bool isActive;
     public bool isWater;
 
-    public GameObject forest;
+    public GameObject rock;
+    public GameObject wood;
     public GameObject wheat;
     public GameObject well;
-    public GameObject rock;
     public GameObject woodhouse;
 
     public bool isRoad;
@@ -79,7 +79,7 @@ public class Tile : MonoBehaviour
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.forest) neighboursTreeCount++;
+            if (tile.wood) neighboursTreeCount++;
         }
 
         return neighboursTreeCount;
@@ -99,7 +99,7 @@ public class Tile : MonoBehaviour
 
     public bool isFree()
     {
-        return isActive && !isWater && !forest && !wheat && !well && !rock && !woodhouse && !isRoad;
+        return isActive && !isWater && !wood && !wheat && !well && !rock && !woodhouse && !isRoad;
     }
 
     private void deleteRoadsConnectingToThisTile()
@@ -207,6 +207,9 @@ public class Tile : MonoBehaviour
 
             // Delete roads to this tile
             deleteRoadsConnectingToThisTile();
+
+            // Also remove from player
+            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithHouse(this);
         }
     
         if (isRoad)
@@ -220,6 +223,9 @@ public class Tile : MonoBehaviour
             // Delete roads from and to this tile
             deleteRoadsConnectingFromThisTile();
             deleteRoadsConnectingToThisTile();
+
+            // Also remove from player
+            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithRoad(this);
         }
     }
 
@@ -230,8 +236,9 @@ public class Tile : MonoBehaviour
         roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         roadCenter.transform.parent = tileGameObject.transform;
 
-        // Set the players color
-        HelperFunctions.colorizeGameObject(roadCenter, GameManager.Instance.turnManager.GetCurrentPlayerColor());
+        // Set the players color and assign tile to him
+        HelperFunctions.colorizeGameObject(roadCenter, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
+        GameManager.Instance.turnManager.GetCurrentPlayer().AddTileWithRoad(this);
 
         isRoad = true;
 
@@ -301,7 +308,7 @@ public class Tile : MonoBehaviour
         roadPiece.transform.parent = tileGameObject.transform;
 
         // Set the players color
-        HelperFunctions.colorizeGameObject(roadPiece, GameManager.Instance.turnManager.GetCurrentPlayerColor());
+        HelperFunctions.colorizeGameObject(roadPiece, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
 
         // Turn it to face the correct neighbour
         Quaternion rotation = roadPiece.transform.rotation;
@@ -317,9 +324,10 @@ public class Tile : MonoBehaviour
         // String resourceToLoad = TurnManager.isPlayer1Turn() ? "WoodhousePlayer1" : "WoodhousePlayer2";
         GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, tileGameObject.transform.position, Quaternion.identity);
         woodHouse.transform.parent = tileGameObject.transform;
-        
-        // Set the players color
-        HelperFunctions.colorizeGameObject(woodHouse, GameManager.Instance.turnManager.GetCurrentPlayerColor());
+
+        // Set the players color and assign tile to him
+        HelperFunctions.colorizeGameObject(woodHouse, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
+        GameManager.Instance.turnManager.GetCurrentPlayer().AddTileWithHouse(this);
 
         // Randomly rotate house to add some variation
         Quaternion rotation = woodHouse.transform.rotation;
