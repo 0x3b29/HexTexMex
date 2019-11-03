@@ -193,7 +193,7 @@ public class SpawnTiles : MonoBehaviour
                 newTree.transform.parent = tile.tileGameObject.transform;
                 newTree.name = "Tree";
 
-                tile.forest = newTree;
+                tile.wood = newTree;
             }
         }
 
@@ -218,7 +218,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.forest && !tile.well && Random.Range(0f, 1f) < wheatProbability)
+            if (!tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
                 
@@ -237,7 +237,7 @@ public class SpawnTiles : MonoBehaviour
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.neighboursRockCount());
 
-            if (!tile.isWater && !tile.forest && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
+            if (!tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
                 
