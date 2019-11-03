@@ -65,6 +65,7 @@ public class Tile : MonoBehaviour
 
     public int neighboursWaterCount()
     {
+        // Iterate over neighbour tiles and count water tiles.
         int neighboursWaterCount = 0;
 
         foreach (Tile tile in getNeighbours())
@@ -75,29 +76,45 @@ public class Tile : MonoBehaviour
         return neighboursWaterCount;
     }
 
-    public int neighboursTreeCount()
+    public int GetNeighboursWoodCount()
     {
-        int neighboursTreeCount = 0;
+        // Iterate over neighbour tiles and count tree tiles.
+        int neighboursWoodCount = 0;
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.wood) neighboursTreeCount++;
+            if (tile.wood) neighboursWoodCount++;
         }
 
-        return neighboursTreeCount;
+        return neighboursWoodCount;
     }
 
-    public int neighboursRockCount()
+    public int GetNeighboursStoneCount()
     {
-        int neighboursRockCount = 0;
+        // Iterate over neighbour tiles and count stone tiles.
+        int neighboursStoneCount = 0;
 
         foreach (Tile tile in getNeighbours())
         {
-            if (tile.rock) neighboursRockCount++;
+            if (tile.rock) neighboursStoneCount++;
         }
 
-        return neighboursRockCount;
+        return neighboursStoneCount;
     }
+
+    public int GetNeighboursWheatCount()
+    {
+        // Iterate over neighbour tiles and count wheat tiles.
+        int neighboursWheatCount = 0;
+
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.wheat) neighboursWheatCount++;
+        }
+
+        return neighboursWheatCount;
+    }
+
 
     public bool isFree()
     {

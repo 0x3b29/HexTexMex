@@ -166,7 +166,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.neighboursTreeCount());
+            float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.GetNeighboursWoodCount());
 
             if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
@@ -174,7 +174,7 @@ public class SpawnTiles : MonoBehaviour
 
                 GameObject newTree;
                 string treeToSpawn;
-                int neighboursTreeCount = tile.neighboursTreeCount();
+                int neighboursTreeCount = tile.GetNeighboursWoodCount();
 
                 if (neighboursTreeCount == 0)
                 {
@@ -235,7 +235,7 @@ public class SpawnTiles : MonoBehaviour
         for (int i = 0; i < x * y; i++)
         {
             Tile tile = tiles[i];
-            float RockProbability = newRockProbability + (adjacentRockProbability * tile.neighboursRockCount());
+            float RockProbability = newRockProbability + (adjacentRockProbability * tile.GetNeighboursStoneCount());
 
             if (!tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
@@ -243,7 +243,7 @@ public class SpawnTiles : MonoBehaviour
                 
                 GameObject rock;
                 string rockToSpawn;
-                int neighboursRockCount = tile.neighboursRockCount();
+                int neighboursRockCount = tile.GetNeighboursStoneCount();
 
                 if (neighboursRockCount == 0)
                 {
