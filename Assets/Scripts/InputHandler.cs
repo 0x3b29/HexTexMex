@@ -57,23 +57,23 @@ public class InputHandler : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                            tile.addRoad();
-                        }
+                        tile.addRoad();
+                    }
                 }
                 
                 if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House))
-                        {
+                {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
-                            {
+                        {
                         tile.placeHouse();
-                            }
                         }
+                    }
 
                 if ((tile.isRoad || tile.woodhouse) && currentBuildingMode.Equals(BuildingMode.Destroy))
-                        {
+                {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
