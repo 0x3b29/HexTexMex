@@ -115,10 +115,15 @@ public class Tile : MonoBehaviour
         return neighboursWheatCount;
     }
 
-
     public bool isFree()
     {
         return isActive && !isWater && !wood && !wheat && !well && !rock && !woodhouse && !isRoad;
+    }
+
+    private void DestroyAndUnset(GameObject gameObject)
+    {
+        Destroy(gameObject);
+        gameObject = null;
     }
 
     private void deleteRoadsConnectingToThisTile()
@@ -128,45 +133,27 @@ public class Tile : MonoBehaviour
 
         // Top Left
         if (topLeftTile && topLeftTile.roadToLowerRightTile)
-        {
-            Destroy(topLeftTile.roadToLowerRightTile);
-            topLeftTile.roadToLowerRightTile = null;
-        }
+            DestroyAndUnset(topLeftTile.roadToLowerRightTile);
 
         // Top Right
         if (topRightTile && topRightTile.roadToLowerLeftTile)
-        {
-            Destroy(topRightTile.roadToLowerLeftTile);
-            topRightTile.roadToLowerLeftTile = null;
-        }
+            DestroyAndUnset(topRightTile.roadToLowerLeftTile);
 
         // Left
         if (leftTile && leftTile.roadToRightTile)
-        {
-            Destroy(leftTile.roadToRightTile);
-            leftTile.roadToRightTile = null;
-        }
+            DestroyAndUnset(leftTile.roadToRightTile);
 
         // Right
         if (rightTile && rightTile.roadToLeftTile)
-        {
-            Destroy(rightTile.roadToLeftTile);
-            rightTile.roadToLeftTile = null;
-        }
+            DestroyAndUnset(rightTile.roadToLeftTile);
 
         // Lower left
         if (lowerLeftTile && lowerLeftTile.roadToTopRightTile)
-        {
-            Destroy(lowerLeftTile.roadToTopRightTile);
-            lowerLeftTile.roadToTopRightTile = null;
-        }
+            DestroyAndUnset(lowerLeftTile.roadToTopRightTile);
 
         // Lower right
         if (lowerRightTile && lowerRightTile.roadToTopLeftTile)
-        {
-            Destroy(lowerRightTile.roadToTopLeftTile);
-            lowerRightTile.roadToTopLeftTile = null;
-        }
+            DestroyAndUnset(lowerRightTile.roadToTopLeftTile);
     }
 
     private void deleteRoadsConnectingFromThisTile()
@@ -176,53 +163,34 @@ public class Tile : MonoBehaviour
 
         // Top Left
         if (roadToTopLeftTile)
-        {
-            Destroy(roadToTopLeftTile);
-            roadToTopLeftTile = null;
-        }
+            DestroyAndUnset(roadToTopLeftTile);
 
         // Top Right
         if (roadToTopRightTile)
-        {
-            Destroy(roadToTopRightTile);
-            roadToTopRightTile = null;
-        }
+            DestroyAndUnset(roadToTopRightTile);
 
         // Left
         if (roadToLeftTile)
-        {
-            Destroy(roadToLeftTile);
-            roadToLeftTile = null;
-        }
+            DestroyAndUnset(roadToLeftTile);
 
         // Right
         if (roadToRightTile)
-        {
-            Destroy(roadToRightTile);
-            roadToRightTile = null;
-        }
+            DestroyAndUnset(roadToRightTile);
 
         // Lower left
         if (roadToLowerLeftTile)
-        {
-            Destroy(roadToLowerLeftTile);
-            roadToLowerLeftTile = null;
-        }
+            DestroyAndUnset(roadToLowerLeftTile);
 
         // Lower right
         if (roadToLowerRightTile)
-        {
-            Destroy(roadToLowerRightTile);
-            roadToLowerRightTile = null;
-        }
+            DestroyAndUnset(roadToLowerRightTile);
     }
 
     public void destroyFeature()
     {
         if (woodhouse)
         {
-            Destroy(woodhouse);
-            woodhouse = null;
+            DestroyAndUnset(woodhouse);
 
             // Delete roads to this tile
             deleteRoadsConnectingToThisTile();
@@ -305,9 +273,7 @@ public class Tile : MonoBehaviour
         // Only proceed if tile has a road 
         // never check the same tile twice during one click
         if (!isRoad || Time.frameCount == lastFrameRoadCheck)
-        {
             return;
-        }
 
         lastFrameRoadCheck = Time.frameCount;
 
@@ -386,6 +352,9 @@ public class Tile : MonoBehaviour
 
     public void setHeight(float height, float slope)
     {
+        // Function is called by world generation. The first tile will be the top of the mountain
+        // The function then recursivly calls itselve and sets its neighbours to some lower hight.
+
         // If my current height is higher than the new height, bail out
         if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
         {
@@ -402,6 +371,7 @@ public class Tile : MonoBehaviour
         scale.y = 1 + height / 2;
         hexagonGameObject.transform.localScale = scale;
 
+        // Recursivly call function on neighbouring tiles
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
@@ -411,6 +381,9 @@ public class Tile : MonoBehaviour
     private float health = 0;
     public void setHealth(float health, float slope)
     {
+        // Function is called by world generation. The first tile will be the center of the map
+        // The function then recursivly calls itselve and sets its neighbours to some lower health.
+
         // If my health is higher than the new health, bail out
         if (this.health >= health || health <= 0 || slope < 0.01)
         {
@@ -425,7 +398,7 @@ public class Tile : MonoBehaviour
         scale.y += (health / 100);
         this.tileGameObject.transform.localScale = scale;
 
-        // Set health to neighbours
+        // Recursivly call function on neighbouring tiles
         foreach (Tile neighbour in getNeighbours())
         {
             neighbour.setHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
@@ -434,6 +407,7 @@ public class Tile : MonoBehaviour
 
     public void checkHealth()
     {
+        // After the health function iterated over the map, deactivate all the tiles with health lower or equal to 0
         if (health <= 0)
         {
             tileGameObject.SetActive(false);
@@ -443,6 +417,7 @@ public class Tile : MonoBehaviour
 
     public Tile getRandomWaterNeighbour()
     {
+        // This function returns a random neighboruing water tile. It is called by boats to get a new destination
         List<Tile> waterTiles = new List<Tile>();
 
         foreach (Tile tile in getNeighbours())
