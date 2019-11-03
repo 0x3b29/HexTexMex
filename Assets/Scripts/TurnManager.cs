@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,9 +63,9 @@ public class TurnManager : MonoBehaviour
         currentPlayer.AddWheat(totalWheat);
 
         // Update UI
-        GameManager.Instance.UIManager.UpdatePlayername(currentPlayer.GetName());
-        GameManager.Instance.UIManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
-        GameManager.Instance.UIManager.SetButtonColor(currentPlayer.GetColor());
+        GameManager.Instance.uiManager.UpdatePlayername(currentPlayer.GetName());
+        GameManager.Instance.uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+        GameManager.Instance.uiManager.SetButtonColor(currentPlayer.GetColor());
     }
 
     public Player GetCurrentPlayer()
