@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,23 +39,9 @@ public class TurnManager : MonoBehaviour
 
         foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
         {
-            foreach(Tile neighbourtile in tile.getNeighbours())
-            {
-                if (neighbourtile.rock)
-                {
-                    totalStone += 1;
-                }
-
-                if (neighbourtile.wood)
-                {
-                    totalWood += 1;
-                }
-
-                if (neighbourtile.wheat)
-                {
-                    totalWheat += 1;
-                }
-            }
+            totalStone += tile.GetNeighboursStoneCount();
+            totalWood += tile.GetNeighboursWoodCount();
+            totalWheat += tile.getNeighboursWheatCount();
         }
 
         currentPlayer.AddStone(totalStone);
