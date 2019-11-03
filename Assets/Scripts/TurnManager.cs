@@ -41,7 +41,7 @@ public class TurnManager : MonoBehaviour
         {
             totalStone += tile.GetNeighboursStoneCount();
             totalWood += tile.GetNeighboursWoodCount();
-            totalWheat += tile.getNeighboursWheatCount();
+            totalWheat += tile.GetNeighboursWheatCount();
         }
 
         currentPlayer.AddStone(totalStone);
