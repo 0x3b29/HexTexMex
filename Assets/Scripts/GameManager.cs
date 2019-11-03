@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public SpawnTiles spawnTiles;
     public InputHandler inputHandler;
     public UIManager uiManager;
+    public BuildingManager buildingManager;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
         turnManager = GetComponent<TurnManager>();
         spawnTiles = GetComponent<SpawnTiles>();
         uiManager = GetComponent<UIManager>();
+        buildingManager = GetComponent<BuildingManager>();
 
         // Create Players
         turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));

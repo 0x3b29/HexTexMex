@@ -22,7 +22,10 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         // Get selected building type
-        BuildingMode currentBuildingMode = GameManager.Instance.UIManager.getBuildingMode();
+        BuildingMode currentBuildingMode = GameManager.Instance.uiManager.getBuildingMode();
+        BuildingManager buildingManager = GameManager.Instance.buildingManager;
+        Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
+        UIManager uiManager = GameManager.Instance.uiManager;
 
         // Do not perform ray casts through buttons and other GUI objects
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
@@ -50,7 +53,7 @@ public class InputHandler : MonoBehaviour
 
                 bool actionAllowed = false;
 
-                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.Road))
+                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.Road) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getRoad()))
                 {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
@@ -58,10 +61,12 @@ public class InputHandler : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         tile.addRoad();
+                        buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getRoad());
+                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
                 
-                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House))
+                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getWoodhouse()))
                 {
                     actionAllowed = true;
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
@@ -69,6 +74,8 @@ public class InputHandler : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         tile.placeHouse();
+                        buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getWoodhouse());
+                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
 
