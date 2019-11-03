@@ -67,10 +67,10 @@ public class InputHandler : MonoBehaviour
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
-                        {
+                    {
                         tile.placeHouse();
-                        }
                     }
+                }
 
                 if ((tile.isRoad || tile.woodhouse) && currentBuildingMode.Equals(BuildingMode.Destroy))
                 {
@@ -78,7 +78,7 @@ public class InputHandler : MonoBehaviour
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
-                        {
+                    {
                         tile.destroyFeature();
                     }
                 }
