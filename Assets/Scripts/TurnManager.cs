@@ -49,9 +49,8 @@ public class TurnManager : MonoBehaviour
         currentPlayer.AddWheat(totalWheat);
 
         // Update UI
-        GameManager.Instance.uiManager.UpdatePlayername(currentPlayer.GetName());
+        GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);
         GameManager.Instance.uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
-        GameManager.Instance.uiManager.SetButtonColor(currentPlayer.GetColor());
     }
 
     public Player GetCurrentPlayer()
