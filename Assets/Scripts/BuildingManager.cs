@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ public class BuildingManager : MonoBehaviour
     Building road;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         woodHouse = new Building("Woodhouse", 3, 2, 1);
         road = new Building("Road", 1, 1, 0);
