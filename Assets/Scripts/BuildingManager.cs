@@ -82,12 +82,10 @@ public class BuildingManager : MonoBehaviour
             building.GetWoodCost() <= player.GetWood() && 
             building.GetWheatCost() <= player.GetWheat())
         {
-            Debug.Log("Enough for " + building.GetName());
             return true;
         }
         else
         {
-            Debug.Log("Not enough for " + building.GetName());
             return false;
         }
     }
