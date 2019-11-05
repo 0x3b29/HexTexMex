@@ -21,8 +21,6 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get selected building type
-        BuildingMode currentBuildingMode = GameManager.Instance.uiManager.getBuildingMode();
         BuildingManager buildingManager = GameManager.Instance.buildingManager;
         Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
         UIManager uiManager = GameManager.Instance.uiManager;
@@ -51,51 +49,22 @@ public class InputHandler : MonoBehaviour
 
                 Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
 
-                bool actionAllowed = false;
-
-                // Test if a road can be build on this tile
-                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.Road) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getRoad()))
+                // Let the buildingManager decide if the selected action on the current tile can be performed by the current player
+                if (buildingManager.IsActionAllowed(tile, currentPlayer))
                 {
-                    actionAllowed = true;
+                    // If the buildmanager allows the current action on selected tile, show a green marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        tile.addRoad(currentPlayer);
-                        buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getRoad());
+                        // If the player clickes on the tile, the currently selected action will be executed
+                        buildingManager.PerformAction(tile, currentPlayer);
                         uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
-
-                // Test if a house can be build on this tile
-                if (tile.isFree() && currentBuildingMode.Equals(BuildingMode.House) && buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, buildingManager.getWoodhouse()))
+                else
                 {
-                    actionAllowed = true;
-                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
-
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        tile.placeHouse(currentPlayer);
-                        buildingManager.substractBuildingCostFromPlayer(currentPlayer, buildingManager.getWoodhouse());
-                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
-                    }
-                }
-
-                // Test if the constructed object can be destroyed
-                if ((tile.isRoad || tile.woodhouse) && currentBuildingMode.Equals(BuildingMode.Destroy))
-                {
-                    actionAllowed = true;
-                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
-
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        tile.destroyFeature();
-                    }
-                }
-
-                // If tile and action did not match for any case, show a red marker 
-                if (!actionAllowed)
-                {
+                    // If the buildmanager declines the current action on selected tile, show a red marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildDenied;
                 }
             }

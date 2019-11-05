@@ -4,30 +4,42 @@ using UnityEngine;
 
 public class Building
 {
+    private ConstructionType constructionType;
     private string name;
     private int stoneCost;
     private int woodCost;
     private int wheatCost;
 
-    public Building (string name, int stoneCost, int woodCost, int wheatCost)
+    public Building (ConstructionType constructionType, string name, int stoneCost, int woodCost, int wheatCost)
     {
+        this.constructionType = constructionType;
         this.name = name;
         this.stoneCost = stoneCost;
         this.woodCost = woodCost;
         this.wheatCost = wheatCost;
     }
 
-    public int getStoneCost()
+    public ConstructionType GetConstructionType()
+    {
+        return constructionType;
+    }
+
+    public string GetName()
+    {
+        return this.name;
+    }
+
+    public int GetStoneCost()
     {
         return stoneCost;
     }
 
-    public int getWoodCost()
+    public int GetWoodCost()
     {
         return woodCost;
     }
 
-    public int getWheatCost()
+    public int GetWheatCost()
     {
         return wheatCost;
     }

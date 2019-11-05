@@ -1,4 +1,4 @@
-﻿public enum BuildingMode
+﻿public enum ConstructionType
 {
     None,
     House,

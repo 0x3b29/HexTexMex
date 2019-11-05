@@ -218,7 +218,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void addRoad(Player owner)
+    public void placeRoad(Player owner)
     {
         // Function is only called when player placed a road
         roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);

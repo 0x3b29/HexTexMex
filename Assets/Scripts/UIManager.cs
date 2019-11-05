@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     private GameObject buttonRoad;
     private GameObject buttonDestroy;
 
-    private BuildingMode buildingMode;
+    private ConstructionType constructionType;
 
     private Player currentPlayer;
 
@@ -34,7 +34,6 @@ public class UIManager : MonoBehaviour
         buttonDestroy = GameObject.Find("Button Destroy");
 
         borderColorUnselected = new Color(.5f, .5f, .5f, .0f);
-        
     }
 
     public void UpdateCurrentPlayer(Player currentPlayer)
@@ -45,7 +44,7 @@ public class UIManager : MonoBehaviour
         buildinColorUnavailable = currentPlayer.GetColor();
         buildinColorUnavailable.a = .5f;
 
-        setBuildingModeNone();
+        SetBuildingMode(ConstructionType.None);
 
         buttonDestroy.transform.Find("Pictogram").GetComponent<Image>().color = currentPlayer.GetColor();
     }
@@ -56,7 +55,7 @@ public class UIManager : MonoBehaviour
         woodCount.text = wood.ToString();
         wheatCount.text = wheat.ToString();
 
-        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, GameManager.Instance.buildingManager.getWoodhouse()))
+        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.House))
         {
             buttonHouse.transform.Find("Pictogram").GetComponent<Image>().color = currentPlayer.GetColor();
         }
@@ -65,7 +64,7 @@ public class UIManager : MonoBehaviour
             buttonHouse.transform.Find("Pictogram").GetComponent<Image>().color = buildinColorUnavailable;
         }
 
-        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, GameManager.Instance.buildingManager.getRoad()))
+        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.Road))
         {
             buttonRoad.transform.Find("Pictogram").GetComponent<Image>().color = currentPlayer.GetColor();
         }
@@ -76,47 +75,59 @@ public class UIManager : MonoBehaviour
     }
 
     // Function referenced in UI
-    public void setBuildingModeNone()
+    public void SetBuildingMode(string buildingModeAsString)
     {
-        buildingMode = BuildingMode.None;
+        ConstructionType newBuildingMode;
+        // Ugly hack because of https://forum.unity.com/threads/ability-to-add-enum-argument-to-button-functions.270817/
+        if (!System.Enum.TryParse(buildingModeAsString, out newBuildingMode))
+        {
+            Debug.LogWarning("UIManager: buildingModeAsString '" + buildingModeAsString + "' could not be parsed");
+            return;
+        }
 
-        buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+        SetBuildingMode(newBuildingMode);
     }
 
-    // Function referenced in UI
-    public void setBuildingModeHouse()
+    // Function referenced in code
+    public void SetBuildingMode(ConstructionType constructionType)
     {
-        buildingMode = BuildingMode.House;
+        this.constructionType = constructionType;
+        GameManager.Instance.buildingManager.SetBuildingMode(constructionType);
 
-        buttonHouse.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
-        buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+        switch (constructionType)
+        {
+            case ConstructionType.House:
+                buttonHouse.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
+                buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                break;
+
+            case ConstructionType.Road:
+                buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonRoad.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
+                buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                break;
+
+            case ConstructionType.Destroy:
+                buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonDestroy.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
+                break;
+
+            case ConstructionType.None:
+                // Unsets everything when turn changes
+                buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
+                break;
+
+            default:
+                break;
+        }
     }
 
-    // Function referenced in UI
-    public void setBuildingModeRoad()
+    public ConstructionType GetConstructionType()
     {
-        buildingMode = BuildingMode.Road;
-
-        buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonRoad.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
-        buttonDestroy.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-    }
-
-    // Function referenced in UI
-    public void setBuildingModeDestroy()
-    {
-        buildingMode = BuildingMode.Destroy;
-
-        buttonHouse.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonRoad.transform.Find("Border").GetComponent<Image>().color = borderColorUnselected;
-        buttonDestroy.transform.Find("Border").GetComponent<Image>().color = currentPlayer.GetColor();
-    }
-
-    public BuildingMode getBuildingMode()
-    {
-        return buildingMode;
+        return constructionType;
     }
 }
