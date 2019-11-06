@@ -7,15 +7,11 @@ public class InputHandler : MonoBehaviour
     Material materialBuildAllowed;
     Material materialBuildDenied;
 
-    GameObject tileHighlighter;
-
-    Dropdown BuildingSelect;
+    GameObject tileHighlighter;   
 
     // Start is called before the first frame update
     void Start()
     {
-        BuildingSelect = GameObject.Find("Dropdown").GetComponent<Dropdown>();
-
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
 
@@ -25,9 +21,13 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        BuildingManager buildingManager = GameManager.Instance.buildingManager;
+        Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
+        UIManager uiManager = GameManager.Instance.uiManager;
+
+        // Do not perform ray casts through buttons and other GUI objects
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
         {
-            // Do not perform ray casts through buttons and other GUI objects
             return;
         }
 
@@ -48,46 +48,23 @@ public class InputHandler : MonoBehaviour
                 tileHighlighter.transform.position = hit.transform.gameObject.transform.position;
 
                 Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
-                string selected = BuildingSelect.options[BuildingSelect.value].text;
 
-                bool actionAllowed = false;
-
-                if (tile.isFree() && selected.Equals("Road"))
+                // Let the buildingManager decide if the selected action on the current tile can be performed by the current player
+                if (buildingManager.IsActionAllowed(tile, currentPlayer))
                 {
-                    actionAllowed = true;
+                    // If the buildmanager allows the current action on selected tile, show a green marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                            tile.addRoad();
-                        }
-                }
-                
-                if (tile.isFree() && selected.Equals("House"))
-                        {
-                    actionAllowed = true;
-                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
-
-                    if (Input.GetMouseButtonDown(0))
-                            {
-                        tile.placeHouse();
-                            }
-                        }
-
-                if ((tile.isRoad || tile.woodhouse) && selected.Equals("Destroy"))
-                        {
-                    actionAllowed = true;
-                    tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
-
-                    if (Input.GetMouseButtonDown(0))
-                        {
-                        tile.destroyFeature();
+                        // If the player clickes on the tile, the currently selected action will be executed
+                        buildingManager.PerformAction(tile, currentPlayer);
+                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
                     }
                 }
-
-                // If tile and action did not match for any case, show a red marker 
-                if (!actionAllowed)
+                else
                 {
+                    // If the buildmanager declines the current action on selected tile, show a red marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildDenied;
                 }
             }

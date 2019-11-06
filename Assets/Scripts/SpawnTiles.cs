@@ -166,7 +166,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.neighboursTreeCount());
+            float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.GetNeighboursWoodCount());
 
             if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
@@ -174,7 +174,7 @@ public class SpawnTiles : MonoBehaviour
 
                 GameObject newTree;
                 string treeToSpawn;
-                int neighboursTreeCount = tile.neighboursTreeCount();
+                int neighboursTreeCount = tile.GetNeighboursWoodCount();
 
                 if (neighboursTreeCount == 0)
                 {
@@ -193,7 +193,7 @@ public class SpawnTiles : MonoBehaviour
                 newTree.transform.parent = tile.tileGameObject.transform;
                 newTree.name = "Tree";
 
-                tile.forest = newTree;
+                tile.wood = newTree;
             }
         }
 
@@ -218,7 +218,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.forest && !tile.well && Random.Range(0f, 1f) < wheatProbability)
+            if (!tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
                 
@@ -235,15 +235,15 @@ public class SpawnTiles : MonoBehaviour
         for (int i = 0; i < x * y; i++)
         {
             Tile tile = tiles[i];
-            float RockProbability = newRockProbability + (adjacentRockProbability * tile.neighboursRockCount());
+            float RockProbability = newRockProbability + (adjacentRockProbability * tile.GetNeighboursStoneCount());
 
-            if (!tile.isWater && !tile.forest && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
+            if (!tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
                 
                 GameObject rock;
                 string rockToSpawn;
-                int neighboursRockCount = tile.neighboursRockCount();
+                int neighboursRockCount = tile.GetNeighboursStoneCount();
 
                 if (neighboursRockCount == 0)
                 {
