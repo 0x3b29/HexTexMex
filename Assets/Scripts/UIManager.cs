@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
     public void UpdateCurrentPlayer(Player currentPlayer)
     {
         this.currentPlayer = currentPlayer;
-        playername.text = currentPlayer.GetName();
+        playername.text = currentPlayer.GetName() + " (" + GameManager.Instance.turnManager.GetGamePhase() + ")";
 
         buildinColorUnavailable = currentPlayer.GetColor();
         buildinColorUnavailable.a = .5f;

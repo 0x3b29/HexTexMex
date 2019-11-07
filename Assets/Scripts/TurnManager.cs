@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,48 +8,83 @@ public class TurnManager : MonoBehaviour
     private GamePhase gamePhase;
     private List<Player> players;
     private Player currentPlayer;
+    private bool firstHalfOfBuildPhase;
 
     public void Awake()
     {
         players = new List<Player>();
         gamePhase = GamePhase.BuildPhase;
+        firstHalfOfBuildPhase = true;
     }
 
     public void AddPlayer(Player player)
     {
         players.Add(player);
-        currentPlayer = player;
+
+        if (currentPlayer == null)
+        {
+            currentPlayer = player;
+        }
     }
 
     // Function referenced in UI
     public void EndTurn()
     {
-        // Hand over the game to the next player
-        int index = players.IndexOf(currentPlayer);
-        index += 1;
-
-        if (index >= players.Count)
+        if (gamePhase.Equals(GamePhase.BuildPhase))
         {
-            index = 0;
+            if (firstHalfOfBuildPhase)
+            {
+                if (players.Last().Equals(currentPlayer))
+                {
+                    firstHalfOfBuildPhase = false;
+                    currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                }
+                else
+                {
+                    currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) + 1];
+                }
+            }
+            else
+            {
+                if (players.First().Equals(currentPlayer))
+                {
+                    gamePhase = GamePhase.PlayPhase;
+                }
+                else
+                {
+                    currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                }
+            }
         }
-
-        currentPlayer = players.ToArray()[index];
-
-        // Collect the ressources from the ressources on neighbouring house tiles
-        int totalStone = 0;
-        int totalWood = 0;
-        int totalWheat = 0;
-
-        foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
+        else if (gamePhase.Equals(GamePhase.PlayPhase))
         {
-            totalStone += tile.GetNeighboursStoneCount();
-            totalWood += tile.GetNeighboursWoodCount();
-            totalWheat += tile.GetNeighboursWheatCount();
-        }
+            // Hand over the game to the next player
+            int index = players.IndexOf(currentPlayer);
+            index += 1;
 
-        currentPlayer.AddStone(totalStone);
-        currentPlayer.AddWood(totalWood);
-        currentPlayer.AddWheat(totalWheat);
+            if (index >= players.Count)
+            {
+                index = 0;
+            }
+
+            currentPlayer = players.ToArray()[index];
+
+            // Collect the ressources from the ressources on neighbouring house tiles
+            int totalStone = 0;
+            int totalWood = 0;
+            int totalWheat = 0;
+
+            foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
+            {
+                totalStone += tile.GetNeighboursStoneCount();
+                totalWood += tile.GetNeighboursWoodCount();
+                totalWheat += tile.GetNeighboursWheatCount();
+            }
+
+            currentPlayer.AddStone(totalStone);
+            currentPlayer.AddWood(totalWood);
+            currentPlayer.AddWheat(totalWheat);
+        }
 
         // Update UI
         GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);

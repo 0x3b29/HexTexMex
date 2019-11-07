@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,11 +38,13 @@ public class GameManager : MonoBehaviour
         // Create Players
         turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));
         turnManager.AddPlayer(new Player("Olivier", Color.red, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
-        turnManager.EndTurn();
+        // turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
 
         // Create Map to play on
         spawnTiles.CreateMap(42, false, false);
+
+        GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
+        GameManager.Instance.uiManager.UpdateRessources(turnManager.GetCurrentPlayer().GetStone(), turnManager.GetCurrentPlayer().GetWood(), turnManager.GetCurrentPlayer().GetWheat());
     }
 
     // Update is called once per frame
