@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ public class TurnManager : MonoBehaviour
 
         currentPlayer = players.ToArray()[index];
 
-        // Collect the ressources from the ressources on neighbouring house tiles
+        // Collect the resources from the resources on neighbouring house tiles
         int totalStone = 0;
         int totalWood = 0;
         int totalWheat = 0;
@@ -43,10 +44,11 @@ public class TurnManager : MonoBehaviour
             totalWood += tile.GetNeighboursWoodCount();
             totalWheat += tile.GetNeighboursWheatCount();
         }
-
-        currentPlayer.AddStone(totalStone);
-        currentPlayer.AddWood(totalWood);
-        currentPlayer.AddWheat(totalWheat);
+        
+        // In case a player does not have any basic neighbouring resources, he receives automatically a base income
+        currentPlayer.AddStone(Math.Max(totalStone, 1));
+        currentPlayer.AddWood(Math.Max(totalWood, 1));
+        currentPlayer.AddWheat(Math.Max(totalWheat, 1));
 
         // Update UI
         GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);
