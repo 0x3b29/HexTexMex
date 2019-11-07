@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
 public class CameraController : MonoBehaviour {
@@ -6,9 +7,9 @@ public class CameraController : MonoBehaviour {
     float speed = 25.0f;
     float mouseSensitivity = 0.2f;
 
-    int minZoomLevel = 1;
+    int minZoomLevel = 3;
     int maxZoomLevel = 10;
-    int currentZoomLevel = 8;
+    float currentZoomLevel = 8f;
     float cameraPanFactor = 2f;
 
     private Vector3 oldMousePosition;
@@ -21,7 +22,7 @@ public class CameraController : MonoBehaviour {
         cameraHitPoint = GameObject.Find("Camera Hit Point");
     }
 
-    void Update ()
+    void FixedUpdate ()
     {
         // Set a marker to the point in space where the camera intersects with the world floor
         RaycastHit hit;
