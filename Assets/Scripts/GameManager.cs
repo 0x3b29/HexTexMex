@@ -36,12 +36,12 @@ public class GameManager : MonoBehaviour
         buildingManager = GetComponent<BuildingManager>();
 
         // Create Players
-        turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Olivier", Color.red, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Jérôme", Color.blue));
+        turnManager.AddPlayer(new Player("Olivier", Color.red));
         // turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
 
         // Create Map to play on
-        spawnTiles.CreateMap(42, false, false);
+        spawnTiles.CreateMap(21, false, false);
 
         GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
         GameManager.Instance.uiManager.UpdateRessources(turnManager.GetCurrentPlayer().GetStone(), turnManager.GetCurrentPlayer().GetWood(), turnManager.GetCurrentPlayer().GetWheat());

@@ -11,6 +11,10 @@ public class TurnManager : MonoBehaviour
     private Player currentPlayer;
     private bool firstHalfOfBuildPhase;
 
+    private int buildPhaseStoneAdd = 4;
+    private int buildPhaseWoodAdd = 3;
+    private int buildPhaseWheatAdd = 1;
+
     public void Awake()
     {
         players = new List<Player>();
@@ -25,7 +29,17 @@ public class TurnManager : MonoBehaviour
         if (currentPlayer == null)
         {
             currentPlayer = player;
+            currentPlayer.AddStone(buildPhaseStoneAdd);
+            currentPlayer.AddWood(buildPhaseWoodAdd);
+            currentPlayer.AddWheat(buildPhaseWheatAdd);
         }
+    }
+
+    private void GivePlayerBuildPhaseResources()
+    {
+        currentPlayer.AddStone(buildPhaseStoneAdd);
+        currentPlayer.AddWood(buildPhaseWoodAdd);
+        currentPlayer.AddWheat(buildPhaseWheatAdd);
     }
 
     // Function referenced in UI
@@ -33,40 +47,64 @@ public class TurnManager : MonoBehaviour
     {
         if (gamePhase.Equals(GamePhase.BuildPhase))
         {
+            // During buildphase, player get resources for one building and one street
             if (firstHalfOfBuildPhase)
             {
-                if (players.Last().Equals(currentPlayer))
+                // In the first halve of the buildphase, process players from 0 to x
+                if (currentPlayer == players.Last())
                 {
+                    // If the current player was the last player in list, the second halve of the buildphase starts
                     firstHalfOfBuildPhase = false;
+
+                    // Go backwards in players list
                     currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                    GivePlayerBuildPhaseResources();
                 }
                 else
                 {
+                    // Go forward in players list
                     currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) + 1];
+                    GivePlayerBuildPhaseResources();
+
+                    // Last player gets double resources
+                    if (currentPlayer == players.Last())
+                    {
+                        GivePlayerBuildPhaseResources();
+                    }
                 }
             }
             else
             {
-                if (players.First().Equals(currentPlayer))
+                // In the second halve of the buildphase, process players from x to 0
+                if (currentPlayer == players.First())
                 {
+                    // When the current player was the first player in list, the buildphase is over
                     gamePhase = GamePhase.PlayPhase;
+                    // Assign last player in list to start next phase with first player 
+                    currentPlayer = players.Last();
                 }
                 else
                 {
+                    // Go backwards in players list
                     currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                    GivePlayerBuildPhaseResources();
                 }
             }
         }
-        else if (gamePhase.Equals(GamePhase.PlayPhase))
+
+        if (gamePhase.Equals(GamePhase.PlayPhase))
         {
             // Hand over the game to the next player
             int index = players.IndexOf(currentPlayer);
             index += 1;
 
+            // If current player is the last player, reset player to first player
             if (index >= players.Count)
             {
                 index = 0;
             }
+
+            currentPlayer = players.ToArray()[index];
 
             // Collect the resources from the resources on neighbouring house tiles
             int totalStone = 0;
@@ -84,7 +122,6 @@ public class TurnManager : MonoBehaviour
             currentPlayer.AddStone(Math.Max(totalStone, 1));
             currentPlayer.AddWood(Math.Max(totalWood, 1));
             currentPlayer.AddWheat(Math.Max(totalWheat, 1));
-
         }
 
         // Update UI

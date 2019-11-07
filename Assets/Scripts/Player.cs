@@ -13,16 +13,16 @@ public class Player
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
 
-    public Player (string name, Color color, int wood, int stone, int wheat)
+    public Player (string name, Color color)
     {
         tilesWithHouses = new List<Tile>();
         tilesWithRoads = new List<Tile>();
 
         this.name = name;
         this.color = color;
-        this.wood = wood;
-        this.stone = stone;
-        this.wheat = wheat;
+        this.wood = 0;
+        this.stone = 0;
+        this.wheat = 0;
     }
 
     public Color GetColor()
