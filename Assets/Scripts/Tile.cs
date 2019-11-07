@@ -437,4 +437,30 @@ public class Tile : MonoBehaviour
             return waterTiles.ToArray()[Random.Range(0, waterTiles.Count)];
         }
     }
+
+    public bool hasNeighbourTileRoad(Player owner)
+    {
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.isRoad && tile.owner == owner)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool hasNeighbourTileBuilding(Player owner)
+    {
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.woodhouse && tile.owner == owner)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

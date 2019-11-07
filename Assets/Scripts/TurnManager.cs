@@ -4,12 +4,14 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
+    private GamePhase gamePhase;
     private List<Player> players;
     private Player currentPlayer;
 
     public void Awake()
     {
         players = new List<Player>();
+        gamePhase = GamePhase.BuildPhase;
     }
 
     public void AddPlayer(Player player)
@@ -56,5 +58,10 @@ public class TurnManager : MonoBehaviour
     public Player GetCurrentPlayer()
     {
         return currentPlayer;
+    }
+
+    public GamePhase GetGamePhase()
+    {
+        return gamePhase;
     }
 }

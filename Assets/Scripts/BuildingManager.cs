@@ -6,8 +6,8 @@ using UnityEngine;
 public class BuildingManager : MonoBehaviour
 {
     List<Building> buildings;
-
     ConstructionType currentBuildingMode;
+    TurnManager turnManager;
 
     // Start is called before the first frame update
     void Awake()
@@ -15,6 +15,11 @@ public class BuildingManager : MonoBehaviour
         buildings = new List<Building>();
         buildings.Add(new Building(ConstructionType.House, "Woodhouse", 3, 2, 1));
         buildings.Add(new Building(ConstructionType.Road, "Road", 1, 1, 0));
+    }
+
+    private void Start()
+    {
+        turnManager = GameManager.Instance.turnManager;
     }
 
     public void SetBuildingMode(ConstructionType buildingMode)
@@ -25,19 +30,42 @@ public class BuildingManager : MonoBehaviour
     public bool IsActionAllowed(Tile tile, Player currentPlayer)
     {
         // Test if a road can be build on this tile
-        if (tile.isFree() && currentBuildingMode.Equals(ConstructionType.Road) && HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
+        if (tile.isFree() &&
+            (tile.hasNeighbourTileBuilding(currentPlayer) || tile.hasNeighbourTileRoad(currentPlayer)) &&
+            currentBuildingMode.Equals(ConstructionType.Road) &&
+            HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
         {
             return true;
         }
 
-        // Test if a house can be build on this tile
-        if (tile.isFree() && currentBuildingMode.Equals(ConstructionType.House) && HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
+        if (turnManager.GetGamePhase().Equals(GamePhase.BuildPhase))
         {
-            return true;
+            // Test if a house can be build on this tile
+            if (tile.isFree() &&
+                !tile.hasNeighbourTileBuilding(currentPlayer) &&
+                currentBuildingMode.Equals(ConstructionType.House) &&
+                HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
+            {
+                return true;
+            }
+        }
+        else if (turnManager.GetGamePhase().Equals(GamePhase.PlayPhase))
+        {
+            // Test if a house can be build on this tile
+            if (tile.isFree() &&
+                !tile.hasNeighbourTileBuilding(currentPlayer) &&
+                tile.hasNeighbourTileRoad(currentPlayer) &&
+                currentBuildingMode.Equals(ConstructionType.House) &&
+                HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
+            {
+                return true;
+            }
         }
 
         // Test if the constructed object can be destroyed
-        if ((tile.isRoad || tile.woodhouse) && tile.owner == currentPlayer && currentBuildingMode.Equals(ConstructionType.Destroy))
+        if ((tile.isRoad || tile.woodhouse) && 
+            tile.owner == currentPlayer && 
+            currentBuildingMode.Equals(ConstructionType.Destroy))
         {
             return true;
         }
