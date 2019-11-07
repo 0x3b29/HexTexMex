@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
         buildingManager = GetComponent<BuildingManager>();
 
         // Create Players
-        turnManager.AddPlayer(new Player("Jérôme", Color.blue, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Olivier", Color.red, 10, 10, 10));
-        turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Jérôme", Color.blue, 3, 4, 1));
+        turnManager.AddPlayer(new Player("Olivier", Color.red, 3, 4, 1));
+        //turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
         turnManager.EndTurn();
 
         // Create Map to play on
