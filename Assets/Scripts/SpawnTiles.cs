@@ -139,14 +139,16 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
-        // Add boats
-        for (int i = 0; i < Random.Range(minBoatCount, maxBoatCount); i++)
-        {
-            // Spawn boat at a random active water tile
-            Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
+        if (waterTiles.Count != 0) {
+            // Add boats
+            for (int i = 0; i < Random.Range(minBoatCount, maxBoatCount); i++)
+            {
+                // Spawn boat at a random active water tile
+                Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
 
-            GameObject boat = Instantiate(Resources.Load(Constants.prefabFolder + "boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
-            boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
+                GameObject boat = Instantiate(Resources.Load(Constants.prefabFolder + "boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
+                boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
+            }
         }
 
         // Add Mountains
