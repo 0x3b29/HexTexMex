@@ -785,6 +785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b168d0a2f1f9d48a06ebcbd08716dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentZoomLevel: 8
 --- !u!1 &568769805
 GameObject:
   m_ObjectHideFlags: 0
@@ -2152,7 +2153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.91016454, g: 0.990566, b: 0, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2445,6 +2446,7 @@ GameObject:
   - component: {fileID: 1727378330}
   - component: {fileID: 1727378335}
   - component: {fileID: 1727378336}
+  - component: {fileID: 1727378337}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2502,6 +2504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ad5ca4b6d93d14d9aa1efd92aa9323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraController: {fileID: 0}
   turnManager: {fileID: 0}
   spawnTiles: {fileID: 0}
   inputHandler: {fileID: 0}
@@ -2543,6 +2546,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d12fcd8f95c65547b2cbff6ec1c04e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1727378337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727378329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b168d0a2f1f9d48a06ebcbd08716dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentZoomLevel: 8
 --- !u!1 &1740819125
 GameObject:
   m_ObjectHideFlags: 0
