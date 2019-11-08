@@ -57,9 +57,13 @@ public class InputHandler : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        // If the player clickes on the tile, the currently selected action will be executed
+                        // If the player clicks on the tile, the currently selected action will be executed
                         buildingManager.PerformAction(tile, currentPlayer);
-                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+                        uiManager.UpdateResources(
+                            currentPlayer.GetStone(), 
+                            currentPlayer.GetWood(), 
+                            currentPlayer.GetWheat(),
+                            currentPlayer.GetCoins());
                     }
                 }
                 else

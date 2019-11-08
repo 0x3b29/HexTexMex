@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,9 @@ public class UIManager : MonoBehaviour
     private Text stoneCount;
     private Text woodCount;
     private Text wheatCount;
-
+    private Text coinsCount;
+    private Text winnerLabel;
+    
     private GameObject buttonHouse;
     private GameObject buttonRoad;
     private GameObject buttonDestroy;
@@ -38,7 +41,9 @@ public class UIManager : MonoBehaviour
         stoneCount = GameObject.Find("Text Stone").GetComponent<Text>();
         woodCount = GameObject.Find("Text Wood").GetComponent<Text>();
         wheatCount = GameObject.Find("Text Wheat").GetComponent<Text>();
-
+        coinsCount = GameObject.Find("Text Coins").GetComponent<Text>();
+        winnerLabel = GameObject.Find("Winner").GetComponent<Text>();
+        
         buttonHousePictogramImage = GameObject.Find("Button House").transform.Find("Pictogram").GetComponent<Image>();
         buttonRoadPictogramImage = GameObject.Find("Button Road").transform.Find("Pictogram").GetComponent<Image>();
         buttonTraderPictogramImage = GameObject.Find("Button Trader").transform.Find("Pictogram").GetComponent<Image>();
@@ -65,12 +70,13 @@ public class UIManager : MonoBehaviour
         buttonDestroyPictogramImage.color = currentPlayer.GetColor();
     }
 
-    public void UpdateRessources(int stone, int wood, int wheat)
+    public void UpdateResources(int stone, int wood, int wheat, int coins)
     {
         stoneCount.text = stone.ToString();
         woodCount.text = wood.ToString();
         wheatCount.text = wheat.ToString();
-
+        coinsCount.text = coins.ToString();
+        
         if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.House))
         {
             buttonHousePictogramImage.color = currentPlayer.GetColor();
@@ -162,6 +168,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowWinnerLabel(String playerName)
+    {
+        winnerLabel.text = playerName + " is the Winner!";
+    }
+    
     public ConstructionType GetConstructionType()
     {
         return constructionType;

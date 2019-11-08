@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -41,10 +42,16 @@ public class GameManager : MonoBehaviour
         // turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
 
         // Create Map to play on
-        spawnTiles.CreateMap(21, false, false);
+        int seed = Random.Range(0, 1000);
+        Debug.Log("Map Seed: " + seed);
+        spawnTiles.CreateMap(seed, false, false);
 
         GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
-        GameManager.Instance.uiManager.UpdateRessources(turnManager.GetCurrentPlayer().GetStone(), turnManager.GetCurrentPlayer().GetWood(), turnManager.GetCurrentPlayer().GetWheat());
+        GameManager.Instance.uiManager.UpdateResources(
+            turnManager.GetCurrentPlayer().GetStone(), 
+            turnManager.GetCurrentPlayer().GetWood(), 
+            turnManager.GetCurrentPlayer().GetWheat(),
+            turnManager.GetCurrentPlayer().GetCoins());
     }
 
     // Update is called once per frame

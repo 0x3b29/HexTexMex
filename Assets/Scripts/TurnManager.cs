@@ -105,7 +105,7 @@ public class TurnManager : MonoBehaviour
             }
 
             currentPlayer = players.ToArray()[index];
-
+            
             // Collect the resources from the resources on neighbouring house tiles
             int totalStone = 0;
             int totalWood = 0;
@@ -122,13 +122,24 @@ public class TurnManager : MonoBehaviour
             currentPlayer.AddStone(Math.Max(totalStone, 1));
             currentPlayer.AddWood(Math.Max(totalWood, 1));
             currentPlayer.AddWheat(Math.Max(totalWheat, 1));
+            currentPlayer.AddCoins(39);
         }
 
         currentPlayer.walkAllTraders();
 
         // Update UI
         GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);
-        GameManager.Instance.uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+        GameManager.Instance.uiManager.UpdateResources(
+            currentPlayer.GetStone(), 
+            currentPlayer.GetWood(), 
+            currentPlayer.GetWheat(),
+            currentPlayer.GetCoins());
+        
+        // Check if the player has won the game
+        if (currentPlayer.GetCoins() >= Constants.minimumCoinsNeededToWin)
+        {
+            GameManager.Instance.uiManager.ShowWinnerLabel(currentPlayer.GetName());
+        }
     }
 
     public Player GetCurrentPlayer()
