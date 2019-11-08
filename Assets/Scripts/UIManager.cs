@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
     private Text woodCount;
     private Text wheatCount;
     private Text coinsCount;
+    private Text winnerLabel;
     
     private GameObject buttonHouse;
     private GameObject buttonRoad;
@@ -38,7 +40,8 @@ public class UIManager : MonoBehaviour
         woodCount = GameObject.Find("Text Wood").GetComponent<Text>();
         wheatCount = GameObject.Find("Text Wheat").GetComponent<Text>();
         coinsCount = GameObject.Find("Text Coins").GetComponent<Text>();
-
+        winnerLabel = GameObject.Find("Winner").GetComponent<Text>();
+        
         buttonHousePictogramImage = GameObject.Find("Button House").transform.Find("Pictogram").GetComponent<Image>();
         buttonRoadPictogramImage = GameObject.Find("Button Road").transform.Find("Pictogram").GetComponent<Image>();
         buttonDestroyPictogramImage = GameObject.Find("Button Destroy").transform.Find("Pictogram").GetComponent<Image>();
@@ -141,6 +144,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowWinnerLabel(String playerName)
+    {
+        winnerLabel.text = playerName + " is the Winner!";
+    }
+    
     public ConstructionType GetConstructionType()
     {
         return constructionType;

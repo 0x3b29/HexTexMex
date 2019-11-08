@@ -33,11 +33,9 @@ public class SpawnTiles : MonoBehaviour
     private Tile[] tiles;
     private List<Tile> waterTiles;
 
-    public void CreateMap(int seed, bool roundisShape, bool mountains)
+    public void CreateMap(int seed, bool roundishShape, bool mountains)
     {
         GameObject tilesContainer = GameObject.Find("Tiles");
-
-        // For development have a fixed board
         Random.InitState(seed);
         
         tiles = new Tile[x * y];
@@ -115,7 +113,7 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Generate roundish shape
-        if (roundisShape)
+        if (roundishShape)
         {
             GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
             for (int i = 0; i < x * y; i++)
