@@ -26,18 +26,20 @@ public class BoatBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Check if boat is close enough to its target
         if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
         {
             Tile newTarget = targetTile.getRandomWaterNeighbour();
 
+            /*
             if (targetTile != newTarget)
             {
                 // If boat has no options, do nothing
                 return;
             }
+            */
 
             targetTile = newTarget;
         }
@@ -46,7 +48,6 @@ public class BoatBehaviour : MonoBehaviour
         if (Vector3.Angle(boatGameObject.transform.forward, targetTile.transform.position - boatGameObject.transform.position) > minRotationError)
         {
             // Check if there is a need to turn
-
             Vector3 newPosition = targetTile.transform.position - boatGameObject.transform.position;
             if (newPosition.magnitude > 0.001f)
             {
