@@ -124,6 +124,8 @@ public class TurnManager : MonoBehaviour
             currentPlayer.AddWheat(Math.Max(totalWheat, 1));
         }
 
+        currentPlayer.walkAllTraders();
+
         // Update UI
         GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);
         GameManager.Instance.uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());

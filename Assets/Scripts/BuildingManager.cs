@@ -15,6 +15,7 @@ public class BuildingManager : MonoBehaviour
         buildings = new List<Building>();
         buildings.Add(new Building(ConstructionType.House, "Woodhouse", 3, 2, 1));
         buildings.Add(new Building(ConstructionType.Road, "Road", 1, 1, 0));
+        buildings.Add(new Building(ConstructionType.Trader, "Trader", 0, 0, 10));
     }
 
     private void Start()
@@ -38,9 +39,10 @@ public class BuildingManager : MonoBehaviour
             return true;
         }
 
+        // Test if a house can be build on this tile
         if (turnManager.GetGamePhase().Equals(GamePhase.BuildPhase))
         {
-            // Test if a house can be build on this tile
+            // During buildphase, houses do not need to be placed next to an existing road
             if (tile.isFree() &&
                 !tile.hasNeighbourTileBuilding(currentPlayer) &&
                 currentBuildingMode.Equals(ConstructionType.House) &&
@@ -51,7 +53,7 @@ public class BuildingManager : MonoBehaviour
         }
         else if (turnManager.GetGamePhase().Equals(GamePhase.PlayPhase))
         {
-            // Test if a house can be build on this tile
+            // During buildphase, houses must be placed next to an existing road
             if (tile.isFree() &&
                 !tile.hasNeighbourTileBuilding(currentPlayer) &&
                 tile.hasNeighbourTileRoad(currentPlayer) &&
@@ -60,6 +62,14 @@ public class BuildingManager : MonoBehaviour
             {
                 return true;
             }
+        }
+
+        if(currentBuildingMode.Equals(ConstructionType.Trader) &&
+            tile.woodhouse &&
+            tile.owner == currentPlayer &&
+            HasPlayerEnoughRessourcesToBuild(currentPlayer, currentBuildingMode))
+        {
+            return true;
         }
 
         // Test if the constructed object can be destroyed
@@ -84,6 +94,16 @@ public class BuildingManager : MonoBehaviour
             case ConstructionType.Road:
                 SubstractBuildingCostFromPlayer(currentPlayer, currentBuildingMode);
                 tile.placeRoad(currentPlayer);
+                break;
+            case ConstructionType.Trader:
+                SubstractBuildingCostFromPlayer(currentPlayer, currentBuildingMode);
+
+                GameObject trader = Instantiate(Resources.Load(Constants.prefabFolder + "Trader") as GameObject, tile.transform.position, Quaternion.identity);
+                TraderBehaviour newTraderBehaviour = trader.AddComponent<TraderBehaviour>();
+                    newTraderBehaviour.Initialize(trader, tile);
+
+                currentPlayer.addTrader(newTraderBehaviour);
+                
                 break;
             case ConstructionType.Destroy:
                 tile.destroyFeature();

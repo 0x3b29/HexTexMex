@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,10 +24,12 @@ public class UIManager : MonoBehaviour
 
     private Image buttonHousePictogramImage;
     private Image buttonRoadPictogramImage;
+    private Image buttonTraderPictogramImage;
     private Image buttonDestroyPictogramImage;
 
     private Image buttonHouseBorderImage;
     private Image buttonRoadBorderImage;
+    private Image buttonTraderBorderImage;
     private Image buttonDestroyBorderImage;
 
     private void Awake()
@@ -39,10 +41,12 @@ public class UIManager : MonoBehaviour
 
         buttonHousePictogramImage = GameObject.Find("Button House").transform.Find("Pictogram").GetComponent<Image>();
         buttonRoadPictogramImage = GameObject.Find("Button Road").transform.Find("Pictogram").GetComponent<Image>();
+        buttonTraderPictogramImage = GameObject.Find("Button Trader").transform.Find("Pictogram").GetComponent<Image>();
         buttonDestroyPictogramImage = GameObject.Find("Button Destroy").transform.Find("Pictogram").GetComponent<Image>();
 
         buttonHouseBorderImage = GameObject.Find("Button House").transform.Find("Border").GetComponent<Image>();
         buttonRoadBorderImage = GameObject.Find("Button Road").transform.Find("Border").GetComponent<Image>();
+        buttonTraderBorderImage = GameObject.Find("Button Trader").transform.Find("Border").GetComponent<Image>();
         buttonDestroyBorderImage = GameObject.Find("Button Destroy").transform.Find("Border").GetComponent<Image>();
 
         borderColorUnselected = new Color(.5f, .5f, .5f, .0f);
@@ -84,6 +88,15 @@ public class UIManager : MonoBehaviour
         {
             buttonRoadPictogramImage.color = buildinColorUnavailable;
         }
+
+        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.Trader))
+        {
+            buttonTraderPictogramImage.color = currentPlayer.GetColor();
+        }
+        else
+        {
+            buttonTraderPictogramImage.color = buildinColorUnavailable;
+        }
     }
 
     // Function referenced in UI
@@ -111,18 +124,28 @@ public class UIManager : MonoBehaviour
             case ConstructionType.House:
                 buttonHouseBorderImage.color = currentPlayer.GetColor();
                 buttonRoadBorderImage.color = borderColorUnselected;
+                buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = borderColorUnselected;
                 break;
 
             case ConstructionType.Road:
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = currentPlayer.GetColor();
+                buttonTraderBorderImage.color = borderColorUnselected;
+                buttonDestroyBorderImage.color = borderColorUnselected;
+                break;
+
+            case ConstructionType.Trader:
+                buttonHouseBorderImage.color = borderColorUnselected;
+                buttonRoadBorderImage.color = borderColorUnselected;
+                buttonTraderBorderImage.color = currentPlayer.GetColor();
                 buttonDestroyBorderImage.color = borderColorUnselected;
                 break;
 
             case ConstructionType.Destroy:
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = borderColorUnselected;
+                buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = currentPlayer.GetColor();
                 break;
 
@@ -130,6 +153,7 @@ public class UIManager : MonoBehaviour
                 // Unsets everything when turn changes
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = borderColorUnselected;
+                buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = borderColorUnselected;
                 break;
 

@@ -438,6 +438,22 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public List<Tile> GetWalkableNeighbours()
+    {
+        List<Tile> walkableNeighbours = new List<Tile>();
+
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.owner == this.owner &&
+                (tile.isRoad || tile.woodhouse))
+            {
+                walkableNeighbours.Add(tile);
+            }
+        }
+
+        return walkableNeighbours;
+    }
+
     public bool hasNeighbourTileRoad(Player owner)
     {
         foreach (Tile tile in getNeighbours())
@@ -462,5 +478,11 @@ public class Tile : MonoBehaviour
         }
 
         return false;
+    }
+
+    public int getLongestRoad(Tile tile)
+    {
+
+        return 0;
     }
 }

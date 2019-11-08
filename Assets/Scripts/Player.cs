@@ -12,11 +12,13 @@ public class Player
 
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
+    private List<TraderBehaviour> traders;
 
     public Player (string name, Color color)
     {
         tilesWithHouses = new List<Tile>();
         tilesWithRoads = new List<Tile>();
+        traders = new List<TraderBehaviour>();
 
         this.name = name;
         this.color = color;
@@ -93,5 +95,23 @@ public class Player
     public void RemoveTileWithRoad(Tile tile)
     {
         tilesWithRoads.Remove(tile);
+    }
+
+    public void addTrader(TraderBehaviour traderBehaviour)
+    {
+        traders.Add(traderBehaviour);
+    }
+
+    public void removeTrader(TraderBehaviour traderBehaviour)
+    {
+        traders.Remove(traderBehaviour);
+    }
+
+    public void walkAllTraders()
+    {
+        foreach(TraderBehaviour traderBehaviour in traders)
+        {
+            traderBehaviour.Walk();
+        }
     }
 }

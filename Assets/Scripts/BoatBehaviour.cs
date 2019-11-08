@@ -31,14 +31,28 @@ public class BoatBehaviour : MonoBehaviour
         // Check if boat is close enough to its target
         if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
         {
-            targetTile = targetTile.getRandomWaterNeighbour();
+            Tile newTarget = targetTile.getRandomWaterNeighbour();
+
+            if (targetTile != newTarget)
+            {
+                // If boat has no options, do nothing
+                return;
+            }
+
+            targetTile = newTarget;
         }
 
         // Only move while pointing at target
         if (Vector3.Angle(boatGameObject.transform.forward, targetTile.transform.position - boatGameObject.transform.position) > minRotationError)
         {
-            // Turn as nessesary
-            boatGameObject.transform.rotation = Quaternion.Slerp(boatGameObject.transform.rotation, Quaternion.LookRotation(targetTile.transform.position - boatGameObject.transform.position), Time.deltaTime * turnRate);
+            // Check if there is a need to turn
+
+            Vector3 newPosition = targetTile.transform.position - boatGameObject.transform.position;
+            if (newPosition.magnitude > 0.001f)
+            {
+                // Turn as nessesary
+                boatGameObject.transform.rotation = Quaternion.Slerp(boatGameObject.transform.rotation, Quaternion.LookRotation(newPosition), Time.deltaTime * turnRate);
+            }
         }
         else
         {

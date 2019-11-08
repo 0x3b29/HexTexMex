@@ -3,5 +3,6 @@
     None,
     House,
     Road,
+    Trader,
     Destroy
 }
