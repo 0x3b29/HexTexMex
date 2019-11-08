@@ -122,7 +122,6 @@ public class TurnManager : MonoBehaviour
             currentPlayer.AddStone(Math.Max(totalStone, 1));
             currentPlayer.AddWood(Math.Max(totalWood, 1));
             currentPlayer.AddWheat(Math.Max(totalWheat, 1));
-            currentPlayer.AddCoins(39);
         }
 
         currentPlayer.walkAllTraders();
