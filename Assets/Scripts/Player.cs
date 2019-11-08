@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.VFX;
 
 public class Player
 {
@@ -11,6 +13,10 @@ public class Player
     private int wheat;
     private int coins;
 
+    private Vector3 cameraPosition;
+    private Quaternion cameraRotation;
+    private float zoomLevel;
+    
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
     private List<TraderBehaviour> traders;
@@ -125,5 +131,17 @@ public class Player
     public void AddCoins(int numberOfCoins)
     {
         this.coins += numberOfCoins;
+    }
+
+    public void SaveCamera(Vector3 cameraPosition, Quaternion cameraRotation, float zoomLevel)
+    {
+        this.cameraPosition = cameraPosition;
+        this.cameraRotation = cameraRotation;
+        this.zoomLevel = zoomLevel;
+    }
+    
+    public Tuple<Vector3, Quaternion, float> RetrieveCamera()
+    {
+        return Tuple.Create(cameraPosition, cameraRotation, zoomLevel);
     }
 }

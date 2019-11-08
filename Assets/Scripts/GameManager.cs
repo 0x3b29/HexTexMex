@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public CameraController cameraController;
     public TurnManager turnManager;
     public SpawnTiles spawnTiles;
     public InputHandler inputHandler;
@@ -35,7 +36,8 @@ public class GameManager : MonoBehaviour
         spawnTiles = GetComponent<SpawnTiles>();
         uiManager = GetComponent<UIManager>();
         buildingManager = GetComponent<BuildingManager>();
-
+        cameraController = GetComponent<CameraController>();
+        
         // Create Players
         turnManager.AddPlayer(new Player("Jérôme", Color.blue));
         turnManager.AddPlayer(new Player("Olivier", Color.red));

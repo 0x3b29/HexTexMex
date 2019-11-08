@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour {
 
     int minZoomLevel = 3;
     int maxZoomLevel = 10;
-    float currentZoomLevel = 8f;
+    public float currentZoomLevel = 8f;
     float cameraPanFactor = 2f;
 
     private Vector3 oldMousePosition;

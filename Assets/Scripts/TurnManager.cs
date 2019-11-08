@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
@@ -14,9 +13,11 @@ public class TurnManager : MonoBehaviour
     private int buildPhaseStoneAdd = 4;
     private int buildPhaseWoodAdd = 3;
     private int buildPhaseWheatAdd = 1;
-
+    private GameObject cameraContainer;
+    
     public void Awake()
     {
+        cameraContainer = GameObject.Find("CameraContainer");
         players = new List<Player>();
         gamePhase = GamePhase.BuildPhase;
         firstHalfOfBuildPhase = true;
@@ -24,6 +25,7 @@ public class TurnManager : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
+        player.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
         players.Add(player);
 
         if (currentPlayer == null)
@@ -47,10 +49,13 @@ public class TurnManager : MonoBehaviour
     {
         if (gamePhase.Equals(GamePhase.BuildPhase))
         {
+            // Store camera position and rotation of the player finishing his turn
+            currentPlayer.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
+            
             // During buildphase, player get resources for one building and one street
             if (firstHalfOfBuildPhase)
             {
-                // In the first halve of the buildphase, process players from 0 to x
+                // In the first half of the buildphase, process players from 0 to x
                 if (currentPlayer == players.Last())
                 {
                     // If the current player was the last player in list, the second halve of the buildphase starts
@@ -75,7 +80,7 @@ public class TurnManager : MonoBehaviour
             }
             else
             {
-                // In the second halve of the buildphase, process players from x to 0
+                // In the second half of the buildphase, process players from x to 0
                 if (currentPlayer == players.First())
                 {
                     // When the current player was the first player in list, the buildphase is over
@@ -94,6 +99,9 @@ public class TurnManager : MonoBehaviour
 
         if (gamePhase.Equals(GamePhase.PlayPhase))
         {
+            // Store camera position and rotation of the player finishing his turn
+            currentPlayer.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
+            
             // Hand over the game to the next player
             int index = players.IndexOf(currentPlayer);
             index += 1;
@@ -133,6 +141,12 @@ public class TurnManager : MonoBehaviour
             currentPlayer.GetWood(), 
             currentPlayer.GetWheat(),
             currentPlayer.GetCoins());
+        
+        // Reset Camera
+        Tuple<Vector3, Quaternion, float> cameraPositionAndRotation = currentPlayer.RetrieveCamera();
+        cameraContainer.transform.position = cameraPositionAndRotation.Item1;
+        cameraContainer.transform.rotation = cameraPositionAndRotation.Item2;
+        GameManager.Instance.cameraController.currentZoomLevel = cameraPositionAndRotation.Item3;
         
         // Check if the player has won the game
         if (currentPlayer.GetCoins() >= Constants.minimumCoinsNeededToWin)
