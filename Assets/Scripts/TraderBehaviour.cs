@@ -15,17 +15,24 @@ public class TraderBehaviour : MonoBehaviour
     public Tile targetTile;
     public GameObject traderGameObject;
 
-    public void Initialize(GameObject trader, Tile tile)
+    private Player owner;
+    bool destroyed;
+    bool foundFinalTarget;
+
+    public void Initialize(GameObject trader, Tile tile, Player owner)
     {
         visitedTiles = new List<Tile>();
         currentTile = tile;
         traderGameObject = trader;
+        this.owner = owner;
+        destroyed = false;
+        foundFinalTarget = false;
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         // Return if Target is not yet set
-        if (targetTile == null)
+        if (targetTile == null || destroyed)
         {
             return;
         }
@@ -33,6 +40,13 @@ public class TraderBehaviour : MonoBehaviour
         // Check if trader is close enough to its target
         if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, traderGameObject.transform.position) < minDistanceToTarget)
         {
+            // If the trader arrived at the targetTile, and the tile has a house, his job is done
+            if (targetTile.woodhouse)
+            {
+                CollectCoins(visitedTiles.Count);
+                Disappear();
+            }
+
             return;
         }
 
@@ -56,12 +70,18 @@ public class TraderBehaviour : MonoBehaviour
 
     public void Walk()
     {
+        if (destroyed || foundFinalTarget)
+        {
+            return;
+        }
+
+        // For the first walk, the target is not yet set
         if (targetTile != null)
         {
             currentTile = targetTile;
         }
 
-        Debug.Log("currentTile: " + currentTile.name);
+        // Never go back to this tile
         visitedTiles.Add(currentTile);
 
         // Find new target tile
@@ -70,32 +90,41 @@ public class TraderBehaviour : MonoBehaviour
         // Remove visited tiles from walkable tiles
         walkableTiles = walkableTiles.Except(visitedTiles).ToList<Tile>();
 
-        // There is no where to go, dissapear
+        // If there is no where to go, dissapear
         if (walkableTiles.Count == 0)
         {
             Disappear();
             return;
         }
 
+        // Find new target
         targetTile = walkableTiles[Random.Range(0, walkableTiles.Count)];
-        Debug.Log("targetTile: " + targetTile.name);
 
-        if (targetTile == null || targetTile.woodhouse)
+        // If new target is a woodhouse, do not walk() again.
+        if (targetTile.woodhouse)
         {
-            CollectCoins();
-            Disappear();
+            foundFinalTarget = true;
         }
     }
 
-    private void CollectCoins()
+    private void CollectCoins(int coins)
     {
-        // TODO: Implement functionality
+        targetTile.owner.AddCoins(coins);
+
+        if (owner == GameManager.Instance.turnManager.GetCurrentPlayer())
+        {
+            GameManager.Instance.uiManager.UpdateResources(targetTile.owner.GetStone(),
+                targetTile.owner.GetWood(),
+                targetTile.owner.GetWheat(),
+                targetTile.owner.GetCoins());
+        }
     }
 
     private void Disappear()
     {
-        // TODO: Wait until arrived befor Destroy 
-        Destroy(traderGameObject);
-        traderGameObject = null;
+        destroyed = true;
+        traderGameObject.SetActive(false);
+
+        // TODO: add destroy() to function outside the foreach loop to avoid modifying collection while still in loop
     }
 }

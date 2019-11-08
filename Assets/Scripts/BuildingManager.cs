@@ -100,7 +100,7 @@ public class BuildingManager : MonoBehaviour
 
                 GameObject trader = Instantiate(Resources.Load(Constants.prefabFolder + "Trader") as GameObject, tile.transform.position, Quaternion.identity);
                 TraderBehaviour newTraderBehaviour = trader.AddComponent<TraderBehaviour>();
-                    newTraderBehaviour.Initialize(trader, tile);
+                    newTraderBehaviour.Initialize(trader, tile, currentPlayer);
 
                 currentPlayer.addTrader(newTraderBehaviour);
                 
