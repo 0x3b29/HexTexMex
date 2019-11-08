@@ -126,7 +126,11 @@ public class TurnManager : MonoBehaviour
 
         // Update UI
         GameManager.Instance.uiManager.UpdateCurrentPlayer(currentPlayer);
-        GameManager.Instance.uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+        GameManager.Instance.uiManager.UpdateResources(
+            currentPlayer.GetStone(), 
+            currentPlayer.GetWood(), 
+            currentPlayer.GetWheat(),
+            currentPlayer.GetCoins());
     }
 
     public Player GetCurrentPlayer()

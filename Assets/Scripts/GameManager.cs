@@ -44,7 +44,11 @@ public class GameManager : MonoBehaviour
         spawnTiles.CreateMap(21, false, false);
 
         GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
-        GameManager.Instance.uiManager.UpdateRessources(turnManager.GetCurrentPlayer().GetStone(), turnManager.GetCurrentPlayer().GetWood(), turnManager.GetCurrentPlayer().GetWheat());
+        GameManager.Instance.uiManager.UpdateResources(
+            turnManager.GetCurrentPlayer().GetStone(), 
+            turnManager.GetCurrentPlayer().GetWood(), 
+            turnManager.GetCurrentPlayer().GetWheat(),
+            turnManager.GetCurrentPlayer().GetCoins());
     }
 
     // Update is called once per frame

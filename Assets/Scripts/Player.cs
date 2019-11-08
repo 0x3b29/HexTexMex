@@ -9,6 +9,7 @@ public class Player
     private int wood;
     private int stone;
     private int wheat;
+    private int coins;
 
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
@@ -23,6 +24,7 @@ public class Player
         this.wood = 0;
         this.stone = 0;
         this.wheat = 0;
+        this.coins = 0;
     }
 
     public Color GetColor()
@@ -65,6 +67,11 @@ public class Player
         return wheat;
     }
 
+    public int GetCoins()
+    {
+        return coins;
+    }
+    
     public List<Tile> GetListOfTilesWithHouses()
     {
         return tilesWithHouses;
@@ -93,5 +100,10 @@ public class Player
     public void RemoveTileWithRoad(Tile tile)
     {
         tilesWithRoads.Remove(tile);
+    }
+
+    public void AddCoins(int numberOfCoins)
+    {
+        this.coins += numberOfCoins;
     }
 }
