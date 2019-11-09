@@ -17,8 +17,6 @@ public class CameraController : MonoBehaviour {
     private GameObject mainCamera;
     private GameObject cameraHitPoint;
 
-    private String id = "";
-
     private void Awake()
     {
         cameraContainer = GameObject.Find("CameraContainer");

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour
     public SpawnTiles spawnTiles;
     public InputHandler inputHandler;
     public UIManager uiManager;
-    public BuildingManager buildingManager;
+    [FormerlySerializedAs("buildingManager")] public ActionManager actionManager;
 
     // Start is called before the first frame update
     void Start()
@@ -35,13 +36,13 @@ public class GameManager : MonoBehaviour
         turnManager = GetComponent<TurnManager>();
         spawnTiles = GetComponent<SpawnTiles>();
         uiManager = GetComponent<UIManager>();
-        buildingManager = GetComponent<BuildingManager>();
+        actionManager = GetComponent<ActionManager>();
         cameraController = GetComponent<CameraController>();
         
         // Create Players
         turnManager.AddPlayer(new Player("Olivier", Color.red));
         turnManager.AddPlayer(new Player("Jérôme", Color.blue));
-        turnManager.AddPlayer(new Player("Gérard", Color.yellow));
+        //turnManager.AddPlayer(new Player("Gérard", Color.yellow));
 
         // Create Map to play on
         int seed = Random.Range(0, 1000);

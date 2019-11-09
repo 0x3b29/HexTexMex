@@ -8,4 +8,5 @@
     
     // ----- Balancing Constants -----
     public const int minimumCoinsNeededToWin = 100;
+    public static int DefaultNumberOfDragonAttacks = 1;
 }

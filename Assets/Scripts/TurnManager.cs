@@ -150,7 +150,7 @@ public class TurnManager : MonoBehaviour
             currentPlayer.GetCoins());
         
         // Reset Camera
-        Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPostionRotationAndZoom();
+        Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPositionRotationAndZoom();
 
         cameraController.SetCameraContainerPosition(cameraPositionRotationAndZoom.Item1);
         cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);

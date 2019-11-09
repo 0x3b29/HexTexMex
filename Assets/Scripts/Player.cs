@@ -12,7 +12,7 @@ public class Player
     private int stone;
     private int wheat;
     private int coins;
-    private int dragonAttacks;
+    private int remainingDragonAttacks;
 
     private Vector3 cameraContainerPosition;
     private Quaternion cameraContainerRotation;
@@ -36,7 +36,7 @@ public class Player
         this.wheat = 0;
         this.coins = 0;
 
-        this.dragonAttacks = 1;
+        this.remainingDragonAttacks = Constants.DefaultNumberOfDragonAttacks;
     }
 
     public Color GetColor()
@@ -151,8 +151,18 @@ public class Player
         this.cameraRotation = cameraRotation;
     }
     
-    public Tuple<Vector3, Quaternion, int, Quaternion> RetrieveCameraPostionRotationAndZoom()
+    public Tuple<Vector3, Quaternion, int, Quaternion> RetrieveCameraPositionRotationAndZoom()
     {
         return Tuple.Create(cameraContainerPosition, cameraContainerRotation, zoomLevel, cameraRotation);
+    }
+
+    public int GetDragonAttacks()
+    {
+        return remainingDragonAttacks;
+    }
+
+    public void DecrementRemainingDragonAttacks()
+    {
+        remainingDragonAttacks -= 1;
     }
 }

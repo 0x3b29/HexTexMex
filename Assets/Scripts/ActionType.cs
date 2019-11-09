@@ -1,4 +1,4 @@
-﻿public enum ConstructionType
+﻿public enum ActionType
 {
     None,
     House,

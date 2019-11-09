@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     private GameObject buttonRoad;
     private GameObject buttonDestroy;
 
-    private ConstructionType constructionType;
+    private ActionType actionType;
 
     private Player currentPlayer;
 
@@ -29,11 +29,13 @@ public class UIManager : MonoBehaviour
     private Image buttonRoadPictogramImage;
     private Image buttonTraderPictogramImage;
     private Image buttonDestroyPictogramImage;
+    private Image buttonDragonPictogramImage;
 
     private Image buttonHouseBorderImage;
     private Image buttonRoadBorderImage;
     private Image buttonTraderBorderImage;
     private Image buttonDestroyBorderImage;
+    private Image buttonDragonBorderImage;
 
     private void Awake()
     {
@@ -48,11 +50,13 @@ public class UIManager : MonoBehaviour
         buttonRoadPictogramImage = GameObject.Find("Button Road").transform.Find("Pictogram").GetComponent<Image>();
         buttonTraderPictogramImage = GameObject.Find("Button Trader").transform.Find("Pictogram").GetComponent<Image>();
         buttonDestroyPictogramImage = GameObject.Find("Button Destroy").transform.Find("Pictogram").GetComponent<Image>();
+        buttonDragonPictogramImage = GameObject.Find("Button Dragon").transform.Find("Pictogram").GetComponent<Image>();
 
         buttonHouseBorderImage = GameObject.Find("Button House").transform.Find("Border").GetComponent<Image>();
         buttonRoadBorderImage = GameObject.Find("Button Road").transform.Find("Border").GetComponent<Image>();
         buttonTraderBorderImage = GameObject.Find("Button Trader").transform.Find("Border").GetComponent<Image>();
         buttonDestroyBorderImage = GameObject.Find("Button Destroy").transform.Find("Border").GetComponent<Image>();
+        buttonDragonBorderImage = GameObject.Find("Button Dragon").transform.Find("Border").GetComponent<Image>();
 
         borderColorUnselected = new Color(.5f, .5f, .5f, .0f);
     }
@@ -65,7 +69,7 @@ public class UIManager : MonoBehaviour
         buildinColorUnavailable = currentPlayer.GetColor();
         buildinColorUnavailable.a = .5f;
 
-        SetBuildingMode(ConstructionType.None);
+        SetBuildingMode(ActionType.None);
 
         buttonDestroyPictogramImage.color = currentPlayer.GetColor();
     }
@@ -77,7 +81,7 @@ public class UIManager : MonoBehaviour
         wheatCount.text = wheat.ToString();
         coinsCount.text = coins.ToString();
         
-        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.House))
+        if (GameManager.Instance.actionManager.IsActionAllowed(currentPlayer, ActionType.House))
         {
             buttonHousePictogramImage.color = currentPlayer.GetColor();
         }
@@ -86,7 +90,7 @@ public class UIManager : MonoBehaviour
             buttonHousePictogramImage.color = buildinColorUnavailable;
         }
 
-        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.Road))
+        if (GameManager.Instance.actionManager.IsActionAllowed(currentPlayer, ActionType.Road))
         {
             buttonRoadPictogramImage.color = currentPlayer.GetColor();
         }
@@ -95,7 +99,7 @@ public class UIManager : MonoBehaviour
             buttonRoadPictogramImage.color = buildinColorUnavailable;
         }
 
-        if (GameManager.Instance.buildingManager.HasPlayerEnoughRessourcesToBuild(currentPlayer, ConstructionType.Trader))
+        if (GameManager.Instance.actionManager.IsActionAllowed(currentPlayer, ActionType.Trader))
         {
             buttonTraderPictogramImage.color = currentPlayer.GetColor();
         }
@@ -103,12 +107,21 @@ public class UIManager : MonoBehaviour
         {
             buttonTraderPictogramImage.color = buildinColorUnavailable;
         }
+        
+        if (GameManager.Instance.actionManager.IsActionAllowed(currentPlayer, ActionType.Dragon))
+        {
+            buttonDragonPictogramImage.color = currentPlayer.GetColor();
+        }
+        else
+        {
+            buttonDragonPictogramImage.color = buildinColorUnavailable;
+        }
     }
 
     // Function referenced in UI
     public void SetBuildingMode(string buildingModeAsString)
     {
-        ConstructionType newBuildingMode;
+        ActionType newBuildingMode;
         // Ugly hack because of https://forum.unity.com/threads/ability-to-add-enum-argument-to-button-functions.270817/
         if (!System.Enum.TryParse(buildingModeAsString, out newBuildingMode))
         {
@@ -120,47 +133,60 @@ public class UIManager : MonoBehaviour
     }
 
     // Function referenced in code
-    public void SetBuildingMode(ConstructionType constructionType)
+    public void SetBuildingMode(ActionType actionType)
     {
-        this.constructionType = constructionType;
-        GameManager.Instance.buildingManager.SetBuildingMode(constructionType);
+        this.actionType = actionType;
+        GameManager.Instance.actionManager.SetBuildingMode(actionType);
 
-        switch (constructionType)
+        switch (actionType)
         {
-            case ConstructionType.House:
+            case ActionType.House:
                 buttonHouseBorderImage.color = currentPlayer.GetColor();
                 buttonRoadBorderImage.color = borderColorUnselected;
                 buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = borderColorUnselected;
+                buttonDragonBorderImage.color = borderColorUnselected;
                 break;
 
-            case ConstructionType.Road:
+            case ActionType.Road:
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = currentPlayer.GetColor();
                 buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = borderColorUnselected;
+                buttonDragonBorderImage.color = borderColorUnselected;
                 break;
 
-            case ConstructionType.Trader:
+            case ActionType.Trader:
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = borderColorUnselected;
                 buttonTraderBorderImage.color = currentPlayer.GetColor();
                 buttonDestroyBorderImage.color = borderColorUnselected;
+                buttonDragonBorderImage.color = borderColorUnselected;
                 break;
 
-            case ConstructionType.Destroy:
+            case ActionType.Destroy:
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = borderColorUnselected;
                 buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = currentPlayer.GetColor();
+                buttonDragonBorderImage.color = borderColorUnselected;
                 break;
 
-            case ConstructionType.None:
+            case ActionType.Dragon:
+                buttonHouseBorderImage.color = borderColorUnselected;
+                buttonRoadBorderImage.color = borderColorUnselected;
+                buttonTraderBorderImage.color = borderColorUnselected;
+                buttonDestroyBorderImage.color = borderColorUnselected;
+                buttonDragonBorderImage.color = currentPlayer.GetColor();
+                break;
+            
+            case ActionType.None:
                 // Unsets everything when turn changes
                 buttonHouseBorderImage.color = borderColorUnselected;
                 buttonRoadBorderImage.color = borderColorUnselected;
                 buttonTraderBorderImage.color = borderColorUnselected;
                 buttonDestroyBorderImage.color = borderColorUnselected;
+                buttonDragonBorderImage.color = borderColorUnselected;
                 break;
 
             default:
@@ -173,8 +199,8 @@ public class UIManager : MonoBehaviour
         winnerLabel.text = playerName + " is the Winner!";
     }
     
-    public ConstructionType GetConstructionType()
+    public ActionType GetConstructionType()
     {
-        return constructionType;
+        return actionType;
     }
 }
