@@ -4,5 +4,6 @@
     House,
     Road,
     Trader,
+    Dragon,
     Destroy
 }

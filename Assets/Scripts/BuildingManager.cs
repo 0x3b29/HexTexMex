@@ -103,7 +103,9 @@ public class BuildingManager : MonoBehaviour
                     newTraderBehaviour.Initialize(trader, tile, currentPlayer);
 
                 currentPlayer.addTrader(newTraderBehaviour);
-                
+                break;
+            case ConstructionType.Dragon:
+                tile.destroyFeature();
                 break;
             case ConstructionType.Destroy:
                 tile.destroyFeature();

@@ -12,6 +12,7 @@ public class Player
     private int stone;
     private int wheat;
     private int coins;
+    private int dragonAttacks;
 
     private Vector3 cameraContainerPosition;
     private Quaternion cameraContainerRotation;
@@ -34,6 +35,8 @@ public class Player
         this.stone = 0;
         this.wheat = 0;
         this.coins = 0;
+
+        this.dragonAttacks = 1;
     }
 
     public Color GetColor()
