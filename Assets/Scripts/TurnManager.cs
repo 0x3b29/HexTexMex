@@ -156,12 +156,6 @@ public class TurnManager : MonoBehaviour
         cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);
         cameraController.SetZoomLevel(cameraPositionRotationAndZoom.Item3);
         cameraController.SetCamerarRotation(cameraPositionRotationAndZoom.Item4);
-
-        // Check if the player has won the game
-        if (currentPlayer.GetCoins() >= Constants.minimumCoinsNeededToWin)
-        {
-            GameManager.Instance.uiManager.ShowWinnerLabel(currentPlayer.GetName());
-        }
     }
 
     public Player GetCurrentPlayer()

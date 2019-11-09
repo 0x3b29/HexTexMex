@@ -132,6 +132,12 @@ public class Player
     public void AddCoins(int numberOfCoins)
     {
         this.coins += numberOfCoins;
+        
+        // Check if the player has won the game
+        if (this.coins >= Constants.minimumCoinsNeededToWin)
+        {
+            GameManager.Instance.uiManager.ShowWinnerLabel(this.name);
+        }
     }
 
     public void SaveCamera(Vector3 cameraContainerPosition, Quaternion cameraContainerRotation, int zoomLevel, Quaternion cameraRotation)
