@@ -6,7 +6,7 @@ public class SpawnTiles : MonoBehaviour
     private const int x = 30;
     private const int y = 30;
 
-    private const float newWaterProbability = 0.003f;
+    private const float newWaterProbability = 0.006f;
     private const float adjacentWaterProbability = 0.35f;
 
     private const float newTreeProbability = 0.015f;
