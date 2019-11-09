@@ -7,17 +7,21 @@ public class CameraController : MonoBehaviour {
     float speed = 25.0f;
     float mouseSensitivity = 0.2f;
 
-    int minZoomLevel = 3;
-    int maxZoomLevel = 10;
-    public float currentZoomLevel = 8f;
-    float cameraPanFactor = 2f;
+    private int minZoomLevel = 3;
+    private int maxZoomLevel = 10;
+    private int currentZoomLevel = 8;
+    private float cameraPanFactor = 2f;
 
     private Vector3 oldMousePosition;
+    private GameObject cameraContainer;
     private GameObject mainCamera;
     private GameObject cameraHitPoint;
 
-    private void Start()
+    private String id = "";
+
+    private void Awake()
     {
+        cameraContainer = GameObject.Find("CameraContainer");
         mainCamera = GameObject.Find("Main Camera");
         cameraHitPoint = GameObject.Find("Camera Hit Point");
     }
@@ -37,7 +41,7 @@ public class CameraController : MonoBehaviour {
         {
             oldMousePosition = Input.mousePosition;
         }
-
+        
         // Mouse movement
         if (Input.GetKey(KeyCode.Mouse2))
         {
@@ -49,7 +53,7 @@ public class CameraController : MonoBehaviour {
             float yMovement = mouseDelta.x * mouseSensitivity;
 
             // Set to new rotation
-            transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, yMovement);
+            cameraContainer.transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, yMovement);
         }
 
         // Keyboard movement of the camera container
@@ -86,10 +90,55 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKey(KeyCode.D)) cameraContainerMovement += new Vector3(1, 0, 0);
         
         // Rotate Camera with Q & E
-        if (Input.GetKey(KeyCode.E)) transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, 100f * Time.deltaTime);
-        if (Input.GetKey(KeyCode.Q)) transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, -100f * Time.deltaTime);
+        if (Input.GetKey(KeyCode.E)) cameraContainer.transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, 100f * Time.deltaTime);
+        if (Input.GetKey(KeyCode.Q)) cameraContainer.transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, -100f * Time.deltaTime);
 
         // Add movement 
-        transform.Translate(cameraContainerMovement * speed * Time.deltaTime);
+        cameraContainer.transform.Translate(cameraContainerMovement * speed * Time.deltaTime);
+    }
+
+    public void SetCamerarRotation(Quaternion cameraRotation)
+    {
+        mainCamera.transform.rotation = cameraRotation;
+    }
+
+    public void SetCameraRotation(Quaternion cameraRotation)
+    {
+        mainCamera.transform.rotation = cameraRotation;
+    }
+
+    public Quaternion GetCameraRotation()
+    {
+        return mainCamera.transform.rotation;
+    }
+
+    public void SetCameraContainerPosition(Vector3 cameraContainerPosition)
+    {
+        cameraContainer.transform.position = cameraContainerPosition;
+    }
+
+    public Vector3 GetCameraContainerPosition()
+    {
+        return cameraContainer.transform.position;
+    }
+
+    public void SetCameraContainerRotation(Quaternion cameraContainerRotation)
+    {
+        cameraContainer.transform.rotation = cameraContainerRotation;
+    }
+
+    public Quaternion GetCameraContainerRotation()
+    {
+        return cameraContainer.transform.rotation;
+    }
+
+    public void SetZoomLevel(int zoomLevel)
+    {
+        currentZoomLevel = zoomLevel;
+    }
+
+    public int GetZoomLevel()
+    {
+        return currentZoomLevel;
     }
 }

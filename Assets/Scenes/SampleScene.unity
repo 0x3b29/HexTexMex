@@ -750,7 +750,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 511333358}
-  - component: {fileID: 511333360}
   m_Layer: 0
   m_Name: CameraContainer
   m_TagString: Untagged
@@ -773,19 +772,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &511333360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 511333357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30b168d0a2f1f9d48a06ebcbd08716dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentZoomLevel: 8
 --- !u!1 &568769805
 GameObject:
   m_ObjectHideFlags: 0
@@ -2558,7 +2544,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b168d0a2f1f9d48a06ebcbd08716dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentZoomLevel: 8
 --- !u!1 &1740819125
 GameObject:
   m_ObjectHideFlags: 0

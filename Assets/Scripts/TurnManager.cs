@@ -13,11 +13,10 @@ public class TurnManager : MonoBehaviour
     private int buildPhaseStoneAdd = 4;
     private int buildPhaseWoodAdd = 3;
     private int buildPhaseWheatAdd = 1;
-    private GameObject cameraContainer;
-    
+    private CameraController cameraController;
+
     public void Awake()
     {
-        cameraContainer = GameObject.Find("CameraContainer");
         players = new List<Player>();
         gamePhase = GamePhase.BuildPhase;
         firstHalfOfBuildPhase = true;
@@ -25,7 +24,15 @@ public class TurnManager : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
-        player.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
+        if (!cameraController)
+        {
+            cameraController = GameManager.Instance.cameraController;
+        }
+
+        player.SaveCamera(cameraController.GetCameraContainerPosition(), 
+            cameraController.GetCameraContainerRotation(), 
+            cameraController.GetZoomLevel(), 
+            cameraController.GetCameraRotation());
         players.Add(player);
 
         if (currentPlayer == null)
@@ -47,11 +54,14 @@ public class TurnManager : MonoBehaviour
     // Function referenced in UI
     public void EndTurn()
     {
+        // Store camera position and rotation of the player finishing his turn
+        currentPlayer.SaveCamera(cameraController.GetCameraContainerPosition(),
+            cameraController.GetCameraContainerRotation(),
+            cameraController.GetZoomLevel(),
+            cameraController.GetCameraRotation());
+
         if (gamePhase.Equals(GamePhase.BuildPhase))
         {
-            // Store camera position and rotation of the player finishing his turn
-            currentPlayer.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
-            
             // During buildphase, player get resources for one building and one street
             if (firstHalfOfBuildPhase)
             {
@@ -99,9 +109,6 @@ public class TurnManager : MonoBehaviour
 
         if (gamePhase.Equals(GamePhase.PlayPhase))
         {
-            // Store camera position and rotation of the player finishing his turn
-            currentPlayer.SaveCamera(cameraContainer.transform.position, cameraContainer.transform.rotation, GameManager.Instance.cameraController.currentZoomLevel);
-            
             // Hand over the game to the next player
             int index = players.IndexOf(currentPlayer);
             index += 1;
@@ -143,11 +150,13 @@ public class TurnManager : MonoBehaviour
             currentPlayer.GetCoins());
         
         // Reset Camera
-        Tuple<Vector3, Quaternion, float> cameraPositionAndRotation = currentPlayer.RetrieveCamera();
-        cameraContainer.transform.position = cameraPositionAndRotation.Item1;
-        cameraContainer.transform.rotation = cameraPositionAndRotation.Item2;
-        GameManager.Instance.cameraController.currentZoomLevel = cameraPositionAndRotation.Item3;
-        
+        Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPostionRotationAndZoom();
+
+        cameraController.SetCameraContainerPosition(cameraPositionRotationAndZoom.Item1);
+        cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);
+        cameraController.SetZoomLevel(cameraPositionRotationAndZoom.Item3);
+        cameraController.SetCamerarRotation(cameraPositionRotationAndZoom.Item4);
+
         // Check if the player has won the game
         if (currentPlayer.GetCoins() >= Constants.minimumCoinsNeededToWin)
         {

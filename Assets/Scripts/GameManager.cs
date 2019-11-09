@@ -39,9 +39,9 @@ public class GameManager : MonoBehaviour
         cameraController = GetComponent<CameraController>();
         
         // Create Players
-        turnManager.AddPlayer(new Player("Jérôme", Color.blue));
         turnManager.AddPlayer(new Player("Olivier", Color.red));
-        // turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
+        turnManager.AddPlayer(new Player("Jérôme", Color.blue));
+        turnManager.AddPlayer(new Player("Gérard", Color.yellow));
 
         // Create Map to play on
         int seed = Random.Range(0, 1000);

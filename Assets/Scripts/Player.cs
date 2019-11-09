@@ -13,9 +13,10 @@ public class Player
     private int wheat;
     private int coins;
 
-    private Vector3 cameraPosition;
+    private Vector3 cameraContainerPosition;
+    private Quaternion cameraContainerRotation;
+    private int zoomLevel;
     private Quaternion cameraRotation;
-    private float zoomLevel;
     
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
@@ -133,15 +134,16 @@ public class Player
         this.coins += numberOfCoins;
     }
 
-    public void SaveCamera(Vector3 cameraPosition, Quaternion cameraRotation, float zoomLevel)
+    public void SaveCamera(Vector3 cameraContainerPosition, Quaternion cameraContainerRotation, int zoomLevel, Quaternion cameraRotation)
     {
-        this.cameraPosition = cameraPosition;
-        this.cameraRotation = cameraRotation;
+        this.cameraContainerPosition = cameraContainerPosition;
+        this.cameraContainerRotation = cameraContainerRotation;
         this.zoomLevel = zoomLevel;
+        this.cameraRotation = cameraRotation;
     }
     
-    public Tuple<Vector3, Quaternion, float> RetrieveCamera()
+    public Tuple<Vector3, Quaternion, int, Quaternion> RetrieveCameraPostionRotationAndZoom()
     {
-        return Tuple.Create(cameraPosition, cameraRotation, zoomLevel);
+        return Tuple.Create(cameraContainerPosition, cameraContainerRotation, zoomLevel, cameraRotation);
     }
 }
