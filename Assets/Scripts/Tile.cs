@@ -186,7 +186,7 @@ public class Tile : MonoBehaviour
             DestroyAndUnset(roadToLowerRightTile);
     }
 
-    public void destroyFeature()
+    public void DestroyFeature()
     {
         if (woodhouse)
         {
@@ -218,6 +218,15 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public void DragonAttack()
+    {
+        DestroyFeature();
+        foreach (Tile neighbour in getNeighbours())
+        {
+            neighbour.DestroyFeature();
+        }
+    }
+    
     public void placeRoad(Player owner)
     {
         // Function is only called when player placed a road
@@ -436,5 +445,53 @@ public class Tile : MonoBehaviour
         {
             return waterTiles.ToArray()[Random.Range(0, waterTiles.Count)];
         }
+    }
+
+    public List<Tile> GetWalkableNeighbours()
+    {
+        List<Tile> walkableNeighbours = new List<Tile>();
+
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.owner == this.owner &&
+                (tile.isRoad || tile.woodhouse))
+            {
+                walkableNeighbours.Add(tile);
+            }
+        }
+
+        return walkableNeighbours;
+    }
+
+    public bool hasNeighbourTileRoad(Player owner)
+    {
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.isRoad && tile.owner == owner)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool hasNeighbourTileBuilding(Player owner)
+    {
+        foreach (Tile tile in getNeighbours())
+        {
+            if (tile.woodhouse && tile.owner == owner)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int getLongestRoad(Tile tile)
+    {
+
+        return 0;
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.VFX;
 
 public class Player
 {
@@ -9,20 +11,32 @@ public class Player
     private int wood;
     private int stone;
     private int wheat;
+    private int coins;
+    private int remainingDragonAttacks;
 
+    private Vector3 cameraContainerPosition;
+    private Quaternion cameraContainerRotation;
+    private int zoomLevel;
+    private Quaternion cameraRotation;
+    
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
+    private List<TraderBehaviour> traders;
 
-    public Player (string name, Color color, int wood, int stone, int wheat)
+    public Player (string name, Color color)
     {
         tilesWithHouses = new List<Tile>();
         tilesWithRoads = new List<Tile>();
+        traders = new List<TraderBehaviour>();
 
         this.name = name;
         this.color = color;
-        this.wood = wood;
-        this.stone = stone;
-        this.wheat = wheat;
+        this.wood = 0;
+        this.stone = 0;
+        this.wheat = 0;
+        this.coins = 0;
+
+        this.remainingDragonAttacks = Constants.DefaultNumberOfDragonAttacks;
     }
 
     public Color GetColor()
@@ -65,6 +79,11 @@ public class Player
         return wheat;
     }
 
+    public int GetCoins()
+    {
+        return coins;
+    }
+    
     public List<Tile> GetListOfTilesWithHouses()
     {
         return tilesWithHouses;
@@ -93,5 +112,57 @@ public class Player
     public void RemoveTileWithRoad(Tile tile)
     {
         tilesWithRoads.Remove(tile);
+    }
+
+    public void addTrader(TraderBehaviour traderBehaviour)
+    {
+        traders.Add(traderBehaviour);
+    }
+
+    public void removeTrader(TraderBehaviour traderBehaviour)
+    {
+        traders.Remove(traderBehaviour);
+    }
+
+    public void walkAllTraders()
+    {
+        foreach(TraderBehaviour traderBehaviour in traders)
+        {
+            traderBehaviour.Walk();
+        }
+    }
+    
+    public void AddCoins(int numberOfCoins)
+    {
+        this.coins += numberOfCoins;
+        
+        // Check if the player has won the game
+        if (this.coins >= Constants.minimumCoinsNeededToWin)
+        {
+            GameManager.Instance.uiManager.ShowWinnerLabel(this.name);
+        }
+    }
+
+    public void SaveCamera(Vector3 cameraContainerPosition, Quaternion cameraContainerRotation, int zoomLevel, Quaternion cameraRotation)
+    {
+        this.cameraContainerPosition = cameraContainerPosition;
+        this.cameraContainerRotation = cameraContainerRotation;
+        this.zoomLevel = zoomLevel;
+        this.cameraRotation = cameraRotation;
+    }
+    
+    public Tuple<Vector3, Quaternion, int, Quaternion> RetrieveCameraPositionRotationAndZoom()
+    {
+        return Tuple.Create(cameraContainerPosition, cameraContainerRotation, zoomLevel, cameraRotation);
+    }
+
+    public int GetDragonAttacks()
+    {
+        return remainingDragonAttacks;
+    }
+
+    public void DecrementRemainingDragonAttacks()
+    {
+        remainingDragonAttacks -= 1;
     }
 }

@@ -21,7 +21,7 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        BuildingManager buildingManager = GameManager.Instance.buildingManager;
+        ActionManager actionManager = GameManager.Instance.actionManager;
         Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
         UIManager uiManager = GameManager.Instance.uiManager;
 
@@ -50,16 +50,20 @@ public class InputHandler : MonoBehaviour
                 Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
 
                 // Let the buildingManager decide if the selected action on the current tile can be performed by the current player
-                if (buildingManager.IsActionAllowed(tile, currentPlayer))
+                if (actionManager.IsCurrentActionAllowedOnTile(tile, currentPlayer))
                 {
                     // If the buildmanager allows the current action on selected tile, show a green marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        // If the player clickes on the tile, the currently selected action will be executed
-                        buildingManager.PerformAction(tile, currentPlayer);
-                        uiManager.UpdateRessources(currentPlayer.GetStone(), currentPlayer.GetWood(), currentPlayer.GetWheat());
+                        // If the player clicks on the tile, the currently selected action will be executed
+                        actionManager.PerformAction(tile, currentPlayer);
+                        uiManager.UpdateResources(
+                            currentPlayer.GetStone(), 
+                            currentPlayer.GetWood(), 
+                            currentPlayer.GetWheat(),
+                            currentPlayer.GetCoins());
                     }
                 }
                 else

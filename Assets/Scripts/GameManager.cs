@@ -1,6 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,11 +21,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public CameraController cameraController;
     public TurnManager turnManager;
     public SpawnTiles spawnTiles;
     public InputHandler inputHandler;
     public UIManager uiManager;
-    public BuildingManager buildingManager;
+    [FormerlySerializedAs("buildingManager")] public ActionManager actionManager;
 
     // Start is called before the first frame update
     void Start()
@@ -33,16 +36,25 @@ public class GameManager : MonoBehaviour
         turnManager = GetComponent<TurnManager>();
         spawnTiles = GetComponent<SpawnTiles>();
         uiManager = GetComponent<UIManager>();
-        buildingManager = GetComponent<BuildingManager>();
-
+        actionManager = GetComponent<ActionManager>();
+        cameraController = GetComponent<CameraController>();
+        
         // Create Players
-        turnManager.AddPlayer(new Player("Jérôme", Color.blue, 3, 4, 1));
-        turnManager.AddPlayer(new Player("Olivier", Color.red, 3, 4, 1));
-        //turnManager.AddPlayer(new Player("Gérard", Color.yellow, 10, 10, 10));
-        turnManager.EndTurn();
+        turnManager.AddPlayer(new Player("Olivier", Color.red));
+        turnManager.AddPlayer(new Player("Jérôme", Color.blue));
+        //turnManager.AddPlayer(new Player("Gérard", Color.yellow));
 
         // Create Map to play on
-        spawnTiles.CreateMap(42, false, false);
+        int seed = Random.Range(0, 1000);
+        Debug.Log("Map Seed: " + seed);
+        spawnTiles.CreateMap(seed, false, false);
+
+        GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
+        GameManager.Instance.uiManager.UpdateResources(
+            turnManager.GetCurrentPlayer().GetStone(), 
+            turnManager.GetCurrentPlayer().GetWood(), 
+            turnManager.GetCurrentPlayer().GetWheat(),
+            turnManager.GetCurrentPlayer().GetCoins());
     }
 
     // Update is called once per frame
