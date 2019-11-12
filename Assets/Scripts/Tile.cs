@@ -218,15 +218,6 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void DragonAttack()
-    {
-        DestroyFeature();
-        foreach (Tile neighbour in getNeighbours())
-        {
-            neighbour.DestroyFeature();
-        }
-    }
-    
     public void placeRoad(Player owner)
     {
         // Function is only called when player placed a road

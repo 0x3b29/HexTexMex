@@ -111,12 +111,31 @@ public class ActionManager : MonoBehaviour
 
                 GameObject trader = Instantiate(Resources.Load(Constants.prefabFolder + "Trader") as GameObject, tile.transform.position, Quaternion.identity);
                 TraderBehaviour newTraderBehaviour = trader.AddComponent<TraderBehaviour>();
-                    newTraderBehaviour.Initialize(trader, tile, currentPlayer);
+                newTraderBehaviour.Initialize(trader, tile, currentPlayer);
 
                 currentPlayer.addTrader(newTraderBehaviour);
                 break;
             case ActionType.Dragon:
-                tile.DragonAttack();
+                
+                // Get random tile from each border
+                string option1 = "Tile" + 0 + "-" + Random.Range(0, Constants.boardSizeX);
+                string option2 = "Tile" + (Constants.boardSizeX - 1) + "-" + Random.Range(0, Constants.boardSizeX);
+                string option3 = "Tile" + Random.Range(0, Constants.boardSizeY) + "-" + 0;
+                string option4 = "Tile" + Random.Range(0, Constants.boardSizeY) + "-" + (Constants.boardSizeY - 1);
+
+                // Select one random tile
+                string[] options = new string[4] { option1, option2, option3, option4 };
+                int index = Random.Range(0, options.Length);
+
+                // Get position of boarder tile and set heigt for dragon to spawn
+                Vector3 dragonSpawnPosition = GameObject.Find(options[index]).transform.position;
+                dragonSpawnPosition.y = 5;
+                
+                // Spawn dragon over this border tile
+                GameObject dragon = Instantiate(Resources.Load(Constants.prefabFolder + "Dragon") as GameObject, dragonSpawnPosition, Quaternion.identity);
+                DragonBehaviour dragonBehaviour = dragon.AddComponent<DragonBehaviour>();
+                dragonBehaviour.Initialize(dragon, tile);
+
                 currentPlayer.DecrementRemainingDragonAttacks();
                 break;
             case ActionType.Destroy:

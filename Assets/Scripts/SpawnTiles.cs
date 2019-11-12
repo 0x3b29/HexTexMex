@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
-    private const int x = 30;
-    private const int y = 30;
+    private int x;
+    private int y;
 
     private const float newWaterProbability = 0.006f;
     private const float adjacentWaterProbability = 0.35f;
@@ -35,6 +35,9 @@ public class SpawnTiles : MonoBehaviour
 
     public void CreateMap(int seed, bool roundishShape, bool mountains)
     {
+        x = Constants.boardSizeX;
+        y = Constants.boardSizeY;
+
         GameObject tilesContainer = GameObject.Find("Tiles");
         Random.InitState(seed);
         
