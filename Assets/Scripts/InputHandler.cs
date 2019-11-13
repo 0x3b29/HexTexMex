@@ -9,22 +9,24 @@ public class InputHandler : MonoBehaviour
 
     GameObject tileHighlighter;   
 
-    // Start is called before the first frame update
-    void Start()
+    private UIManager uiManager;
+    private TurnManager turnManager;
+    private ActionManager actionManager;
     {
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
 
         tileHighlighter = Instantiate(Resources.Load(Constants.prefabFolder + "Torus Parent") as GameObject, new Vector3(), Quaternion.identity);
+
+        uiManager = GameManager.Instance.uiManager;
+        turnManager = GameManager.Instance.turnManager;
+        actionManager = GameManager.Instance.actionManager;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ActionManager actionManager = GameManager.Instance.actionManager;
-        Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
-        UIManager uiManager = GameManager.Instance.uiManager;
-        TurnManager turnManager = GameManager.Instance.turnManager;
+        Player currentPlayer = turnManager.GetCurrentPlayer();
 
         // Capture a screenshot with P
         if (Input.GetKeyDown(KeyCode.P))
