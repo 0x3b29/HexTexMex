@@ -46,8 +46,8 @@ public class ActionManager : MonoBehaviour
     public bool IsCurrentActionAllowedOnTile(Tile tile, Player currentPlayer)
     {
         // Test if a road can be build on this tile
-        if (tile.isFree() &&
-            (tile.hasNeighbourTileBuilding(currentPlayer) || tile.hasNeighbourTileRoad(currentPlayer)) &&
+        if (tile.IsFree() &&
+            (tile.HasNeighbourTileBuilding(currentPlayer) || tile.HasNeighbourTileRoad(currentPlayer)) &&
             currentAction.Equals(ActionType.Road) &&
             IsActionAllowed(currentPlayer, currentAction))
         {
@@ -58,8 +58,8 @@ public class ActionManager : MonoBehaviour
         if (turnManager.GetGamePhase().Equals(GamePhase.BuildPhase))
         {
             // During buildphase, houses do not need to be placed next to an existing road
-            if (tile.isFree() &&
-                !tile.hasNeighbourTileBuilding(currentPlayer) &&
+            if (tile.IsFree() &&
+                !tile.HasNeighbourTileBuilding(currentPlayer) &&
                 currentAction.Equals(ActionType.House) &&
                 IsActionAllowed(currentPlayer, currentAction))
             {
@@ -69,9 +69,9 @@ public class ActionManager : MonoBehaviour
         else if (turnManager.GetGamePhase().Equals(GamePhase.PlayPhase))
         {
             // During playphase, houses must be placed next to an existing road
-            if (tile.isFree() &&
-                !tile.hasNeighbourTileBuilding(currentPlayer) &&
-                tile.hasNeighbourTileRoad(currentPlayer) &&
+            if (tile.IsFree() &&
+                !tile.HasNeighbourTileBuilding(currentPlayer) &&
+                tile.HasNeighbourTileRoad(currentPlayer) &&
                 currentAction.Equals(ActionType.House) &&
                 IsActionAllowed(currentPlayer, currentAction))
             {
@@ -112,11 +112,11 @@ public class ActionManager : MonoBehaviour
         {
             case ActionType.House:
                 SubstractBuildingCostFromPlayer(currentPlayer, currentAction);
-                tile.placeHouse(currentPlayer);
+                tile.PlaceHouse(currentPlayer);
                 break;
             case ActionType.Road:
                 SubstractBuildingCostFromPlayer(currentPlayer, currentAction);
-                tile.placeRoad(currentPlayer);
+                tile.PlaceRoad(currentPlayer);
                 break;
             case ActionType.Trader:
                 SubstractBuildingCostFromPlayer(currentPlayer, currentAction);

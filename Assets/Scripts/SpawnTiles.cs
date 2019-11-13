@@ -79,7 +79,7 @@ public class SpawnTiles : MonoBehaviour
 
                 // Attach tile script
                 tiles[tileCounter] = newTile.AddComponent<Tile>(); 
-                tiles[tileCounter].setInitialValues(i, j, newTile, hexagonGameObject);
+                tiles[tileCounter].SetInitialValues(i, j, newTile, hexagonGameObject);
 
                 tileCounter++;
             }
@@ -115,10 +115,10 @@ public class SpawnTiles : MonoBehaviour
         // Generate roundish shape
         if (roundishShape)
         {
-            GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().setHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
+            GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().SetHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
             for (int i = 0; i < x * y; i++)
             {
-                tiles[i].checkHealth();
+                tiles[i].CheckHealth();
             }
         }
 
@@ -127,7 +127,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            float waterProbability = newWaterProbability + (adjacentWaterProbability * tile.neighboursWaterCount());
+            float waterProbability = newWaterProbability + (adjacentWaterProbability * tile.NeighboursWaterCount());
 
             if (Random.Range(0f, 1f) < waterProbability && tile.isActive)
             {
@@ -145,7 +145,7 @@ public class SpawnTiles : MonoBehaviour
                 Tile randomWaterTile = waterTiles.ToArray()[Random.Range(0, waterTiles.Count - 1)];
 
                 GameObject boat = Instantiate(Resources.Load(Constants.prefabFolder + "boatyMacBootface") as GameObject, randomWaterTile.transform.position, Quaternion.identity);
-                boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.getRandomWaterNeighbour(), i);
+                boat.AddComponent<BoatBehaviour>().Initialize(boat, randomWaterTile.GetRandomWaterNeighbour(), i);
             }
         }
 
@@ -157,7 +157,7 @@ public class SpawnTiles : MonoBehaviour
         
             for (int i = 0; i < mountainCount; i++)
             {
-                tiles[Mathf.RoundToInt(Random.Range(0, x * y))].setHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
+                tiles[Mathf.RoundToInt(Random.Range(0, x * y))].SetHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
             }
         }
         

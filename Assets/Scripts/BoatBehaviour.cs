@@ -26,7 +26,7 @@ public class BoatBehaviour : MonoBehaviour
         // Check if boat is close enough to its target
         if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
         {
-            Tile newTarget = targetTile.getRandomWaterNeighbour();
+            Tile newTarget = targetTile.GetRandomWaterNeighbour();
             targetTile = newTarget;
         }
 

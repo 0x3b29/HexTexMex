@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
     public GameObject roadToLowerRightTile;
 
 
-    public void setInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
+    public void SetInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
         this.isActive = true;
 
@@ -49,7 +49,7 @@ public class Tile : MonoBehaviour
         this.hexagonGameObject = hexagonGameObject;
     }
 
-    public List<Tile> getNeighbours()
+    public List<Tile> GetNeighbours()
     {
         List <Tile> neighbourList = new List<Tile>();
 
@@ -63,12 +63,12 @@ public class Tile : MonoBehaviour
         return neighbourList;
     }
 
-    public int neighboursWaterCount()
+    public int NeighboursWaterCount()
     {
         // Iterate over neighbour tiles and count water tiles.
         int neighboursWaterCount = 0;
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.isWater) neighboursWaterCount++;
         }
@@ -81,7 +81,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count tree tiles.
         int neighboursWoodCount = 0;
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.wood) neighboursWoodCount++;
         }
@@ -94,7 +94,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count stone tiles.
         int neighboursStoneCount = 0;
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.rock) neighboursStoneCount++;
         }
@@ -107,7 +107,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count wheat tiles.
         int neighboursWheatCount = 0;
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.wheat) neighboursWheatCount++;
         }
@@ -115,7 +115,7 @@ public class Tile : MonoBehaviour
         return neighboursWheatCount;
     }
 
-    public bool isFree()
+    public bool IsFree()
     {
         return isActive && !isWater && !wood && !wheat && !well && !rock && !woodhouse && !isRoad;
     }
@@ -126,7 +126,7 @@ public class Tile : MonoBehaviour
         gameObject = null;
     }
 
-    private void deleteRoadsConnectingToThisTile()
+    private void DeleteRoadsConnectingToThisTile()
     {
         // Check if a tile has a road to this one.
         // If so, delete that road
@@ -156,7 +156,7 @@ public class Tile : MonoBehaviour
             DestroyAndUnset(lowerRightTile.roadToTopLeftTile);
     }
 
-    private void deleteRoadsConnectingFromThisTile()
+    private void DeleteRoadsConnectingFromThisTile()
     {
         // Check if this tile has a road in a given direction.
         // If so, delete that road
@@ -193,7 +193,7 @@ public class Tile : MonoBehaviour
             DestroyAndUnset(woodhouse);
 
             // Delete roads to this tile
-            deleteRoadsConnectingToThisTile();
+            DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
             GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithHouse(this);
@@ -209,8 +209,8 @@ public class Tile : MonoBehaviour
             roadCenter = null;
 
             // Delete roads from and to this tile
-            deleteRoadsConnectingFromThisTile();
-            deleteRoadsConnectingToThisTile();
+            DeleteRoadsConnectingFromThisTile();
+            DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
             GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithRoad(this);
@@ -218,7 +218,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void placeRoad(Player owner)
+    public void PlaceRoad(Player owner)
     {
         // Function is only called when player placed a road
         roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
@@ -232,10 +232,10 @@ public class Tile : MonoBehaviour
         isRoad = true;      
 
         // Actual roadPieces are only placed by the checkRoad function
-        checkRoads();  
+        CheckRoads();  
     }
 
-    private bool needConnection(Tile neighbourTile)
+    private bool NeedConnection(Tile neighbourTile)
     {
         // This function checks if a roadpiece to the passed tile needs to be placed
         // Test if tile exists
@@ -268,7 +268,7 @@ public class Tile : MonoBehaviour
     }
 
     public int lastFrameRoadCheck;
-    public void checkRoads()
+    public void CheckRoads()
     {
         // Only proceed if tile has a road 
         // never check the same tile twice during one click
@@ -278,35 +278,35 @@ public class Tile : MonoBehaviour
         lastFrameRoadCheck = Time.frameCount;
 
         // Check right
-        if (needConnection(rightTile))
-            roadToRightTile = spawnRoad(180);
+        if (NeedConnection(rightTile))
+            roadToRightTile = SpawnRoad(180);
 
         // Check left
-        if (needConnection(leftTile))
-            roadToLeftTile = spawnRoad(0);
+        if (NeedConnection(leftTile))
+            roadToLeftTile = SpawnRoad(0);
 
         // Check upper right
-        if (needConnection(topRightTile))
-            roadToTopRightTile = spawnRoad(120);
+        if (NeedConnection(topRightTile))
+            roadToTopRightTile = SpawnRoad(120);
 
         // Check upper left
-        if (needConnection(topLeftTile))
-            roadToTopLeftTile = spawnRoad(60);
+        if (NeedConnection(topLeftTile))
+            roadToTopLeftTile = SpawnRoad(60);
 
         // Check lower right
-        if (needConnection(lowerRightTile))
-            roadToLowerRightTile= spawnRoad(-120);
+        if (NeedConnection(lowerRightTile))
+            roadToLowerRightTile= SpawnRoad(-120);
 
         // Check lower left
-        if (needConnection(lowerLeftTile))
-            roadToLowerLeftTile = spawnRoad(-60);
+        if (NeedConnection(lowerLeftTile))
+            roadToLowerLeftTile = SpawnRoad(-60);
 
         // Check all the neighbour tiles in a floodfill manner
-        foreach (Tile tile in getNeighbours())
-            tile.checkRoads();
+        foreach (Tile tile in GetNeighbours())
+            tile.CheckRoads();
     }
 
-    private GameObject spawnRoad(float roadRotation)
+    private GameObject SpawnRoad(float roadRotation)
     {
         // Spawn the roadpiece
         GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
@@ -324,7 +324,7 @@ public class Tile : MonoBehaviour
         return roadPiece;
     }
 
-    public void placeHouse(Player owner)
+    public void PlaceHouse(Player owner)
     {
         // Spawn the house
         GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, tileGameObject.transform.position, Quaternion.identity);
@@ -342,15 +342,15 @@ public class Tile : MonoBehaviour
 
         woodHouse.name = "woodHouse";
         this.woodhouse = woodHouse;
-        checkRoads();
+        CheckRoads();
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
-            tile.checkRoads();
+            tile.CheckRoads();
         }
     }
 
-    public void setHeight(float height, float slope)
+    public void SetHeight(float height, float slope)
     {
         // Function is called by world generation. The first tile will be the top of the mountain
         // The function then recursivly calls itselve and sets its neighbours to some lower hight.
@@ -372,14 +372,14 @@ public class Tile : MonoBehaviour
         hexagonGameObject.transform.localScale = scale;
 
         // Recursivly call function on neighbouring tiles
-        foreach (Tile neighbour in getNeighbours())
+        foreach (Tile neighbour in GetNeighbours())
         {
-            neighbour.setHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
+            neighbour.SetHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
         }
     }
 
     private float health = 0;
-    public void setHealth(float health, float slope)
+    public void SetHealth(float health, float slope)
     {
         // Function is called by world generation. The first tile will be the center of the map
         // The function then recursivly calls itselve and sets its neighbours to some lower health.
@@ -399,13 +399,13 @@ public class Tile : MonoBehaviour
         this.tileGameObject.transform.localScale = scale;
 
         // Recursivly call function on neighbouring tiles
-        foreach (Tile neighbour in getNeighbours())
+        foreach (Tile neighbour in GetNeighbours())
         {
-            neighbour.setHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
+            neighbour.SetHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
         }
     }
 
-    public void checkHealth()
+    public void CheckHealth()
     {
         // After the health function iterated over the map, deactivate all the tiles with health lower or equal to 0
         if (health <= 0)
@@ -415,12 +415,12 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public Tile getRandomWaterNeighbour()
+    public Tile GetRandomWaterNeighbour()
     {
         // This function returns a random neighboruing water tile. It is called by boats to get a new destination
         List<Tile> waterTiles = new List<Tile>();
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.isWater && tile.isActive)
             {
@@ -442,7 +442,7 @@ public class Tile : MonoBehaviour
     {
         List<Tile> walkableNeighbours = new List<Tile>();
 
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.owner == this.owner &&
                 (tile.isRoad || tile.woodhouse))
@@ -454,9 +454,9 @@ public class Tile : MonoBehaviour
         return walkableNeighbours;
     }
 
-    public bool hasNeighbourTileRoad(Player owner)
+    public bool HasNeighbourTileRoad(Player owner)
     {
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.isRoad && tile.owner == owner)
             {
@@ -467,9 +467,9 @@ public class Tile : MonoBehaviour
         return false;
     }
 
-    public bool hasNeighbourTileBuilding(Player owner)
+    public bool HasNeighbourTileBuilding(Player owner)
     {
-        foreach (Tile tile in getNeighbours())
+        foreach (Tile tile in GetNeighbours())
         {
             if (tile.woodhouse && tile.owner == owner)
             {
@@ -480,7 +480,7 @@ public class Tile : MonoBehaviour
         return false;
     }
 
-    public int getLongestRoad(Tile tile)
+    public int GetLongestRoad(Tile tile)
     {
 
         return 0;
