@@ -9,15 +9,27 @@ public class ActionManager : MonoBehaviour
     ActionType currentAction;
     TurnManager turnManager;
 
-    // Start is called before the first frame update
-    void Awake()
+    private List<ActionType> actionTypes;
+
+    public void Initialize()
     {
-        actions = new List<Action>();
-        actions.Add(new Action(ActionType.House, "Woodhouse", 3, 2, 1));
-        actions.Add(new Action(ActionType.Road, "Road", 1, 1, 0));
-        actions.Add(new Action(ActionType.Trader, "Trader", 0, 0, 10));
-        actions.Add(new Action(ActionType.Destroy, "Destroy", 0, 0, 0));
-        actions.Add(new Action(ActionType.Dragon, "Dragon", 1));
+        actions = new List<Action>
+        {
+            new Action(ActionType.House, "Woodhouse", "Button House", 3, 2, 1),
+            new Action(ActionType.Road, "Road", "Button Road", 1, 1, 0),
+            new Action(ActionType.Trader, "Trader", "Button Trader", 0, 0, 10),
+            new Action(ActionType.Destroy, "Destroy", "Button Destroy", 0, 0, 0),
+            new Action(ActionType.Dragon, "Dragon", "Button Dragon", 1)
+        };
+
+        actionTypes = new List<ActionType>
+        {
+            ActionType.House,
+            ActionType.Road,
+            ActionType.Trader,
+            ActionType.Destroy,
+            ActionType.Dragon
+        };
     }
 
     private void Start()
@@ -156,7 +168,7 @@ public class ActionManager : MonoBehaviour
         }
 
         // Get the correct building from the buildings list
-        Action action = actions.First(x => x.GetConstructionType().Equals(actionType));
+        Action action = actions.First(action => action.GetActionType().Equals(actionType));
 
         // Check if resource requirements are met
         if (action.GetStoneCost() <= player.GetStone() && 
@@ -175,10 +187,20 @@ public class ActionManager : MonoBehaviour
     public void SubstractBuildingCostFromPlayer(Player player, ActionType actionType)
     {
         // Get the correct building from the buildings list
-        Action action = actions.First(x => x.GetConstructionType().Equals(actionType));
+        Action action = actions.First(action => action.GetActionType().Equals(actionType));
 
         player.AddStone(- action.GetStoneCost());
         player.AddWood(- action.GetWoodCost());
         player.AddWheat(- action.GetWheatCost());
+    }
+
+    public List<Action> GetActions()
+    {
+        return actions;
+    }
+
+    public List<ActionType> GetActionTypes()
+    {
+        return actionTypes;
     }
 }
