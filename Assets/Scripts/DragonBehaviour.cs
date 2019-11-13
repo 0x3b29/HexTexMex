@@ -66,5 +66,12 @@ public class DragonBehaviour : MonoBehaviour
         {
             fire.Stop();
         }
+
+        // Despawn if realy far away and going further
+        if (distanceToTarget > 150f && !movingTowardsTarget)
+        {
+            Destroy(dragonGameObject);
+            dragonGameObject = null;
+        }
     }
 }
