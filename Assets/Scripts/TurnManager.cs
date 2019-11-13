@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -156,7 +156,7 @@ public class TurnManager : MonoBehaviour
         cameraController.SetCameraContainerPosition(cameraPositionRotationAndZoom.Item1);
         cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);
         cameraController.SetZoomLevel(cameraPositionRotationAndZoom.Item3);
-        cameraController.SetCamerarRotation(cameraPositionRotationAndZoom.Item4);
+        cameraController.SetCameraRotation(cameraPositionRotationAndZoom.Item4);
     }
 
     public Player GetCurrentPlayer()
