@@ -26,12 +26,6 @@ public class InputHandler : MonoBehaviour
         UIManager uiManager = GameManager.Instance.uiManager;
         TurnManager turnManager = GameManager.Instance.turnManager;
 
-        // Do not perform ray casts through buttons and other GUI objects
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
-        {
-            return;
-        }
-
         // Capture a screenshot with P
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -57,6 +51,13 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
             turnManager.EndTurn();
 
+        // Do not perform ray casts through buttons and other GUI objects
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
+        {
+            return;
+        }
+
+        // Send ray through everything to get the tile the player is pointing at
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         
