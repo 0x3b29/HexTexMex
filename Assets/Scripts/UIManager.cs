@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
         colorActionUnavailable = currentPlayer.GetColor();
         colorActionUnavailable.a = .5f;
 
-        SetBuildingMode(ActionType.None);
+        SetBuildingMode(currentPlayer.GetSelectedActionType());
     }
 
     public void UpdateResources(int stone, int wood, int wheat, int coins)
@@ -88,6 +88,7 @@ public class UIManager : MonoBehaviour
     {
         this.actionType = actionType;
         GameManager.Instance.actionManager.SetBuildingMode(actionType);
+        GameManager.Instance.turnManager.GetCurrentPlayer().SetSelectedActionType(actionType);
 
         // Iterate over all actions and set bordercolor for passed actiontype
         foreach (Action action in actionManager.GetActions())

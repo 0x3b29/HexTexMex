@@ -18,6 +18,7 @@ public class Player
     private Quaternion cameraContainerRotation;
     private int zoomLevel;
     private Quaternion cameraRotation;
+    private ActionType selectedActionType;
     
     public List<Tile> tilesWithHouses;
     private List<Tile> tilesWithRoads;
@@ -37,6 +38,7 @@ public class Player
         this.coins = 0;
 
         this.remainingDragonAttacks = Constants.DefaultNumberOfDragonAttacks;
+        selectedActionType = ActionType.None;
     }
 
     public Color GetColor()
@@ -164,5 +166,15 @@ public class Player
     public void DecrementRemainingDragonAttacks()
     {
         remainingDragonAttacks -= 1;
+    }
+
+    public void SetSelectedActionType(ActionType actionType)
+    {
+        selectedActionType = actionType;
+    }
+
+    public ActionType GetSelectedActionType()
+    {
+        return selectedActionType;
     }
 }
