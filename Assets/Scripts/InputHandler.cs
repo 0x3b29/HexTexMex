@@ -24,6 +24,7 @@ public class InputHandler : MonoBehaviour
         ActionManager actionManager = GameManager.Instance.actionManager;
         Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
         UIManager uiManager = GameManager.Instance.uiManager;
+        TurnManager turnManager = GameManager.Instance.turnManager;
 
         // Do not perform ray casts through buttons and other GUI objects
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
@@ -36,6 +37,25 @@ public class InputHandler : MonoBehaviour
         {
             ScreenCapture.CaptureScreenshot("Screenshots/" + System.DateTime.Now.ToString("dd-MM-yy_hh-mm-ss") + ".png");
         }
+
+        // Hotkeys for menu
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            uiManager.SetBuildingMode(ActionType.House);
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            uiManager.SetBuildingMode(ActionType.Road);
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            uiManager.SetBuildingMode(ActionType.Trader);
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            uiManager.SetBuildingMode(ActionType.Dragon);
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            uiManager.SetBuildingMode(ActionType.Destroy);
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            turnManager.EndTurn();
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
