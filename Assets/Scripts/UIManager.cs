@@ -53,11 +53,13 @@ public class UIManager : MonoBehaviour
 
     public void UpdateResources(int stone, int wood, int wheat, int coins)
     {
+        // Update resource labels
         stoneCount.text = stone.ToString();
         woodCount.text = wood.ToString();
         wheatCount.text = wheat.ToString();
         coinsCount.text = coins.ToString();
         
+        // Enable or disable buttons depending on resources
         foreach(ActionType actionType in actionManager.GetActionTypes())
         {
             if (GameManager.Instance.actionManager.IsActionAllowed(currentPlayer, actionType))
