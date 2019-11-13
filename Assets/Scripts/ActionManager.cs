@@ -168,7 +168,7 @@ public class ActionManager : MonoBehaviour
         }
 
         // Get the correct building from the buildings list
-        Action action = actions.First(action => action.GetActionType().Equals(actionType));
+        Action action = actions.First(actionListItem => actionListItem.GetActionType().Equals(actionType));
 
         // Check if resource requirements are met
         if (action.GetStoneCost() <= player.GetStone() && 
@@ -187,7 +187,7 @@ public class ActionManager : MonoBehaviour
     public void SubstractBuildingCostFromPlayer(Player player, ActionType actionType)
     {
         // Get the correct building from the buildings list
-        Action action = actions.First(action => action.GetActionType().Equals(actionType));
+        Action action = actions.First(actionListItem => actionListItem.GetActionType().Equals(actionType));
 
         player.AddStone(- action.GetStoneCost());
         player.AddWood(- action.GetWoodCost());
