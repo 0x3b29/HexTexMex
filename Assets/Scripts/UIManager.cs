@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
         colorActionUnavailable = currentPlayer.GetColor();
         colorActionUnavailable.a = .5f;
 
-        SetBuildingMode(currentPlayer.GetSelectedActionType());
+        SetActionType(currentPlayer.GetSelectedActionType());
     }
 
     public void UpdateResources(int stone, int wood, int wheat, int coins)
@@ -70,21 +70,21 @@ public class UIManager : MonoBehaviour
     }
 
     // Function referenced in UI
-    public void SetBuildingMode(string buildingModeAsString)
+    public void SetActionType(string actionTypeAsString)
     {
         ActionType newBuildingMode;
         // Ugly hack because of https://forum.unity.com/threads/ability-to-add-enum-argument-to-button-functions.270817/
-        if (!System.Enum.TryParse(buildingModeAsString, out newBuildingMode))
+        if (!System.Enum.TryParse(actionTypeAsString, out newBuildingMode))
         {
-            Debug.LogWarning("UIManager: buildingModeAsString '" + buildingModeAsString + "' could not be parsed");
+            Debug.LogWarning("UIManager: buildingModeAsString '" + actionTypeAsString + "' could not be parsed");
             return;
         }
 
-        SetBuildingMode(newBuildingMode);
+        SetActionType(newBuildingMode);
     }
 
     // Function referenced in code
-    public void SetBuildingMode(ActionType actionType)
+    public void SetActionType(ActionType actionType)
     {
         this.actionType = actionType;
         GameManager.Instance.actionManager.SetBuildingMode(actionType);

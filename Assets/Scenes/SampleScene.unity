@@ -353,7 +353,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1648,7 +1648,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1825,7 +1825,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2674,11 +2674,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1727378331}
   - component: {fileID: 1727378332}
-  - component: {fileID: 1727378334}
   - component: {fileID: 1727378333}
+  - component: {fileID: 1727378336}
+  - component: {fileID: 1727378334}
   - component: {fileID: 1727378330}
   - component: {fileID: 1727378335}
-  - component: {fileID: 1727378336}
   - component: {fileID: 1727378337}
   m_Layer: 0
   m_Name: GameManager
@@ -2737,12 +2737,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ad5ca4b6d93d14d9aa1efd92aa9323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 0}
-  turnManager: {fileID: 0}
   spawnTiles: {fileID: 0}
-  inputHandler: {fileID: 0}
-  uiManager: {fileID: 0}
   actionManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  turnManager: {fileID: 0}
+  inputHandler: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!114 &1727378334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3266,7 +3266,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3367,7 +3367,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -148,7 +148,7 @@ public class TurnManager : MonoBehaviour
             currentPlayer.GetWood(), 
             currentPlayer.GetWheat(),
             currentPlayer.GetCoins());
-        GameManager.Instance.uiManager.SetBuildingMode(currentPlayer.GetSelectedActionType());
+        GameManager.Instance.uiManager.SetActionType(currentPlayer.GetSelectedActionType());
 
         // Reset Camera
         Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPositionRotationAndZoom();

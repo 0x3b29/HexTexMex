@@ -38,19 +38,19 @@ public class InputHandler : MonoBehaviour
 
         // Hotkeys for menu
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            uiManager.SetBuildingMode(ActionType.House);
+            uiManager.SetActionType(ActionType.House);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            uiManager.SetBuildingMode(ActionType.Road);
+            uiManager.SetActionType(ActionType.Road);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            uiManager.SetBuildingMode(ActionType.Trader);
+            uiManager.SetActionType(ActionType.Trader);
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
-            uiManager.SetBuildingMode(ActionType.Dragon);
+            uiManager.SetActionType(ActionType.Dragon);
 
         if (Input.GetKeyDown(KeyCode.Alpha5))
-            uiManager.SetBuildingMode(ActionType.Destroy);
+            uiManager.SetActionType(ActionType.Destroy);
 
         if (Input.GetKeyDown(KeyCode.Return))
             turnManager.EndTurn();
