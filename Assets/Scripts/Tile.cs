@@ -479,10 +479,4 @@ public class Tile : MonoBehaviour
 
         return false;
     }
-
-    public int GetLongestRoad(Tile tile)
-    {
-
-        return 0;
-    }
 }
