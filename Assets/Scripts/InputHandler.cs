@@ -7,11 +7,13 @@ public class InputHandler : MonoBehaviour
     Material materialBuildAllowed;
     Material materialBuildDenied;
 
-    GameObject tileHighlighter;   
+    GameObject tileHighlighter;
 
     private UIManager uiManager;
     private TurnManager turnManager;
     private ActionManager actionManager;
+
+    public void Initialize()
     {
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;

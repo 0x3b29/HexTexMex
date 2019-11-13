@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
         actionManager.Initialize();
         uiManager.Initialize();
+        inputHandler.Initialize();
 
         uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
         uiManager.UpdateResources(
