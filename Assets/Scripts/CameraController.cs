@@ -35,7 +35,8 @@ public class CameraController : MonoBehaviour {
     {
         // Set a marker to the point in space where the camera intersects with the world floor
         RaycastHit hit;
-        if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E) && !Input.GetKey(KeyCode.Mouse2) && Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 100, 1 << Constants.worldFloorLayer))
+        if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E) && !Input.GetKey(KeyCode.Mouse2) && 
+            Physics.Raycast(mainCameraTarget.transform.position, mainCameraTarget.transform.forward, out hit, 100, 1 << Constants.worldFloorLayer))
         {
             Vector3 newPosition = new Vector3(hit.point.x, hit.point.y, hit.point.z);
             cameraHitPoint.transform.position = newPosition;
