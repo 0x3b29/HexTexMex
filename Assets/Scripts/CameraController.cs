@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
@@ -6,6 +6,9 @@ public class CameraController : MonoBehaviour {
       
     float speed = 25.0f;
     float mouseSensitivity = 0.2f;
+
+    float cameraRotationLerpSpeed = 3f;
+    float cameraPositionLerpSpeed = 3f;
 
     private int minZoomLevel = 3;
     private int maxZoomLevel = 10;
@@ -103,9 +106,9 @@ public class CameraController : MonoBehaviour {
         cameraContainerTarget.transform.Translate(cameraContainerMovement * speed * Time.deltaTime);
 
         // Move actual camera
-        mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, mainCameraTarget.transform.rotation, Time.deltaTime * 5f);
-        cameraContainer.transform.rotation = Quaternion.Lerp(cameraContainer.transform.rotation,cameraContainerTarget.transform.rotation , Time.deltaTime * 4f);
-        cameraContainer.transform.position = Vector3.Lerp(cameraContainer.transform.position, cameraContainerTarget.transform.position, Time.deltaTime * 5f);
+        mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, mainCameraTarget.transform.rotation, Time.deltaTime * cameraRotationLerpSpeed);
+        cameraContainer.transform.rotation = Quaternion.Lerp(cameraContainer.transform.rotation, cameraContainerTarget.transform.rotation , Time.deltaTime * cameraRotationLerpSpeed);
+        cameraContainer.transform.position = Vector3.Lerp(cameraContainer.transform.position, cameraContainerTarget.transform.position, Time.deltaTime * cameraPositionLerpSpeed);
     }
 
     public void SetCameraRotation(Quaternion cameraRotation)    
