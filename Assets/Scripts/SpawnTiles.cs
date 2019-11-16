@@ -6,6 +6,9 @@ public class SpawnTiles : MonoBehaviour
     private int x = Constants.boardSizeX;
     private int y = Constants.boardSizeY;
 
+    private float horizontalTileOffset = 1.732f;
+    private float verticalTileOffset = 1.5f;
+
     private const float newWaterProbability = 0.006f;
     private const float adjacentWaterProbability = 0.35f;
 
@@ -65,8 +68,12 @@ public class SpawnTiles : MonoBehaviour
             for (int j = 0; j < y; j++)
             {
                 GameObject newTile;
-                
-                newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
+
+                // Every second line of tiles needs to be shifted by half the horizontal tile 
+                // offset to make the hexagons match.
+                newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, 
+                    new Vector3(j * horizontalTileOffset + (i % 2 * (horizontalTileOffset / 2)), 0, i * verticalTileOffset), Quaternion.identity);
+
                 newTile.name = "Tile" + i + "-" + j;
                 newTile.transform.parent = tilesContainer.transform;
 
