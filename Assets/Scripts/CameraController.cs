@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
 public class CameraController : MonoBehaviour {
       
+    float speed = 25.0f;
     float mouseSensitivity = 0.2f;
 
     float cameraRotationLerpSpeed = 3f;
@@ -102,7 +103,7 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKey(KeyCode.Q)) cameraContainerTarget.transform.RotateAround(cameraHitPoint.transform.position, Vector3.up, -100f * Time.deltaTime);
 
         // Add movement 
-        cameraContainerTarget.transform.Translate(cameraContainerMovement);
+        cameraContainerTarget.transform.Translate(cameraContainerMovement * speed * Time.deltaTime);
 
         // Move actual camera
         mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, mainCameraTarget.transform.rotation, Time.deltaTime * cameraRotationLerpSpeed);
