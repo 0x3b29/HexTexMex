@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -71,8 +71,10 @@ public class TurnManager : MonoBehaviour
                     // If the current player was the last player in list, the second halve of the buildphase starts
                     firstHalfOfBuildPhase = false;
 
-                    // Go backwards in players list
-                    currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                    // Go backwards in players list (If there is more than one player)
+                    if (!currentPlayer.Equals(players[0]))
+                        currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+
                     GivePlayerBuildPhaseResources();
                 }
                 else
