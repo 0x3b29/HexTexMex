@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
@@ -137,12 +138,21 @@ public class MainMenu : MonoBehaviour
 
     public void EnterText(string text)
     {
-
+        // Unused
     }
 
     // Called from UI
     public void StartGame()
     {
-        Debug.Log("TODO: Start the game");
+        foreach (GameObject inputField in inputFields)
+        {
+            string name = inputField.GetComponentInChildren<InputField>().text;
+            Color color = inputField.transform.Find("Panel Player Color").GetComponent<Image>().color;
+
+            if (name != "" && name != null)
+                MenuManager.Instance.AddPlayer(name, color);
+        }
+
+        SceneManager.LoadScene("GameScene");
     }
 }

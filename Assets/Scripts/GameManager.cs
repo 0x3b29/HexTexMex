@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
@@ -36,14 +37,8 @@ public class GameManager : MonoBehaviour
     public InputHandler inputHandler;
     public CameraController cameraController;
 
-    // Start is called before the first frame update
-    void Start()
+    public void StartGame()
     {
-        // Create Players
-        turnManager.AddPlayer(new Player("Olivier", Color.red));
-        turnManager.AddPlayer(new Player("Jérôme", Color.blue));
-        //turnManager.AddPlayer(new Player("Gérard", Color.yellow));
-
         // Create Map to play on
         int seed = Random.Range(0, 1000);
         Debug.Log("Map Seed: " + seed);
@@ -55,15 +50,17 @@ public class GameManager : MonoBehaviour
 
         uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
         uiManager.UpdateResources(
-            turnManager.GetCurrentPlayer().GetStone(), 
-            turnManager.GetCurrentPlayer().GetWood(), 
+            turnManager.GetCurrentPlayer().GetStone(),
+            turnManager.GetCurrentPlayer().GetWood(),
             turnManager.GetCurrentPlayer().GetWheat(),
             turnManager.GetCurrentPlayer().GetCoins());
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddPlayers(List<Player> players)
     {
-        
+        foreach (Player player in players)
+        {
+            turnManager.AddPlayer(player);
+        }
     }
 }
