@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -40,9 +39,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // Create Map to play on
-        int seed = Random.Range(0, 1000);
-        Debug.Log("Map Seed: " + seed);
-        spawnTiles.CreateMap(seed, false, false);
+        spawnTiles.CreateMap(MenuManager.Instance.Seed, MenuManager.Instance.RoundMap, MenuManager.Instance.Mountains);
 
         actionManager.Initialize();
         uiManager.Initialize();

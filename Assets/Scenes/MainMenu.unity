@@ -1095,7 +1095,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00010023624}
+  m_AnchoredPosition: {x: 0, y: 0.000029207093}
   m_SizeDelta: {x: 0, y: 659.75}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &212527776
@@ -1377,7 +1377,7 @@ GameObject:
   m_Component:
   - component: {fileID: 323833952}
   m_Layer: 5
-  m_Name: Option (2)
+  m_Name: Option Mountains
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1401,7 +1401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00091552734, y: -50}
+  m_AnchoredPosition: {x: 0.0009765625, y: -50}
   m_SizeDelta: {x: 1862.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &343406675
@@ -1610,7 +1610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 546552823}
   m_Layer: 5
-  m_Name: Option (3)
+  m_Name: Option Dragon Madness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1634,7 +1634,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00091552734, y: -150}
+  m_AnchoredPosition: {x: 0.0009765625, y: -150}
   m_SizeDelta: {x: 1862.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &733797339
@@ -1719,7 +1719,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 41172524}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999725
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2080,7 +2080,7 @@ GameObject:
   m_Component:
   - component: {fileID: 886883331}
   m_Layer: 5
-  m_Name: Option (1)
+  m_Name: Option Round Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2104,7 +2104,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00091552734, y: 50}
+  m_AnchoredPosition: {x: 0.0009765625, y: 50}
   m_SizeDelta: {x: 1862.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &975977671
@@ -2141,7 +2141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00091552734, y: 250}
+  m_AnchoredPosition: {x: 0.0009765625, y: 250}
   m_SizeDelta: {x: 1862.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1035645307
@@ -3230,6 +3230,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c46999e1aa4f848977dc5f4b62b1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelOptions: {fileID: 0}
+  inputFieldSeed: {fileID: 0}
+  inputFieldSize: {fileID: 0}
+  toggleRoundMap: {fileID: 0}
+  toggleMountains: {fileID: 0}
+  toggleDragonMadness: {fileID: 0}
 --- !u!1 &1413202089
 GameObject:
   m_ObjectHideFlags: 0
@@ -4006,7 +4012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1870887634}
   m_Layer: 5
-  m_Name: Option
+  m_Name: Option Size
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4030,7 +4036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00091552734, y: 150}
+  m_AnchoredPosition: {x: 0.0009765625, y: 150}
   m_SizeDelta: {x: 1862.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1934737577
@@ -4310,7 +4316,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1998184737}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1398025821}
+        m_MethodName: ShowOptions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1998184737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4655,7 +4672,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1398025821}
-        m_MethodName: StartGame
+        m_MethodName: HideOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

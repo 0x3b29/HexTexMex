@@ -8,6 +8,12 @@ public class MenuManager : MonoBehaviour
     public static MenuManager Instance { get; private set; }
     List<Player> players;
 
+    public int Seed { get; set; }
+    public int FieldSize { get; set; }
+    public bool RoundMap { get; set; }
+    public bool Mountains { get; set; }
+    public bool DragonMadness { get; set; }
+
     void Awake()
     {
         if (Instance == null)
@@ -16,6 +22,7 @@ public class MenuManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             players = new List<Player>();
+            FieldSize = Constants.boardSizeX;
         }
         else
         {

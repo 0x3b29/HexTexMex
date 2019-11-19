@@ -12,6 +12,14 @@ public class MainMenu : MonoBehaviour
     List<Color> availableColors;
     List<Color> takenColors;
 
+    public GameObject panelOptions;
+
+    public InputField inputFieldSeed;
+    public InputField inputFieldSize;
+    public Toggle toggleRoundMap;
+    public Toggle toggleMountains;
+    public Toggle toggleDragonMadness;
+
     public void Start()
     {
         inputFields = new List<GameObject>();
@@ -23,6 +31,22 @@ public class MainMenu : MonoBehaviour
 
         // Add first input field
         AddInputField();
+
+        // Fetch the options panel
+        panelOptions = GameObject.Find("PanelOptions");
+
+        // Fetch option fields
+        inputFieldSeed = GameObject.Find("Option Seed").transform.Find("InputField").GetComponent<InputField>();
+        inputFieldSize = GameObject.Find("Option Size").transform.Find("InputField").GetComponent<InputField>();
+        toggleRoundMap = GameObject.Find("Option Round Map").transform.Find("Toggle").GetComponent<Toggle>();
+        toggleMountains = GameObject.Find("Option Mountains").transform.Find("Toggle").GetComponent<Toggle>();
+        toggleDragonMadness = GameObject.Find("Option Dragon Madness").transform.Find("Toggle").GetComponent<Toggle>();
+
+        // initialize options
+        inputFieldSeed.text = Random.Range(0, 99999).ToString();
+
+        // Hide the options
+        HideOptions();
     }
 
     public void Update()
@@ -141,7 +165,18 @@ public class MainMenu : MonoBehaviour
         // Unused
     }
 
-    // Called from UI
+    public void ShowOptions()
+    {
+        panelOptions.SetActive(true);
+    }
+
+    // Called from UI button & from this
+    public void HideOptions()
+    {
+        panelOptions.SetActive(false);
+    }
+
+    // Called from UI button
     public void StartGame()
     {
         MenuManager.Instance.ClearPlayers();
@@ -154,6 +189,12 @@ public class MainMenu : MonoBehaviour
             if (name != "" && name != null)
                 MenuManager.Instance.AddPlayer(name, color);
         }
+
+        MenuManager.Instance.Seed = int.Parse(inputFieldSeed.text);
+        MenuManager.Instance.FieldSize = int.Parse(inputFieldSize.text);
+        MenuManager.Instance.RoundMap = toggleRoundMap.isOn;
+        MenuManager.Instance.Mountains = toggleMountains.isOn;
+        MenuManager.Instance.DragonMadness = toggleDragonMadness.isOn;
 
         SceneManager.LoadScene("GameScene");
     }
