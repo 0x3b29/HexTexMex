@@ -26,16 +26,12 @@ public class MenuManager : MonoBehaviour
     // called first
     void OnEnable()
     {
-        Debug.Log("OnEnable called");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("OnSceneLoaded: " + scene.name);
-        Debug.Log(mode);
-
         if (scene.name.Equals("GameScene"))
         {
             if (players.Count == 0)
@@ -50,7 +46,7 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void ClearPlayers()
+    public void ClearPlayers()
     {
         players.Clear();
     }

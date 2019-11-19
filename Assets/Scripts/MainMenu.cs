@@ -144,6 +144,8 @@ public class MainMenu : MonoBehaviour
     // Called from UI
     public void StartGame()
     {
+        MenuManager.Instance.ClearPlayers();
+
         foreach (GameObject inputField in inputFields)
         {
             string name = inputField.GetComponentInChildren<InputField>().text;
