@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,7 +37,7 @@ public class ActionManager : MonoBehaviour
         turnManager = GameManager.Instance.turnManager;
     }
 
-    public void SetBuildingMode(ActionType buildingMode)
+    public void SetSelectedAction(ActionType buildingMode)
     {
         this.currentAction = buildingMode;
     }
