@@ -204,22 +204,6 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
-        // Set Wells
-        /*for (int i = 0; i < x * y; i++)
-        {
-            Tile tile = tiles[i];
-
-            if (!tile.isWater && !tile.forest && Random.Range(0f, 1f) < wellProbability)
-            {
-                GameObject well;
-                well = Instantiate(Resources.Load(Constants.prefabFolder + "Well") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
-                well.transform.parent = tile.tileGameObject.transform;
-                well.name = "Well";
-
-                tile.well = well;
-            }
-        }*/
-
         // Set Wheat
         for (int i = 0; i < x * y; i++)
         {
