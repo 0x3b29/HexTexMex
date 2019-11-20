@@ -180,7 +180,7 @@ public class MainMenu : MonoBehaviour
     // Called from UI button
     public void StartGame()
     {
-        MenuManager.Instance.ClearPlayers();
+        GameManager.Instance.Players.Clear();
 
         foreach (GameObject inputField in inputFields)
         {
@@ -188,32 +188,32 @@ public class MainMenu : MonoBehaviour
             Color color = inputField.transform.Find("Panel Player Color").GetComponent<Image>().color;
 
             if (name != "" && name != null)
-                MenuManager.Instance.AddPlayer(name, color);
+                GameManager.Instance.Players.Add(new Player(name, color));
         }
 
         try
         {
-            MenuManager.Instance.Seed = int.Parse(inputFieldSeed.text);
+            GameManager.Instance.Seed = int.Parse(inputFieldSeed.text);
         }
         catch (Exception e)
         {
             Debug.Log("Parsing seed failed" + e.Message);
-            MenuManager.Instance.Seed = UnityEngine.Random.Range(0, 99999);
+            GameManager.Instance.Seed = UnityEngine.Random.Range(0, 99999);
         }
 
         try
         {
-            MenuManager.Instance.FieldSize = int.Parse(inputFieldSize.text);
+            GameManager.Instance.FieldSize = int.Parse(inputFieldSize.text);
         }
         catch (Exception e)
         {
             Debug.Log("Parsing field size failed" + e.Message);
-            MenuManager.Instance.FieldSize = UnityEngine.Random.Range(25, 35);
+            GameManager.Instance.FieldSize = UnityEngine.Random.Range(25, 35);
         }
 
-        MenuManager.Instance.RoundMap = toggleRoundMap.isOn;
-        MenuManager.Instance.Mountains = toggleMountains.isOn;
-        MenuManager.Instance.DragonMadness = toggleDragonMadness.isOn;
+        GameManager.Instance.RoundMap = toggleRoundMap.isOn;
+        GameManager.Instance.Mountains = toggleMountains.isOn;
+        GameManager.Instance.DragonMadness = toggleDragonMadness.isOn;
 
         SceneManager.LoadScene("GameScene");
     }

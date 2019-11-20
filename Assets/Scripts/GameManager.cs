@@ -8,6 +8,20 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public SpawnTiles spawnTiles;
+    public ActionManager actionManager;
+    public UIManager uiManager;
+    public TurnManager turnManager;
+    public InputHandler inputHandler;
+    public CameraController cameraController;
+
+    public List<Player> Players { get; set; }
+    public int Seed { get; set; }
+    public int FieldSize { get; set; }
+    public bool RoundMap { get; set; }
+    public bool Mountains { get; set; }
+    public bool DragonMadness { get; set; }
+
     void Awake()
     {
         if (Instance == null)
@@ -19,31 +33,69 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        // Fetch Scripts
-        spawnTiles = GetComponent<SpawnTiles>();
-        actionManager = GetComponent<ActionManager>();
-        turnManager = GetComponent<TurnManager>();
-        uiManager = GetComponent<UIManager>();
-        inputHandler = GetComponent<InputHandler>();
-        cameraController = GetComponent<CameraController>();
     }
 
-    public SpawnTiles spawnTiles;
-    public ActionManager actionManager;
-    public UIManager uiManager;
-    public TurnManager turnManager;
-    public InputHandler inputHandler;
-    public CameraController cameraController;
+    private void Start()
+    {
+        Debug.Log("Start got called");
+
+        Players = new List<Player>();
+        FieldSize = Constants.boardSizeX;
+    }
+
+
+    // called first
+    void OnEnable()
+    {
+        Debug.Log("OnEnable got called");
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // called second
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded got called");
+
+
+        if (scene.name.Equals("GameScene"))
+        {
+            if (Players.Count == 0)
+            {
+                Players.Add(new Player("Jérôme", Color.red));
+                Players.Add(new Player("Olivier", Color.blue));
+                Players.Add(new Player("Gérard", Color.yellow));
+            }
+
+            StartGame();
+        }
+    }
 
     public void StartGame()
     {
-        // Create Map to play on
-        spawnTiles.CreateMap(MenuManager.Instance.Seed, MenuManager.Instance.RoundMap, MenuManager.Instance.Mountains);
+        // Fetch Scripts
+        GameObject gameScripts = GameObject.Find("GameScripts");
 
+        spawnTiles = gameScripts.GetComponent<SpawnTiles>();
+        actionManager = gameScripts.GetComponent<ActionManager>();
+        turnManager = gameScripts.GetComponent<TurnManager>();
+        uiManager = gameScripts.GetComponent<UIManager>();
+        inputHandler = gameScripts.GetComponent<InputHandler>();
+        cameraController = gameScripts.GetComponent<CameraController>();
+
+        // Create Map to play on
+        spawnTiles.CreateMap(Seed, RoundMap, Mountains);
+
+        // Initialize scripts in a certain order
         actionManager.Initialize();
         uiManager.Initialize();
         inputHandler.Initialize();
+        turnManager.Initialize();
+
+        foreach (Player player in Players)
+        {
+            turnManager.AddPlayer(player);
+        }
 
         uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
         uiManager.UpdateResources(

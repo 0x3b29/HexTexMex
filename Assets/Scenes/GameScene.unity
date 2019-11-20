@@ -402,49 +402,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 244431153}
   m_CullTransparentMesh: 0
---- !u!1 &249019832
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 249019834}
-  - component: {fileID: 249019833}
-  m_Layer: 0
-  m_Name: MenuManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &249019833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249019832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cff7c59b9404af740bc5929c65617ce2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &249019834
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249019832}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 943.56244, y: 558.6275, z: -2049.4734}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &256896053
 GameObject:
   m_ObjectHideFlags: 0
@@ -2748,14 +2705,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1727378331}
   - component: {fileID: 1727378332}
-  - component: {fileID: 1727378333}
   - component: {fileID: 1727378336}
   - component: {fileID: 1727378334}
   - component: {fileID: 1727378330}
   - component: {fileID: 1727378335}
   - component: {fileID: 1727378337}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: GameScripts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2799,24 +2755,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabc8994da6a5343b6c23705b6132ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1727378333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727378329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ad5ca4b6d93d14d9aa1efd92aa9323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnTiles: {fileID: 0}
-  actionManager: {fileID: 0}
-  uiManager: {fileID: 0}
-  turnManager: {fileID: 0}
-  inputHandler: {fileID: 0}
-  cameraController: {fileID: 0}
 --- !u!114 &1727378334
 MonoBehaviour:
   m_ObjectHideFlags: 0

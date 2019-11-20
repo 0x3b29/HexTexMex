@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +13,9 @@ public class TurnManager : MonoBehaviour
     private int buildPhaseStoneAdd = 4;
     private int buildPhaseWoodAdd = 3;
     private int buildPhaseWheatAdd = 1;
+
     private CameraController cameraController;
+    private ActionManager actionManager;
 
     public void Awake()
     {
@@ -22,11 +24,16 @@ public class TurnManager : MonoBehaviour
         firstHalfOfBuildPhase = true;
     }
 
+    public void Initialize()
+    {
+        cameraController = GameManager.Instance.cameraController;
+        actionManager = GameManager.Instance.actionManager;
+    }
+
     public void AddPlayer(Player player)
     {
         if (!cameraController)
         {
-            cameraController = GameManager.Instance.cameraController;
         }
 
         player.SaveCamera(cameraController.GetCameraContainerPosition(), 
