@@ -37,8 +37,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Start got called");
-
         Players = new List<Player>();
         FieldSize = Constants.boardSizeX;
     }
@@ -47,24 +45,19 @@ public class GameManager : MonoBehaviour
     // called first
     void OnEnable()
     {
-        Debug.Log("OnEnable got called");
-
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("OnSceneLoaded got called");
-
-
         if (scene.name.Equals("GameScene"))
         {
             if (Players.Count == 0)
             {
-                Players.Add(new Player("Jérôme", Color.red));
+                Players.Add(new Player("Jï¿½rï¿½me", Color.red));
                 Players.Add(new Player("Olivier", Color.blue));
-                Players.Add(new Player("Gérard", Color.yellow));
+                Players.Add(new Player("Gï¿½rard", Color.yellow));
             }
 
             StartGame();
