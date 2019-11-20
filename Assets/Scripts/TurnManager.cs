@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +13,8 @@ public class TurnManager : MonoBehaviour
     private int buildPhaseStoneAdd = 4;
     private int buildPhaseWoodAdd = 3;
     private int buildPhaseWheatAdd = 1;
+
+    private int turnCount = 0;
 
     private CameraController cameraController;
     private ActionManager actionManager;
@@ -126,6 +128,18 @@ public class TurnManager : MonoBehaviour
             if (index >= players.Count)
             {
                 index = 0;
+
+                // Launch dragon attacks
+                if (GameManager.Instance.DragonMadness)
+                {
+                    for (int i = 0; i < (turnCount / 2); i++)
+                    {
+                        actionManager.SetSelectedAction(ActionType.Dragon);
+                        actionManager.PerformAction(GameManager.Instance.GetRandomTile(), null);
+                    }
+                }
+
+                turnCount += 1;
             }
 
             currentPlayer = players.ToArray()[index];

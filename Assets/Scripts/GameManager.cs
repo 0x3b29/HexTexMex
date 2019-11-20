@@ -55,9 +55,9 @@ public class GameManager : MonoBehaviour
         {
             if (Players.Count == 0)
             {
-                Players.Add(new Player("Jï¿½rï¿½me", Color.red));
+                Players.Add(new Player("Jérôme", Color.red));
                 Players.Add(new Player("Olivier", Color.blue));
-                Players.Add(new Player("Gï¿½rard", Color.yellow));
+                Players.Add(new Player("Gérard", Color.yellow));
             }
 
             StartGame();
@@ -104,5 +104,17 @@ public class GameManager : MonoBehaviour
         {
             turnManager.AddPlayer(player);
         }
+    }
+
+    public Tile GetRandomTile()
+    {
+        Tile randomTile = null;
+
+        while (randomTile == null || !randomTile.isActive)
+        {
+            randomTile = GameObject.Find("Tile" + Random.Range(0, FieldSize) + "-" + Random.Range(0, FieldSize)).GetComponent<Tile>();
+        }
+
+        return randomTile;
     }
 }

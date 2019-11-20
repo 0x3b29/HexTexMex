@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -148,7 +148,10 @@ public class ActionManager : MonoBehaviour
                 DragonBehaviour dragonBehaviour = dragon.AddComponent<DragonBehaviour>();
                 dragonBehaviour.Initialize(dragon, tile);
 
-                currentPlayer.DecrementRemainingDragonAttacks();
+                // In case of DragonMadness gamemode, the game can launch attacks as well
+                if (!(currentPlayer == null))
+                    currentPlayer.DecrementRemainingDragonAttacks();
+
                 break;
             case ActionType.Destroy:
                 tile.DestroyFeature();
