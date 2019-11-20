@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -43,7 +44,7 @@ public class MainMenu : MonoBehaviour
         toggleDragonMadness = GameObject.Find("Option Dragon Madness").transform.Find("Toggle").GetComponent<Toggle>();
 
         // initialize options
-        inputFieldSeed.text = Random.Range(0, 99999).ToString();
+        inputFieldSeed.text = UnityEngine.Random.Range(0, 99999).ToString();
 
         // Hide the options
         HideOptions();
@@ -190,8 +191,26 @@ public class MainMenu : MonoBehaviour
                 MenuManager.Instance.AddPlayer(name, color);
         }
 
-        MenuManager.Instance.Seed = int.Parse(inputFieldSeed.text);
-        MenuManager.Instance.FieldSize = int.Parse(inputFieldSize.text);
+        try
+        {
+            MenuManager.Instance.Seed = int.Parse(inputFieldSeed.text);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Parsing seed failed" + e.Message);
+            MenuManager.Instance.Seed = UnityEngine.Random.Range(0, 99999);
+        }
+
+        try
+        {
+            MenuManager.Instance.FieldSize = int.Parse(inputFieldSize.text);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Parsing field size failed" + e.Message);
+            MenuManager.Instance.FieldSize = UnityEngine.Random.Range(25, 35);
+        }
+
         MenuManager.Instance.RoundMap = toggleRoundMap.isOn;
         MenuManager.Instance.Mountains = toggleMountains.isOn;
         MenuManager.Instance.DragonMadness = toggleDragonMadness.isOn;
