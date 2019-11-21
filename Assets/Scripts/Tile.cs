@@ -196,7 +196,7 @@ public class Tile : MonoBehaviour
             DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
-            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithHouse(this);
+            owner.RemoveTileWithHouse(this);
             this.owner = null;
         }
     
@@ -213,7 +213,7 @@ public class Tile : MonoBehaviour
             DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
-            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithRoad(this);
+            owner.RemoveTileWithRoad(this);
             this.owner = null;
         }
     }
