@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
-    private int x = Constants.boardSizeX;
-    private int y = Constants.boardSizeY;
-
     private float horizontalTileOffset = 1.732f;
     private float verticalTileOffset = 1.5f;
 
@@ -40,8 +37,11 @@ public class SpawnTiles : MonoBehaviour
     {
         GameObject tilesContainer = GameObject.Find("Tiles");
         Random.InitState(seed);
-        
-        tiles = new Tile[x * y];
+
+        int boardSizeX = GameManager.Instance.BoardSizeX;
+        int boardSizeY = GameManager.Instance.BoardSizeX;
+
+        tiles = new Tile[boardSizeX * boardSizeY];
         waterTiles = new List<Tile>();
 
         Material water = Resources.Load(Constants.materialsFolder + "Water", typeof(Material)) as Material;
@@ -63,9 +63,9 @@ public class SpawnTiles : MonoBehaviour
         int tileCounter = 0;
 
         // Create Tiles 
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < boardSizeX; i++)
         {
-            for (int j = 0; j < y; j++)
+            for (int j = 0; j < boardSizeY; j++)
             {
                 GameObject newTile;
 
@@ -93,9 +93,9 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Connect tiles 
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < boardSizeX; i++)
         {
-            for (int j = 0; j < y; j++)
+            for (int j = 0; j < boardSizeY; j++)
             {
                 GameObject goThisTile = GameObject.Find("Tile" + i + "-" + j);
 
@@ -122,15 +122,15 @@ public class SpawnTiles : MonoBehaviour
         // Generate roundish shape
         if (roundishShape)
         {
-            GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().SetHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
-            for (int i = 0; i < x * y; i++)
+            GameObject.Find("Tile" + Mathf.RoundToInt(boardSizeX / 2) + "-" + Mathf.RoundToInt(boardSizeY / 2)).GetComponent<Tile>().SetHealth( (Mathf.Min(boardSizeX, boardSizeY) / 2) * tileHealthFactor, tileHealthSlope);
+            for (int i = 0; i < boardSizeX * boardSizeY; i++)
             {
                 tiles[i].CheckHealth();
             }
         }
 
         // Set Water
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
@@ -164,12 +164,12 @@ public class SpawnTiles : MonoBehaviour
         
             for (int i = 0; i < mountainCount; i++)
             {
-                tiles[Mathf.RoundToInt(Random.Range(0, x * y))].SetHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
+                tiles[Mathf.RoundToInt(Random.Range(0, boardSizeX * boardSizeY))].SetHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
             }
         }
         
         // Set Trees
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
@@ -205,7 +205,7 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Set Wheat
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
@@ -223,7 +223,7 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Set Rocks
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.GetNeighboursStoneCount());

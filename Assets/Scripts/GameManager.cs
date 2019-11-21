@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public List<Player> Players { get; set; }
     public int Seed { get; set; }
-    public int FieldSize { get; set; }
+    public int BoardSizeX { get; set; }
     public bool RoundMap { get; set; }
     public bool Mountains { get; set; }
     public bool DragonMadness { get; set; }
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Players = new List<Player>();
-        FieldSize = Constants.boardSizeX;
+        BoardSizeX = Constants.boardSizeX;
     }
 
 
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         while (randomTile == null || !randomTile.isActive)
         {
-            randomTile = GameObject.Find("Tile" + Random.Range(0, FieldSize) + "-" + Random.Range(0, FieldSize)).GetComponent<Tile>();
+            randomTile = GameObject.Find("Tile" + Random.Range(0, BoardSizeX) + "-" + Random.Range(0, BoardSizeX)).GetComponent<Tile>();
         }
 
         return randomTile;
