@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public List<Player> Players { get; set; }
     public int Seed { get; set; }
     public int BoardSizeX { get; set; }
+    public int BoardSizeY { get; set; }
     public bool RoundMap { get; set; }
     public bool Mountains { get; set; }
     public bool DragonMadness { get; set; }
@@ -38,7 +39,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Players = new List<Player>();
-        BoardSizeX = Constants.boardSizeX;
     }
 
 

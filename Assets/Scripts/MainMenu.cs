@@ -204,11 +204,13 @@ public class MainMenu : MonoBehaviour
         try
         {
             GameManager.Instance.BoardSizeX = int.Parse(inputFieldSize.text);
+            GameManager.Instance.BoardSizeY = int.Parse(inputFieldSize.text);
         }
         catch (Exception e)
         {
             Debug.Log("Parsing field size failed" + e.Message);
             GameManager.Instance.BoardSizeX = UnityEngine.Random.Range(25, 35);
+            GameManager.Instance.BoardSizeY = UnityEngine.Random.Range(25, 35);
         }
 
         GameManager.Instance.RoundMap = toggleRoundMap.isOn;
