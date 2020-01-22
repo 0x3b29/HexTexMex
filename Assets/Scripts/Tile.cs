@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -430,7 +430,7 @@ public class Tile : MonoBehaviour
         // After the health function iterated over the map, deactivate all the tiles with health lower or equal to 0
         if (health <= 0)
         {
-            tileGameObject.SetActive(false);
+            hexagonGameObject.SetActive(false);
             isActive = false;
         }
     }
