@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -134,7 +134,9 @@ public class TurnManager : MonoBehaviour
             // Launch dragon attacks
             if (GameManager.Instance.DragonMadness)
             {
-                for (int i = 0; i < (turnCount / 2); i++)
+                // With the formula (int)Math.Round(Math.Log(turnCount, 20) * 10): 
+                // x(1) => 2; x(5) => 5; x(10) => 8; x(20) => 10; x(30) => 11; x(40) => 12;  
+                for (int i = 0; i < Random.Range(0, (int)Math.Round(Math.Log(turnCount, 20) * 10)); i++)
                 {
                     actionManager.SetSelectedAction(ActionType.Dragon);
                     actionManager.PerformAction(GameManager.Instance.GetRandomTile(), null);
