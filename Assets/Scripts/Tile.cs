@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -189,6 +189,11 @@ public class Tile : MonoBehaviour
 
     public void SetOnFire()
     {
+        if (!isActive || isWater)
+        {
+            return;
+        }
+
         Invoke("SpawnFire", Random.Range(0, 1.5f));
         Invoke("DestroyFeature", Random.Range(2.5f, 4f));
     }
