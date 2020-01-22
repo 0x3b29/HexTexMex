@@ -175,7 +175,7 @@ public class SpawnTiles : MonoBehaviour
 
             float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.GetNeighboursWoodCount());
 
-            if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
+            if (tile.isActive && !tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
 
@@ -209,7 +209,7 @@ public class SpawnTiles : MonoBehaviour
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
+            if (tile.isActive && !tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
                 
@@ -228,7 +228,7 @@ public class SpawnTiles : MonoBehaviour
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.GetNeighboursStoneCount());
 
-            if (!tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
+            if (tile.isActive && !tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
                 
