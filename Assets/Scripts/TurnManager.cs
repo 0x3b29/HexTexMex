@@ -128,18 +128,17 @@ public class TurnManager : MonoBehaviour
             if (index >= players.Count)
             {
                 index = 0;
-
-                // Launch dragon attacks
-                if (GameManager.Instance.DragonMadness)
-                {
-                    for (int i = 0; i < (turnCount / 2); i++)
-                    {
-                        actionManager.SetSelectedAction(ActionType.Dragon);
-                        actionManager.PerformAction(GameManager.Instance.GetRandomTile(), null);
-                    }
-                }
-
                 turnCount += 1;
+            }
+
+            // Launch dragon attacks
+            if (GameManager.Instance.DragonMadness)
+            {
+                for (int i = 0; i < (turnCount / 2); i++)
+                {
+                    actionManager.SetSelectedAction(ActionType.Dragon);
+                    actionManager.PerformAction(GameManager.Instance.GetRandomTile(), null);
+                }
             }
 
             currentPlayer = players.ToArray()[index];
