@@ -37,6 +37,7 @@ public class Tile : MonoBehaviour
     public GameObject roadToLowerLeftTile;
     public GameObject roadToLowerRightTile;
 
+    public GameObject fire;
 
     public void SetInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
@@ -184,6 +185,25 @@ public class Tile : MonoBehaviour
         // Lower right
         if (roadToLowerRightTile)
             DestroyAndUnset(roadToLowerRightTile);
+    }
+
+    public void SetOnFire()
+    {
+        Invoke("SpawnFire", Random.Range(0, 1.5f));
+        Invoke("DestroyFeature", Random.Range(2.5f, 4f));
+    }
+
+    private void SpawnFire()
+    {
+        fire = Instantiate(Resources.Load(Constants.prefabFolder + "Fire") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        fire.transform.parent = tileGameObject.transform;
+        Invoke("RemoveFire", 8f);
+    }
+
+    private void RemoveFire()
+    {
+        Destroy(fire);
+        fire = null;
     }
 
     public void DestroyFeature()

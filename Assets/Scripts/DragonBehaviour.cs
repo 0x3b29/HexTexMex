@@ -61,10 +61,10 @@ public class DragonBehaviour : MonoBehaviour
             {
                 hasAttacked = true;
 
-                targetTile.Invoke("DestroyFeature", Random.Range(1, 4f));
+                targetTile.SetOnFire();
                 foreach(Tile tile in targetTile.GetNeighbours())
                 {
-                    tile.Invoke("DestroyFeature", Random.Range(1, 4f));
+                    tile.SetOnFire();
                 }
             }
         }
