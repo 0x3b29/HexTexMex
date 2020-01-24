@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -148,14 +148,15 @@ public class TurnManager : MonoBehaviour
             currentPlayer.GetWood(), 
             currentPlayer.GetWheat(),
             currentPlayer.GetCoins());
-        
+        GameManager.Instance.uiManager.SetActionType(currentPlayer.GetSelectedActionType());
+
         // Reset Camera
         Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPositionRotationAndZoom();
 
         cameraController.SetCameraContainerPosition(cameraPositionRotationAndZoom.Item1);
         cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);
         cameraController.SetZoomLevel(cameraPositionRotationAndZoom.Item3);
-        cameraController.SetCamerarRotation(cameraPositionRotationAndZoom.Item4);
+        cameraController.SetCameraRotation(cameraPositionRotationAndZoom.Item4);
     }
 
     public Player GetCurrentPlayer()

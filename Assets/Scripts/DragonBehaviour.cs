@@ -57,7 +57,7 @@ public class DragonBehaviour : MonoBehaviour
 
             // Destroy the stuff build on the target tile, and its neighbours
             targetTile.Invoke("DestroyFeature", Random.Range(1, 4f));
-            foreach(Tile tile in targetTile.getNeighbours())
+            foreach(Tile tile in targetTile.GetNeighbours())
             {
                 tile.Invoke("DestroyFeature", Random.Range(1, 4f));
             }

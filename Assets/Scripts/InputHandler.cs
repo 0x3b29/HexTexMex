@@ -7,29 +7,28 @@ public class InputHandler : MonoBehaviour
     Material materialBuildAllowed;
     Material materialBuildDenied;
 
-    GameObject tileHighlighter;   
+    GameObject tileHighlighter;
 
-    // Start is called before the first frame update
-    void Start()
+    private UIManager uiManager;
+    private TurnManager turnManager;
+    private ActionManager actionManager;
+
+    public void Initialize()
     {
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
         materialBuildDenied = Resources.Load(Constants.materialsFolder + "BuildDenied", typeof(Material)) as Material;
 
         tileHighlighter = Instantiate(Resources.Load(Constants.prefabFolder + "Torus Parent") as GameObject, new Vector3(), Quaternion.identity);
+
+        uiManager = GameManager.Instance.uiManager;
+        turnManager = GameManager.Instance.turnManager;
+        actionManager = GameManager.Instance.actionManager;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ActionManager actionManager = GameManager.Instance.actionManager;
-        Player currentPlayer = GameManager.Instance.turnManager.GetCurrentPlayer();
-        UIManager uiManager = GameManager.Instance.uiManager;
-
-        // Do not perform ray casts through buttons and other GUI objects
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
-        {
-            return;
-        }
+        Player currentPlayer = turnManager.GetCurrentPlayer();
 
         // Capture a screenshot with P
         if (Input.GetKeyDown(KeyCode.P))
@@ -37,6 +36,32 @@ public class InputHandler : MonoBehaviour
             ScreenCapture.CaptureScreenshot("Screenshots/" + System.DateTime.Now.ToString("dd-MM-yy_hh-mm-ss") + ".png");
         }
 
+        // Hotkeys for menu
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            uiManager.SetActionType(ActionType.House);
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            uiManager.SetActionType(ActionType.Road);
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            uiManager.SetActionType(ActionType.Trader);
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            uiManager.SetActionType(ActionType.Dragon);
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            uiManager.SetActionType(ActionType.Destroy);
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            turnManager.EndTurn();
+
+        // Do not perform ray casts through buttons and other GUI objects
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
+        {
+            return;
+        }
+
+        // Send ray through everything to get the tile the player is pointing at
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         

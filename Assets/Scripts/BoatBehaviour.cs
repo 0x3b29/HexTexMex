@@ -20,27 +20,13 @@ public class BoatBehaviour : MonoBehaviour
         this.boatNumber = boatNumber;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
     // Update is called once per frame
     void FixedUpdate()
     {
         // Check if boat is close enough to its target
         if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
         {
-            Tile newTarget = targetTile.getRandomWaterNeighbour();
-
-            /*
-            if (targetTile != newTarget)
-            {
-                // If boat has no options, do nothing
-                return;
-            }
-            */
-
+            Tile newTarget = targetTile.GetRandomWaterNeighbour();
             targetTile = newTarget;
         }
 

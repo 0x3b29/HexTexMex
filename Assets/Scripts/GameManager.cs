@@ -19,26 +19,26 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Fetch Scripts
+        spawnTiles = GetComponent<SpawnTiles>();
+        actionManager = GetComponent<ActionManager>();
+        turnManager = GetComponent<TurnManager>();
+        uiManager = GetComponent<UIManager>();
+        inputHandler = GetComponent<InputHandler>();
+        cameraController = GetComponent<CameraController>();
     }
 
-    public CameraController cameraController;
-    public TurnManager turnManager;
     public SpawnTiles spawnTiles;
-    public InputHandler inputHandler;
+    public ActionManager actionManager;
     public UIManager uiManager;
-    [FormerlySerializedAs("buildingManager")] public ActionManager actionManager;
+    public TurnManager turnManager;
+    public InputHandler inputHandler;
+    public CameraController cameraController;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Fetch Scripts
-        inputHandler = GetComponent<InputHandler>();
-        turnManager = GetComponent<TurnManager>();
-        spawnTiles = GetComponent<SpawnTiles>();
-        uiManager = GetComponent<UIManager>();
-        actionManager = GetComponent<ActionManager>();
-        cameraController = GetComponent<CameraController>();
-        
         // Create Players
         turnManager.AddPlayer(new Player("Olivier", Color.red));
         turnManager.AddPlayer(new Player("Jérôme", Color.blue));
@@ -49,8 +49,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Map Seed: " + seed);
         spawnTiles.CreateMap(seed, false, false);
 
-        GameManager.Instance.uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
-        GameManager.Instance.uiManager.UpdateResources(
+        actionManager.Initialize();
+        uiManager.Initialize();
+        inputHandler.Initialize();
+
+        uiManager.UpdateCurrentPlayer(turnManager.GetCurrentPlayer());
+        uiManager.UpdateResources(
             turnManager.GetCurrentPlayer().GetStone(), 
             turnManager.GetCurrentPlayer().GetWood(), 
             turnManager.GetCurrentPlayer().GetWheat(),

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.005818204, g: 0.002843293, b: 0.0025242227, a: 1}
+  m_IndirectSpecularColor: {r: 0.0050231772, g: 0.0028318227, b: 0.0024381795, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -353,7 +353,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1597,7 +1597,7 @@ RectTransform:
   - {fileID: 750288536}
   - {fileID: 2020383303}
   m_Father: {fileID: 1852341698}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1648,7 +1648,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1774,7 +1774,7 @@ RectTransform:
   - {fileID: 640173460}
   - {fileID: 655482422}
   m_Father: {fileID: 1852341698}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1825,7 +1825,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2674,11 +2674,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1727378331}
   - component: {fileID: 1727378332}
-  - component: {fileID: 1727378334}
   - component: {fileID: 1727378333}
+  - component: {fileID: 1727378336}
+  - component: {fileID: 1727378334}
   - component: {fileID: 1727378330}
   - component: {fileID: 1727378335}
-  - component: {fileID: 1727378336}
   - component: {fileID: 1727378337}
   m_Layer: 0
   m_Name: GameManager
@@ -2737,12 +2737,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ad5ca4b6d93d14d9aa1efd92aa9323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 0}
-  turnManager: {fileID: 0}
   spawnTiles: {fileID: 0}
-  inputHandler: {fileID: 0}
-  uiManager: {fileID: 0}
   actionManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  turnManager: {fileID: 0}
+  inputHandler: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!114 &1727378334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2988,8 +2988,8 @@ RectTransform:
   - {fileID: 244431154}
   - {fileID: 2095846563}
   - {fileID: 2059989593}
-  - {fileID: 778017220}
   - {fileID: 913942296}
+  - {fileID: 778017220}
   m_Father: {fileID: 974544673}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3266,7 +3266,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3367,7 +3367,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727378334}
-        m_MethodName: SetBuildingMode
+        m_MethodName: SetActionType
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

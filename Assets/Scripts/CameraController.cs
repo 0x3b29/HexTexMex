@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
@@ -93,11 +93,6 @@ public class CameraController : MonoBehaviour {
 
         // Add movement 
         cameraContainer.transform.Translate(cameraContainerMovement * speed * Time.deltaTime);
-    }
-
-    public void SetCamerarRotation(Quaternion cameraRotation)
-    {
-        mainCamera.transform.rotation = cameraRotation;
     }
 
     public void SetCameraRotation(Quaternion cameraRotation)
