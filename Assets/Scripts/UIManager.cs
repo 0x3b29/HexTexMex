@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
     public void SetActionType(ActionType actionType)
     {
         this.actionType = actionType;
-        GameManager.Instance.actionManager.SetBuildingMode(actionType);
+        GameManager.Instance.actionManager.SetSelectedAction(actionType);
         GameManager.Instance.turnManager.GetCurrentPlayer().SetSelectedActionType(actionType);
 
         // Iterate over all actions and set bordercolor for passed actiontype

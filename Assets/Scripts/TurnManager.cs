@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TurnManager : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class TurnManager : MonoBehaviour
     private int buildPhaseStoneAdd = 4;
     private int buildPhaseWoodAdd = 3;
     private int buildPhaseWheatAdd = 1;
+
+    private int turnCount = 0;
+
     private CameraController cameraController;
+    private ActionManager actionManager;
 
     public void Awake()
     {
@@ -22,11 +27,16 @@ public class TurnManager : MonoBehaviour
         firstHalfOfBuildPhase = true;
     }
 
+    public void Initialize()
+    {
+        cameraController = GameManager.Instance.cameraController;
+        actionManager = GameManager.Instance.actionManager;
+    }
+
     public void AddPlayer(Player player)
     {
         if (!cameraController)
         {
-            cameraController = GameManager.Instance.cameraController;
         }
 
         player.SaveCamera(cameraController.GetCameraContainerPosition(), 
@@ -71,8 +81,10 @@ public class TurnManager : MonoBehaviour
                     // If the current player was the last player in list, the second halve of the buildphase starts
                     firstHalfOfBuildPhase = false;
 
-                    // Go backwards in players list
-                    currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+                    // Go backwards in players list (If there is more than one player)
+                    if (!currentPlayer.Equals(players[0]))
+                        currentPlayer = players.ToArray()[players.IndexOf(currentPlayer) - 1];
+
                     GivePlayerBuildPhaseResources();
                 }
                 else
@@ -117,15 +129,29 @@ public class TurnManager : MonoBehaviour
             if (index >= players.Count)
             {
                 index = 0;
+                turnCount += 1;
+            }
+
+            // Launch dragon attacks
+            if (GameManager.Instance.DragonMadness)
+            {
+                // With the formula (int)Math.Round(Math.Log(turnCount, 20) * 10): 
+                // x(1) => 2; x(5) => 5; x(10) => 8; x(20) => 10; x(30) => 11; x(40) => 12;  
+                for (int i = 0; i < Random.Range(0, (int)Math.Round(Math.Log(turnCount, 20) * 10)); i++)
+                {
+                    actionManager.SetSelectedAction(ActionType.Dragon);
+                    actionManager.PerformAction(GameManager.Instance.GetRandomTile(), null);
+                }
             }
 
             currentPlayer = players.ToArray()[index];
             
-            // Collect the resources from the resources on neighbouring house tiles
-            int totalStone = 0;
-            int totalWood = 0;
-            int totalWheat = 0;
+            // Players always have a base income of 1
+            int totalStone = 1;
+            int totalWood = 1;
+            int totalWheat = 1;
 
+            // Collect the resources from the resources on neighbouring house tiles
             foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
             {
                 totalStone += tile.GetNeighboursStoneCount();
@@ -133,10 +159,10 @@ public class TurnManager : MonoBehaviour
                 totalWheat += tile.GetNeighboursWheatCount();
             }
 
-            // In case a player does not have any basic neighbouring resources, he receives automatically a base income
-            currentPlayer.AddStone(Math.Max(totalStone, 1));
-            currentPlayer.AddWood(Math.Max(totalWood, 1));
-            currentPlayer.AddWheat(Math.Max(totalWheat, 1));
+            // Add resources to player
+            currentPlayer.AddStone(totalStone);
+            currentPlayer.AddWood(totalWood);
+            currentPlayer.AddWheat(totalWheat);
         }
 
         currentPlayer.walkAllTraders();

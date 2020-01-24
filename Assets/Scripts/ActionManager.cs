@@ -37,7 +37,7 @@ public class ActionManager : MonoBehaviour
         turnManager = GameManager.Instance.turnManager;
     }
 
-    public void SetBuildingMode(ActionType buildingMode)
+    public void SetSelectedAction(ActionType buildingMode)
     {
         this.currentAction = buildingMode;
     }
@@ -130,10 +130,10 @@ public class ActionManager : MonoBehaviour
             case ActionType.Dragon:
                 
                 // Get random tile from each border
-                string option1 = "Tile" + 0 + "-" + Random.Range(0, Constants.boardSizeX);
-                string option2 = "Tile" + (Constants.boardSizeX - 1) + "-" + Random.Range(0, Constants.boardSizeX);
-                string option3 = "Tile" + Random.Range(0, Constants.boardSizeY) + "-" + 0;
-                string option4 = "Tile" + Random.Range(0, Constants.boardSizeY) + "-" + (Constants.boardSizeY - 1);
+                string option1 = "Tile" + 0 + "-" + Random.Range(0, GameManager.Instance.BoardSizeY);
+                string option2 = "Tile" + (GameManager.Instance.BoardSizeX - 1) + "-" + Random.Range(0, GameManager.Instance.BoardSizeY);
+                string option3 = "Tile" + Random.Range(0, GameManager.Instance.BoardSizeX) + "-" + 0;
+                string option4 = "Tile" + Random.Range(0, GameManager.Instance.BoardSizeX) + "-" + (GameManager.Instance.BoardSizeY - 1);
 
                 // Select one random tile
                 string[] options = new string[4] { option1, option2, option3, option4 };
@@ -148,7 +148,10 @@ public class ActionManager : MonoBehaviour
                 DragonBehaviour dragonBehaviour = dragon.AddComponent<DragonBehaviour>();
                 dragonBehaviour.Initialize(dragon, tile);
 
-                currentPlayer.DecrementRemainingDragonAttacks();
+                // In case of DragonMadness gamemode, the game can launch attacks as well
+                if (!(currentPlayer == null))
+                    currentPlayer.DecrementRemainingDragonAttacks();
+
                 break;
             case ActionType.Destroy:
                 tile.DestroyFeature();

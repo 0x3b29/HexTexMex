@@ -10,6 +10,7 @@ public class DragonBehaviour : MonoBehaviour
     private float movementSpeed = 10f;
     private bool movingTowardsTarget = true;
     private float lastDistance = float.MaxValue;
+    private bool hasAttacked = false;
 
     public void Initialize(GameObject dragonGameObject, Tile targetTile)
     {
@@ -56,10 +57,15 @@ public class DragonBehaviour : MonoBehaviour
             fire.Play();
 
             // Destroy the stuff build on the target tile, and its neighbours
-            targetTile.Invoke("DestroyFeature", Random.Range(1, 4f));
-            foreach(Tile tile in targetTile.GetNeighbours())
+            if (!hasAttacked)
             {
-                tile.Invoke("DestroyFeature", Random.Range(1, 4f));
+                hasAttacked = true;
+
+                targetTile.SetOnFire();
+                foreach(Tile tile in targetTile.GetNeighbours())
+                {
+                    tile.SetOnFire();
+                }
             }
         }
         else

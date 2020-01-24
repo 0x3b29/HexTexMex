@@ -13,6 +13,8 @@ public class InputHandler : MonoBehaviour
     private TurnManager turnManager;
     private ActionManager actionManager;
 
+    bool initialized = false;
+
     public void Initialize()
     {
         materialBuildAllowed = Resources.Load(Constants.materialsFolder + "BuildAllowed", typeof(Material)) as Material;
@@ -23,11 +25,16 @@ public class InputHandler : MonoBehaviour
         uiManager = GameManager.Instance.uiManager;
         turnManager = GameManager.Instance.turnManager;
         actionManager = GameManager.Instance.actionManager;
+
+        initialized = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!initialized)
+            return;
+
         Player currentPlayer = turnManager.GetCurrentPlayer();
 
         // Capture a screenshot with P

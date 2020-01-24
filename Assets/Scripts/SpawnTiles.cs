@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
-    private int x = Constants.boardSizeX;
-    private int y = Constants.boardSizeY;
+    private float horizontalTileOffset = 1.732f;
+    private float verticalTileOffset = 1.5f;
 
     private const float newWaterProbability = 0.006f;
     private const float adjacentWaterProbability = 0.35f;
@@ -37,8 +37,11 @@ public class SpawnTiles : MonoBehaviour
     {
         GameObject tilesContainer = GameObject.Find("Tiles");
         Random.InitState(seed);
-        
-        tiles = new Tile[x * y];
+
+        int boardSizeX = GameManager.Instance.BoardSizeX;
+        int boardSizeY = GameManager.Instance.BoardSizeX;
+
+        tiles = new Tile[boardSizeX * boardSizeY];
         waterTiles = new List<Tile>();
 
         Material water = Resources.Load(Constants.materialsFolder + "Water", typeof(Material)) as Material;
@@ -60,13 +63,17 @@ public class SpawnTiles : MonoBehaviour
         int tileCounter = 0;
 
         // Create Tiles 
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < boardSizeX; i++)
         {
-            for (int j = 0; j < y; j++)
+            for (int j = 0; j < boardSizeY; j++)
             {
                 GameObject newTile;
-                
-                newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, new Vector3(j * 1.7f + (i % 2 * 0.85f), 0, i * 1.5f), Quaternion.identity);
+
+                // Every second line of tiles needs to be shifted by half the horizontal tile 
+                // offset to make the hexagons match.
+                newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hex Parent") as GameObject, 
+                    new Vector3(j * horizontalTileOffset + (i % 2 * (horizontalTileOffset / 2)), 0, i * verticalTileOffset), Quaternion.identity);
+
                 newTile.name = "Tile" + i + "-" + j;
                 newTile.transform.parent = tilesContainer.transform;
 
@@ -86,9 +93,9 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Connect tiles 
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < boardSizeX; i++)
         {
-            for (int j = 0; j < y; j++)
+            for (int j = 0; j < boardSizeY; j++)
             {
                 GameObject goThisTile = GameObject.Find("Tile" + i + "-" + j);
 
@@ -115,15 +122,15 @@ public class SpawnTiles : MonoBehaviour
         // Generate roundish shape
         if (roundishShape)
         {
-            GameObject.Find("Tile" + Mathf.RoundToInt(x / 2) + "-" + Mathf.RoundToInt(y / 2)).GetComponent<Tile>().SetHealth( (Mathf.Min(x, y) / 2) * tileHealthFactor, tileHealthSlope);
-            for (int i = 0; i < x * y; i++)
+            GameObject.Find("Tile" + Mathf.RoundToInt(boardSizeX / 2) + "-" + Mathf.RoundToInt(boardSizeY / 2)).GetComponent<Tile>().SetHealth( (Mathf.Min(boardSizeX, boardSizeY) / 2) * tileHealthFactor, tileHealthSlope);
+            for (int i = 0; i < boardSizeX * boardSizeY; i++)
             {
                 tiles[i].CheckHealth();
             }
         }
 
         // Set Water
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
@@ -157,18 +164,18 @@ public class SpawnTiles : MonoBehaviour
         
             for (int i = 0; i < mountainCount; i++)
             {
-                tiles[Mathf.RoundToInt(Random.Range(0, x * y))].SetHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
+                tiles[Mathf.RoundToInt(Random.Range(0, boardSizeX * boardSizeY))].SetHeight(Random.Range(0, maxMountainHeight), Random.Range(minMountainSlope, maxMountainSlope));
             }
         }
         
         // Set Trees
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
             float treeProbability = newTreeProbability + (adjacentTreeProbability * tile.GetNeighboursWoodCount());
 
-            if (!tile.isWater && Random.Range(0f, 1f) < treeProbability)
+            if (tile.isActive && !tile.isWater && Random.Range(0f, 1f) < treeProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
 
@@ -197,28 +204,12 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
-        // Set Wells
-        /*for (int i = 0; i < x * y; i++)
-        {
-            Tile tile = tiles[i];
-
-            if (!tile.isWater && !tile.forest && Random.Range(0f, 1f) < wellProbability)
-            {
-                GameObject well;
-                well = Instantiate(Resources.Load(Constants.prefabFolder + "Well") as GameObject, tile.tileGameObject.transform.position, Quaternion.identity);
-                well.transform.parent = tile.tileGameObject.transform;
-                well.name = "Well";
-
-                tile.well = well;
-            }
-        }*/
-
         // Set Wheat
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
 
-            if (!tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
+            if (tile.isActive && !tile.isWater && !tile.wood && !tile.well && Random.Range(0f, 1f) < wheatProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = earthTile;
                 
@@ -232,12 +223,12 @@ public class SpawnTiles : MonoBehaviour
         }
 
         // Set Rocks
-        for (int i = 0; i < x * y; i++)
+        for (int i = 0; i < boardSizeX * boardSizeY; i++)
         {
             Tile tile = tiles[i];
             float RockProbability = newRockProbability + (adjacentRockProbability * tile.GetNeighboursStoneCount());
 
-            if (!tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
+            if (tile.isActive && !tile.isWater && !tile.wood && !tile.well && !tile.wheat && Random.Range(0f, 1f) < RockProbability)
             {
                 tile.tileGameObject.transform.Find("Hexagon").GetComponent<Renderer>().materials = stoneTile;
                 

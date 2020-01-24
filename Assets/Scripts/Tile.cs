@@ -37,6 +37,7 @@ public class Tile : MonoBehaviour
     public GameObject roadToLowerLeftTile;
     public GameObject roadToLowerRightTile;
 
+    public GameObject fire;
 
     public void SetInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
@@ -186,6 +187,30 @@ public class Tile : MonoBehaviour
             DestroyAndUnset(roadToLowerRightTile);
     }
 
+    public void SetOnFire()
+    {
+        if (!isActive || isWater)
+        {
+            return;
+        }
+
+        Invoke("SpawnFire", Random.Range(0, 1.5f));
+        Invoke("DestroyFeature", Random.Range(2.5f, 4f));
+    }
+
+    private void SpawnFire()
+    {
+        fire = Instantiate(Resources.Load(Constants.prefabFolder + "Fire") as GameObject, tileGameObject.transform.position, Quaternion.identity);
+        fire.transform.parent = tileGameObject.transform;
+        Invoke("RemoveFire", 8f);
+    }
+
+    private void RemoveFire()
+    {
+        Destroy(fire);
+        fire = null;
+    }
+
     public void DestroyFeature()
     {
         if (woodhouse)
@@ -196,7 +221,7 @@ public class Tile : MonoBehaviour
             DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
-            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithHouse(this);
+            owner.RemoveTileWithHouse(this);
             this.owner = null;
         }
     
@@ -213,7 +238,7 @@ public class Tile : MonoBehaviour
             DeleteRoadsConnectingToThisTile();
 
             // Also remove from player
-            GameManager.Instance.turnManager.GetCurrentPlayer().RemoveTileWithRoad(this);
+            owner.RemoveTileWithRoad(this);
             this.owner = null;
         }
     }
@@ -410,7 +435,7 @@ public class Tile : MonoBehaviour
         // After the health function iterated over the map, deactivate all the tiles with health lower or equal to 0
         if (health <= 0)
         {
-            tileGameObject.SetActive(false);
+            hexagonGameObject.SetActive(false);
             isActive = false;
         }
     }
