@@ -39,6 +39,9 @@ public class Tile : MonoBehaviour
 
     public GameObject fire;
 
+    public float health = 0;
+    public float height = 0;
+
     public void SetInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
     {
         this.isActive = true;
@@ -375,16 +378,14 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void SetHeight(float height, float slope)
+    public float GetHeight()
     {
-        // Function is called by world generation. The first tile will be the top of the mountain
-        // The function then recursivly calls itselve and sets its neighbours to some lower hight.
+        return height;
+    }
 
-        // If my current height is higher than the new height, bail out
-        if (tileGameObject.transform.position.y >= height || height < 0 || slope < 0.01 || isWater)
-        {
-            return;
-        }
+    public void SetHeight(float height)
+    {
+        this.height = height;
 
         // Set height to the new height
         Vector3 position = tileGameObject.transform.position;
@@ -395,39 +396,18 @@ public class Tile : MonoBehaviour
         Vector3 scale = hexagonGameObject.transform.localScale;
         scale.y = 1 + height / 2;
         hexagonGameObject.transform.localScale = scale;
-
-        // Recursivly call function on neighbouring tiles
-        foreach (Tile neighbour in GetNeighbours())
-        {
-            neighbour.SetHeight(height - Random.Range(0.75f * slope, 1.25f * slope), slope);
-        }
     }
 
-    private float health = 0;
-    public void SetHealth(float health, float slope)
+    
+    public void SetHealth(float health)
     {
-        // Function is called by world generation. The first tile will be the center of the map
-        // The function then recursivly calls itselve and sets its neighbours to some lower health.
-
-        // If my health is higher than the new health, bail out
-        if (this.health >= health || health <= 0 || slope < 0.01)
-        {
-            return;
-        }
-
         // Set my health to the new health
         this.health = health;
 
         // Add my health to the tilescale to create a cloud island effect
         Vector3 scale = this.tileGameObject.transform.localScale;
-        scale.y += (health / 100);
+        scale.y = 0.1f + health * 0.8f + Random.Range(0, Mathf.Log(Mathf.Max(1, health)));
         this.tileGameObject.transform.localScale = scale;
-
-        // Recursivly call function on neighbouring tiles
-        foreach (Tile neighbour in GetNeighbours())
-        {
-            neighbour.SetHealth(health - Random.Range(0.5f * slope, 1.5f * slope), slope);
-        }
     }
 
     public void CheckHealth()

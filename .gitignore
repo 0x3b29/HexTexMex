@@ -47,3 +47,7 @@ sysinfo.txt
 # Include webgl-build
 !webgl-build/
 !webgl-build/*
+.vsconfig
+UserSettings/Layouts/default-2021.dwlt
+Logs/
+UserSettings/EditorUserSettings.asset

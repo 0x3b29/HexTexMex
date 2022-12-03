@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         cameraController = gameScripts.GetComponent<CameraController>();
 
         // Create Map to play on
-        spawnTiles.CreateMap(Seed, RoundMap, Mountains);
+        spawnTiles.CreateMap(GameManager.Instance.BoardSizeX, GameManager.Instance.BoardSizeY, Seed, RoundMap, Mountains);
 
         // Initialize scripts in a certain order
         actionManager.Initialize();
