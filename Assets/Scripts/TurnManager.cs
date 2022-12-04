@@ -152,11 +152,11 @@ public class TurnManager : MonoBehaviour
             int totalWheat = 1;
 
             // Collect the resources from the resources on neighbouring house tiles
-            foreach (Tile tile in currentPlayer.GetListOfTilesWithHouses())
+            foreach (TileManager tileManager in currentPlayer.GetListOfTilesWithHouses())
             {
-                totalStone += tile.GetNeighboursStoneCount();
-                totalWood += tile.GetNeighboursWoodCount();
-                totalWheat += tile.GetNeighboursWheatCount();
+                totalStone += tileManager.GetNeighboursStoneCount();
+                totalWood += tileManager.GetNeighboursWoodCount();
+                totalWheat += tileManager.GetNeighboursWheatCount();
             }
 
             // Add resources to player

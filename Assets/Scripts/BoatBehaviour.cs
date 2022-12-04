@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoatBehaviour : MonoBehaviour
 {
     private GameObject boatGameObject;
-    private Tile targetTile;
+    private TileManager targetTile;
     private int boatNumber;
 
     private const float turnRate = 2f;
@@ -13,7 +13,7 @@ public class BoatBehaviour : MonoBehaviour
     private const float minDistanceToTarget = 0.01f; // 10cm
     private const float minRotationError = 1f; // 1°
 
-    public void Initialize(GameObject boatGameObject, Tile targetTile, int boatNumber)
+    public void Initialize(GameObject boatGameObject, TileManager targetTile, int boatNumber)
     {
         this.boatGameObject = boatGameObject;
         this.targetTile = targetTile;
@@ -24,9 +24,9 @@ public class BoatBehaviour : MonoBehaviour
     void FixedUpdate()
     {
         // Check if boat is close enough to its target
-        if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
+        if (Vector3.Distance(targetTile.gameObject.transform.position, boatGameObject.transform.position) < minDistanceToTarget)
         {
-            Tile newTarget = targetTile.GetRandomWaterNeighbour();
+            TileManager newTarget = targetTile.GetRandomNeighboursHavingWater();
             targetTile = newTarget;
         }
 
@@ -44,7 +44,7 @@ public class BoatBehaviour : MonoBehaviour
         else
         {
             // Move to target
-            transform.position = Vector3.Slerp(transform.position, targetTile.hexagonGameObject.transform.position, Time.deltaTime * moveRate);
+            transform.position = Vector3.Slerp(transform.position, targetTile.gameObject.transform.position, Time.deltaTime * moveRate);
         }
     }
 }

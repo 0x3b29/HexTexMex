@@ -106,13 +106,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Tile GetRandomTile()
+    public TileManager GetRandomTile()
     {
-        Tile randomTile = null;
+        TileManager randomTile = null;
 
         while (randomTile == null || !randomTile.isActive)
         {
-            randomTile = GameObject.Find("Tile" + Random.Range(0, BoardSizeX) + "-" + Random.Range(0, BoardSizeX)).GetComponent<Tile>();
+            randomTile = GameObject.Find("Tile" + Random.Range(0, BoardSizeX) + "-" + Random.Range(0, BoardSizeX)).GetComponent<TileManager>();
         }
 
         return randomTile;

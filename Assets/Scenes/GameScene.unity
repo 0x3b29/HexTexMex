@@ -2956,8 +2956,8 @@ MonoBehaviour:
   perlinNoiseHfScale: 1
   perlinNoiseHfFactor: 0.2
   perlinNoiseLfScale: 0.1
-  perlinNoiseLfFactor: 2
-  verticalOffset: 0.5
+  perlinNoiseLfFactor: 10
+  verticalOffset: 2
 --- !u!114 &1727378334
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Tile : MonoBehaviour
+public class TileManager : MonoBehaviour
 {
-    public GameObject tileGameObject;
-    public GameObject hexagonGameObject;
-    public Tile leftTile;
-    public Tile rightTile;
-    public Tile topLeftTile;
-    public Tile topRightTile;
-    public Tile lowerLeftTile;
-    public Tile lowerRightTile;
+    public MeshRenderer meshRenderer;
+    public TileManager leftTileManager;
+    public TileManager rightTileManager;
+    public TileManager topLeftTileManager;
+    public TileManager topRightTileManager;
+    public TileManager lowerLeftTileManager;
+    public TileManager lowerRightTileManager;
 
     public int xCoordinate;
     public int yCoordinate;
@@ -28,43 +27,42 @@ public class Tile : MonoBehaviour
     public GameObject well;
     public GameObject woodhouse;
 
-    public bool isRoad;
+    public bool hasRoad;
     public GameObject roadCenter;
-    public GameObject roadToLeftTile;
-    public GameObject roadToRightTile;
-    public GameObject roadToTopLeftTile;
-    public GameObject roadToTopRightTile;
-    public GameObject roadToLowerLeftTile;
-    public GameObject roadToLowerRightTile;
+    public GameObject roadToLeft;
+    public GameObject roadToRight;
+    public GameObject roadToTopLeft;
+    public GameObject roadToTopRight;
+    public GameObject roadToLowerLeft;
+    public GameObject roadToLowerRight;
 
     public GameObject fire;
 
     public float health = 0;
     public float height = 0;
 
-    public void SetInitialValues(int xCoordinate, int yCoordinate, GameObject tileGameObject, GameObject hexagonGameObject)
+    public void SetInitialValues(int xCoordinate, int yCoordinate, MeshRenderer meshRenderer)
     {
         this.isActive = true;
 
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
-        this.tileGameObject = tileGameObject;
-        this.hexagonGameObject = hexagonGameObject;
+        this.meshRenderer = meshRenderer;
     }
 
-    public List<Tile> GetNeighbours()
+    public List<TileManager> GetNeighbouringTileManagers()
     {
-        List <Tile> neighbourList = new List<Tile>();
+        List <TileManager> neighbouringTileManagers = new List<TileManager>();
 
-        if (leftTile != null) neighbourList.Add(leftTile);
-        if (rightTile != null) neighbourList.Add(rightTile);
-        if (topLeftTile != null) neighbourList.Add(topLeftTile);
-        if (topRightTile != null) neighbourList.Add(topRightTile);
-        if (lowerLeftTile != null) neighbourList.Add(lowerLeftTile);
-        if (lowerRightTile != null) neighbourList.Add(lowerRightTile);
+        if (leftTileManager != null) neighbouringTileManagers.Add(leftTileManager);
+        if (rightTileManager != null) neighbouringTileManagers.Add(rightTileManager);
+        if (topLeftTileManager != null) neighbouringTileManagers.Add(topLeftTileManager);
+        if (topRightTileManager != null) neighbouringTileManagers.Add(topRightTileManager);
+        if (lowerLeftTileManager != null) neighbouringTileManagers.Add(lowerLeftTileManager);
+        if (lowerRightTileManager != null) neighbouringTileManagers.Add(lowerRightTileManager);
 
-        return neighbourList;
+        return neighbouringTileManagers;
     }
 
     public int NeighboursWaterCount()
@@ -72,7 +70,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count water tiles.
         int neighboursWaterCount = 0;
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             if (tile.isWater) neighboursWaterCount++;
         }
@@ -85,7 +83,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count tree tiles.
         int neighboursWoodCount = 0;
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             if (tile.wood) neighboursWoodCount++;
         }
@@ -98,7 +96,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count stone tiles.
         int neighboursStoneCount = 0;
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             if (tile.rock) neighboursStoneCount++;
         }
@@ -111,7 +109,7 @@ public class Tile : MonoBehaviour
         // Iterate over neighbour tiles and count wheat tiles.
         int neighboursWheatCount = 0;
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             if (tile.wheat) neighboursWheatCount++;
         }
@@ -121,7 +119,14 @@ public class Tile : MonoBehaviour
 
     public bool IsFree()
     {
-        return isActive && !isWater && !wood && !wheat && !well && !rock && !woodhouse && !isRoad;
+        return isActive && 
+            !isWater && 
+            !wood && 
+            !wheat && 
+            !well && 
+            !rock && 
+            !woodhouse && 
+            !hasRoad;
     }
 
     private void DestroyAndUnset(GameObject gameObject)
@@ -136,28 +141,28 @@ public class Tile : MonoBehaviour
         // If so, delete that road
 
         // Top Left
-        if (topLeftTile && topLeftTile.roadToLowerRightTile)
-            DestroyAndUnset(topLeftTile.roadToLowerRightTile);
+        if (topLeftTileManager && topLeftTileManager.roadToLowerRight)
+            DestroyAndUnset(topLeftTileManager.roadToLowerRight);
 
         // Top Right
-        if (topRightTile && topRightTile.roadToLowerLeftTile)
-            DestroyAndUnset(topRightTile.roadToLowerLeftTile);
+        if (topRightTileManager && topRightTileManager.roadToLowerLeft)
+            DestroyAndUnset(topRightTileManager.roadToLowerLeft);
 
         // Left
-        if (leftTile && leftTile.roadToRightTile)
-            DestroyAndUnset(leftTile.roadToRightTile);
+        if (leftTileManager && leftTileManager.roadToRight)
+            DestroyAndUnset(leftTileManager.roadToRight);
 
         // Right
-        if (rightTile && rightTile.roadToLeftTile)
-            DestroyAndUnset(rightTile.roadToLeftTile);
+        if (rightTileManager && rightTileManager.roadToLeft)
+            DestroyAndUnset(rightTileManager.roadToLeft);
 
         // Lower left
-        if (lowerLeftTile && lowerLeftTile.roadToTopRightTile)
-            DestroyAndUnset(lowerLeftTile.roadToTopRightTile);
+        if (lowerLeftTileManager && lowerLeftTileManager.roadToTopRight)
+            DestroyAndUnset(lowerLeftTileManager.roadToTopRight);
 
         // Lower right
-        if (lowerRightTile && lowerRightTile.roadToTopLeftTile)
-            DestroyAndUnset(lowerRightTile.roadToTopLeftTile);
+        if (lowerRightTileManager && lowerRightTileManager.roadToTopLeft)
+            DestroyAndUnset(lowerRightTileManager.roadToTopLeft);
     }
 
     private void DeleteRoadsConnectingFromThisTile()
@@ -166,28 +171,28 @@ public class Tile : MonoBehaviour
         // If so, delete that road
 
         // Top Left
-        if (roadToTopLeftTile)
-            DestroyAndUnset(roadToTopLeftTile);
+        if (roadToTopLeft)
+            DestroyAndUnset(roadToTopLeft);
 
         // Top Right
-        if (roadToTopRightTile)
-            DestroyAndUnset(roadToTopRightTile);
+        if (roadToTopRight)
+            DestroyAndUnset(roadToTopRight);
 
         // Left
-        if (roadToLeftTile)
-            DestroyAndUnset(roadToLeftTile);
+        if (roadToLeft)
+            DestroyAndUnset(roadToLeft);
 
         // Right
-        if (roadToRightTile)
-            DestroyAndUnset(roadToRightTile);
+        if (roadToRight)
+            DestroyAndUnset(roadToRight);
 
         // Lower left
-        if (roadToLowerLeftTile)
-            DestroyAndUnset(roadToLowerLeftTile);
+        if (roadToLowerLeft)
+            DestroyAndUnset(roadToLowerLeft);
 
         // Lower right
-        if (roadToLowerRightTile)
-            DestroyAndUnset(roadToLowerRightTile);
+        if (roadToLowerRight)
+            DestroyAndUnset(roadToLowerRight);
     }
 
     public void SetOnFire()
@@ -203,8 +208,8 @@ public class Tile : MonoBehaviour
 
     private void SpawnFire()
     {
-        fire = Instantiate(Resources.Load(Constants.prefabFolder + "Fire") as GameObject, tileGameObject.transform.position, Quaternion.identity);
-        fire.transform.parent = tileGameObject.transform;
+        fire = Instantiate(Resources.Load(Constants.prefabFolder + "Fire") as GameObject, gameObject.transform.position, Quaternion.identity);
+        fire.transform.parent = gameObject.transform;
         Invoke("RemoveFire", 8f);
     }
 
@@ -228,9 +233,9 @@ public class Tile : MonoBehaviour
             this.owner = null;
         }
     
-        if (isRoad)
+        if (hasRoad)
         {
-            isRoad = false;
+            hasRoad = false;
 
             // Remove center piece
             Destroy(roadCenter);
@@ -249,46 +254,46 @@ public class Tile : MonoBehaviour
     public void PlaceRoad(Player owner)
     {
         // Function is only called when player placed a road
-        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, tileGameObject.transform.position, Quaternion.identity);
-        roadCenter.transform.parent = tileGameObject.transform;
+        roadCenter = Instantiate(Resources.Load(Constants.prefabFolder + "roadCenter") as GameObject, gameObject.transform.position, Quaternion.identity);
+        roadCenter.transform.parent = gameObject.transform;
 
         // Set the players color and assign tile to him
         HelperFunctions.colorizeGameObject(roadCenter, owner.GetColor());
         owner.AddTileWithRoad(this);
         this.owner = owner;
 
-        isRoad = true;      
+        hasRoad = true;      
 
         // Actual roadPieces are only placed by the checkRoad function
         CheckRoads();  
     }
 
-    private bool NeedConnection(Tile neighbourTile)
+    private bool NeedsConnection(TileManager neighbouringTileManager)
     {
         // This function checks if a roadpiece to the passed tile needs to be placed
         // Test if tile exists
-        if (!neighbourTile)
+        if (!neighbouringTileManager)
             return false;
 
         // Test if tile is active
-        if (!neighbourTile.isActive)
+        if (!neighbouringTileManager.isActive)
             return false;
 
         // Test if the owner is the same
-        if (neighbourTile.owner != owner)
+        if (neighbouringTileManager.owner != owner)
             return false;
 
         // Test if there is even a reason to have a road to this tile
-        if (!neighbourTile.isRoad && !neighbourTile.woodhouse)
+        if (!neighbouringTileManager.hasRoad && !neighbouringTileManager.woodhouse)
             return false;
 
         // Test if there is already a road to the neighbour tile
-        if ((neighbourTile == topLeftTile && roadToTopLeftTile) ||
-            (neighbourTile == topRightTile && roadToTopRightTile) ||
-            (neighbourTile == leftTile && roadToLeftTile) ||
-            (neighbourTile == rightTile && roadToRightTile) ||
-            (neighbourTile == lowerLeftTile && roadToLowerLeftTile) ||
-            (neighbourTile == lowerRightTile && roadToLowerRightTile))
+        if ((neighbouringTileManager == topLeftTileManager && roadToTopLeft) ||
+            (neighbouringTileManager == topRightTileManager && roadToTopRight) ||
+            (neighbouringTileManager == leftTileManager && roadToLeft) ||
+            (neighbouringTileManager == rightTileManager && roadToRight) ||
+            (neighbouringTileManager == lowerLeftTileManager && roadToLowerLeft) ||
+            (neighbouringTileManager == lowerRightTileManager && roadToLowerRight))
             return false;
 
         // Only if all of these tests pass, we need to put a roadpiece
@@ -300,45 +305,45 @@ public class Tile : MonoBehaviour
     {
         // Only proceed if tile has a road 
         // never check the same tile twice during one click
-        if (!isRoad || Time.frameCount == lastFrameRoadCheck)
+        if (!hasRoad || Time.frameCount == lastFrameRoadCheck)
             return;
 
         lastFrameRoadCheck = Time.frameCount;
 
         // Check right
-        if (NeedConnection(rightTile))
-            roadToRightTile = SpawnRoad(180);
+        if (NeedsConnection(rightTileManager))
+            roadToRight = SpawnRoad(180);
 
         // Check left
-        if (NeedConnection(leftTile))
-            roadToLeftTile = SpawnRoad(0);
+        if (NeedsConnection(leftTileManager))
+            roadToLeft = SpawnRoad(0);
 
         // Check upper right
-        if (NeedConnection(topRightTile))
-            roadToTopRightTile = SpawnRoad(120);
+        if (NeedsConnection(topRightTileManager))
+            roadToTopRight = SpawnRoad(120);
 
         // Check upper left
-        if (NeedConnection(topLeftTile))
-            roadToTopLeftTile = SpawnRoad(60);
+        if (NeedsConnection(topLeftTileManager))
+            roadToTopLeft = SpawnRoad(60);
 
         // Check lower right
-        if (NeedConnection(lowerRightTile))
-            roadToLowerRightTile= SpawnRoad(-120);
+        if (NeedsConnection(lowerRightTileManager))
+            roadToLowerRight= SpawnRoad(-120);
 
         // Check lower left
-        if (NeedConnection(lowerLeftTile))
-            roadToLowerLeftTile = SpawnRoad(-60);
+        if (NeedsConnection(lowerLeftTileManager))
+            roadToLowerLeft = SpawnRoad(-60);
 
         // Check all the neighbour tiles in a floodfill manner
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
             tile.CheckRoads();
     }
 
     private GameObject SpawnRoad(float roadRotation)
     {
         // Spawn the roadpiece
-        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, tileGameObject.transform.position, Quaternion.identity);
-        roadPiece.transform.parent = tileGameObject.transform;
+        GameObject roadPiece = Instantiate(Resources.Load(Constants.prefabFolder + "roadPiece") as GameObject, gameObject.transform.position, Quaternion.identity);
+        roadPiece.transform.parent = gameObject.transform;
 
         // Set the players color
         HelperFunctions.colorizeGameObject(roadPiece, GameManager.Instance.turnManager.GetCurrentPlayer().GetColor());
@@ -355,8 +360,8 @@ public class Tile : MonoBehaviour
     public void PlaceHouse(Player owner)
     {
         // Spawn the house
-        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, tileGameObject.transform.position, Quaternion.identity);
-        woodHouse.transform.parent = tileGameObject.transform;
+        GameObject woodHouse = Instantiate(Resources.Load(Constants.prefabFolder + "Woodhouse") as GameObject, gameObject.transform.position, Quaternion.identity);
+        woodHouse.transform.parent = gameObject.transform;
 
         // Set the players color and assign tile to him
         HelperFunctions.colorizeGameObject(woodHouse, owner.GetColor());
@@ -372,7 +377,7 @@ public class Tile : MonoBehaviour
         this.woodhouse = woodHouse;
         CheckRoads();
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             tile.CheckRoads();
         }
@@ -388,14 +393,14 @@ public class Tile : MonoBehaviour
         this.height = height;
 
         // Set height to the new height
-        Vector3 position = tileGameObject.transform.position;
+        Vector3 position = gameObject.transform.position;
         position.y = height;
-        tileGameObject.transform.position = position;
+        gameObject.transform.position = position;
 
         // Enlarge the hexagon to give them all the same bottom level
-        Vector3 scale = hexagonGameObject.transform.localScale;
+        Vector3 scale = gameObject.transform.localScale;
         scale.y = 1 + height / 2;
-        hexagonGameObject.transform.localScale = scale;
+        gameObject.transform.localScale = scale;
     }
 
     
@@ -405,9 +410,9 @@ public class Tile : MonoBehaviour
         this.health = health;
 
         // Add my health to the tilescale to create a cloud island effect
-        Vector3 scale = this.tileGameObject.transform.localScale;
+        Vector3 scale = this.gameObject.transform.localScale;
         scale.y = 0.1f + health * 0.8f + Random.Range(0, Mathf.Log(Mathf.Max(1, health)));
-        this.tileGameObject.transform.localScale = scale;
+        this.gameObject.transform.localScale = scale;
     }
 
     public void CheckHealth()
@@ -415,21 +420,21 @@ public class Tile : MonoBehaviour
         // After the health function iterated over the map, deactivate all the tiles with health lower or equal to 0
         if (health <= 0)
         {
-            hexagonGameObject.SetActive(false);
+            gameObject.SetActive(false);
             isActive = false;
         }
     }
 
-    public Tile GetRandomWaterNeighbour()
+    public TileManager GetRandomNeighboursHavingWater()
     {
         // This function returns a random neighboruing water tile. It is called by boats to get a new destination
-        List<Tile> waterTiles = new List<Tile>();
+        List<TileManager> waterTiles = new List<TileManager>();
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tileManager in GetNeighbouringTileManagers())
         {
-            if (tile.isWater && tile.isActive)
+            if (tileManager.isWater && tileManager.isActive)
             {
-                waterTiles.Add(tile);
+                waterTiles.Add(tileManager);
             }
         }
 
@@ -443,27 +448,27 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public List<Tile> GetWalkableNeighbours()
+    public List<TileManager> GetWalkableNeighbours()
     {
-        List<Tile> walkableNeighbours = new List<Tile>();
+        List<TileManager> walkableNeighbours = new List<TileManager>();
 
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tileManager in GetNeighbouringTileManagers())
         {
-            if (tile.owner == this.owner &&
-                (tile.isRoad || tile.woodhouse))
+            if (tileManager.owner == this.owner &&
+                (tileManager.hasRoad || tileManager.woodhouse))
             {
-                walkableNeighbours.Add(tile);
+                walkableNeighbours.Add(tileManager);
             }
         }
 
         return walkableNeighbours;
     }
 
-    public bool HasNeighbourTileRoad(Player owner)
+    public bool HasNeighbouringTileManagerRoad(Player owner)
     {
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
-            if (tile.isRoad && tile.owner == owner)
+            if (tile.hasRoad && tile.owner == owner)
             {
                 return true;
             }
@@ -472,9 +477,9 @@ public class Tile : MonoBehaviour
         return false;
     }
 
-    public bool HasNeighbourTileBuilding(Player owner)
+    public bool HasNeighbouringTileManagerBuilding(Player owner)
     {
-        foreach (Tile tile in GetNeighbours())
+        foreach (TileManager tile in GetNeighbouringTileManagers())
         {
             if (tile.woodhouse && tile.owner == owner)
             {

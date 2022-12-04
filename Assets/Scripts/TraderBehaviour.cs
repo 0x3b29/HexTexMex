@@ -10,19 +10,19 @@ public class TraderBehaviour : MonoBehaviour
     private const float minDistanceToTarget = 0.01f; // 10cm
     private const float minRotationError = 1f; // 1°
 
-    public List<Tile> visitedTiles;
-    public Tile currentTile;
-    public Tile targetTile;
+    public List<TileManager> visitedTiles;
+    public TileManager currentTileManager;
+    public TileManager targetTileManager;
     public GameObject traderGameObject;
 
     private Player owner;
     bool destroyed;
     bool foundFinalTarget;
 
-    public void Initialize(GameObject trader, Tile tile, Player owner)
+    public void Initialize(GameObject trader, TileManager tileManager, Player owner)
     {
-        visitedTiles = new List<Tile>();
-        currentTile = tile;
+        visitedTiles = new List<TileManager>();
+        currentTileManager = tileManager;
         traderGameObject = trader;
         this.owner = owner;
         destroyed = false;
@@ -32,16 +32,16 @@ public class TraderBehaviour : MonoBehaviour
     public void FixedUpdate()
     {
         // Return if Target is not yet set
-        if (targetTile == null || destroyed)
+        if (targetTileManager == null || destroyed)
         {
             return;
         }
 
         // Check if trader is close enough to its target
-        if (Vector3.Distance(targetTile.hexagonGameObject.transform.position, traderGameObject.transform.position) < minDistanceToTarget)
+        if (Vector3.Distance(targetTileManager.gameObject.transform.position, traderGameObject.transform.position) < minDistanceToTarget)
         {
             // If the trader arrived at the targetTile, and the tile has a house, his job is done
-            if (targetTile.woodhouse)
+            if (targetTileManager.woodhouse)
             {
                 CollectCoins(visitedTiles.Count);
                 Disappear();
@@ -51,20 +51,20 @@ public class TraderBehaviour : MonoBehaviour
         }
 
         // Only move while pointing at target
-        if (Vector3.Angle(traderGameObject.transform.forward, targetTile.transform.position - traderGameObject.transform.position) > minRotationError)
+        if (Vector3.Angle(traderGameObject.transform.forward, targetTileManager.transform.position - traderGameObject.transform.position) > minRotationError)
         {
             // Check if there is a need to turn
-            Vector3 newPosition = targetTile.transform.position - traderGameObject.transform.position;
+            Vector3 newPosition = targetTileManager.transform.position - traderGameObject.transform.position;
             if (newPosition.magnitude > 0.001f)
             {
                 // Turn as nessesary
-                traderGameObject.transform.rotation = Quaternion.Slerp(traderGameObject.transform.rotation, Quaternion.LookRotation(targetTile.transform.position - traderGameObject.transform.position), Time.deltaTime * turnRate);
+                traderGameObject.transform.rotation = Quaternion.Slerp(traderGameObject.transform.rotation, Quaternion.LookRotation(targetTileManager.transform.position - traderGameObject.transform.position), Time.deltaTime * turnRate);
             }
         }
         else
         {
             // Move to target
-            transform.position = Vector3.Slerp(transform.position, targetTile.hexagonGameObject.transform.position, Time.deltaTime * moveRate);
+            transform.position = Vector3.Slerp(transform.position, targetTileManager.gameObject.transform.position, Time.deltaTime * moveRate);
         }
     }
 
@@ -76,32 +76,32 @@ public class TraderBehaviour : MonoBehaviour
         }
 
         // For the first walk, the target is not yet set
-        if (targetTile != null)
+        if (targetTileManager != null)
         {
-            currentTile = targetTile;
+            currentTileManager = targetTileManager;
         }
 
         // Never go back to this tile
-        visitedTiles.Add(currentTile);
+        visitedTiles.Add(currentTileManager);
 
         // Find new target tile
-        List<Tile> walkableTiles = currentTile.GetWalkableNeighbours();
+        List<TileManager> walkableTileManagers = currentTileManager.GetWalkableNeighbours();
 
         // Remove visited tiles from walkable tiles
-        walkableTiles = walkableTiles.Except(visitedTiles).ToList<Tile>();
+        walkableTileManagers = walkableTileManagers.Except(visitedTiles).ToList<TileManager>();
 
         // If there is no where to go, dissapear
-        if (walkableTiles.Count == 0)
+        if (walkableTileManagers.Count == 0)
         {
             Disappear();
             return;
         }
 
         // Find new target
-        targetTile = walkableTiles[Random.Range(0, walkableTiles.Count)];
+        targetTileManager = walkableTileManagers[Random.Range(0, walkableTileManagers.Count)];
 
         // If new target is a woodhouse, do not walk() again.
-        if (targetTile.woodhouse)
+        if (targetTileManager.woodhouse)
         {
             foundFinalTarget = true;
         }
@@ -109,14 +109,14 @@ public class TraderBehaviour : MonoBehaviour
 
     private void CollectCoins(int coins)
     {
-        targetTile.owner.AddCoins(coins);
+        targetTileManager.owner.AddCoins(coins);
 
         if (owner == GameManager.Instance.turnManager.GetCurrentPlayer())
         {
-            GameManager.Instance.uiManager.UpdateResources(targetTile.owner.GetStone(),
-                targetTile.owner.GetWood(),
-                targetTile.owner.GetWheat(),
-                targetTile.owner.GetCoins());
+            GameManager.Instance.uiManager.UpdateResources(targetTileManager.owner.GetStone(),
+                targetTileManager.owner.GetWood(),
+                targetTileManager.owner.GetWheat(),
+                targetTileManager.owner.GetCoins());
         }
     }
 

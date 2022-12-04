@@ -20,14 +20,14 @@ public class Player
     private Quaternion cameraRotation;
     private ActionType selectedActionType;
     
-    public List<Tile> tilesWithHouses;
-    private List<Tile> tilesWithRoads;
+    public List<TileManager> tilesWithHouses;
+    private List<TileManager> tilesWithRoads;
     private List<TraderBehaviour> traders;
 
     public Player (string name, Color color)
     {
-        tilesWithHouses = new List<Tile>();
-        tilesWithRoads = new List<Tile>();
+        tilesWithHouses = new List<TileManager>();
+        tilesWithRoads = new List<TileManager>();
         traders = new List<TraderBehaviour>();
 
         this.name = name;
@@ -86,34 +86,34 @@ public class Player
         return coins;
     }
     
-    public List<Tile> GetListOfTilesWithHouses()
+    public List<TileManager> GetListOfTilesWithHouses()
     {
         return tilesWithHouses;
     }
 
-    public List<Tile> GetListOfTilesWithRoads()
+    public List<TileManager> GetListOfTilesWithRoads()
     {
         return tilesWithRoads;
     }
 
-    public void AddTileWithHouse(Tile tile)
+    public void AddTileWithHouse(TileManager tileManager)
     {
-        tilesWithHouses.Add(tile);
+        tilesWithHouses.Add(tileManager);
     }
 
-    public void RemoveTileWithHouse(Tile tile)
+    public void RemoveTileWithHouse(TileManager tileManager)
     {
-        tilesWithHouses.Remove(tile);
+        tilesWithHouses.Remove(tileManager);
     }
 
-    public void AddTileWithRoad(Tile tile)
+    public void AddTileWithRoad(TileManager tileManager)
     {
-        tilesWithRoads.Add(tile);
+        tilesWithRoads.Add(tileManager);
     }
 
-    public void RemoveTileWithRoad(Tile tile)
+    public void RemoveTileWithRoad(TileManager tileManager)
     {
-        tilesWithRoads.Remove(tile);
+        tilesWithRoads.Remove(tileManager);
     }
 
     public void addTrader(TraderBehaviour traderBehaviour)

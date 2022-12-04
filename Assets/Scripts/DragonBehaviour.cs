@@ -6,23 +6,23 @@ public class DragonBehaviour : MonoBehaviour
 {
     private GameObject dragonGameObject;
     private ParticleSystem fire;
-    private Tile targetTile;
+    private TileManager targetTileManager;
     private float movementSpeed = 10f;
     private bool movingTowardsTarget = true;
     private float lastDistance = float.MaxValue;
     private bool hasAttacked = false;
 
-    public void Initialize(GameObject dragonGameObject, Tile targetTile)
+    public void Initialize(GameObject dragonGameObject, TileManager targetTileManager)
     {
         this.dragonGameObject = dragonGameObject;
-        this.targetTile = targetTile;
+        this.targetTileManager = targetTileManager;
 
         // Stop the fire breath
         fire = dragonGameObject.transform.Find("Head").transform.Find("Fire").GetComponent<ParticleSystem>();
         fire.Stop();
 
         // Set target to the same hight as dragon is flying
-        Vector3 dragonAttackPosition = targetTile.transform.position;
+        Vector3 dragonAttackPosition = targetTileManager.transform.position;
         dragonAttackPosition.y = 5;
 
         // Make the dragon facing its target
@@ -39,7 +39,7 @@ public class DragonBehaviour : MonoBehaviour
         dragonGameObject.transform.position += dragonGameObject.transform.forward * Time.deltaTime * movementSpeed;
 
         // Distance to target is absolute (No negative)
-        float distanceToTarget = Vector3.Distance(targetTile.transform.position, dragonGameObject.transform.position);
+        float distanceToTarget = Vector3.Distance(targetTileManager.transform.position, dragonGameObject.transform.position);
 
         // Determine if we are before or behind the target
         if (distanceToTarget <= lastDistance)
@@ -61,8 +61,8 @@ public class DragonBehaviour : MonoBehaviour
             {
                 hasAttacked = true;
 
-                targetTile.SetOnFire();
-                foreach(Tile tile in targetTile.GetNeighbours())
+                targetTileManager.SetOnFire();
+                foreach(TileManager tile in targetTileManager.GetNeighbouringTileManagers())
                 {
                     tile.SetOnFire();
                 }

@@ -74,15 +74,13 @@ public class InputHandler : MonoBehaviour
         
         if (Physics.Raycast(ray, out hit, 100, 1 << Constants.tileLayer))
         {
-            if (hit.transform.gameObject.name.Equals("Hexagon"))
+            if (hit.transform.gameObject.TryGetComponent<TileManager>(out TileManager tileManager))
             {
                 tileHighlighter.SetActive(true);
                 tileHighlighter.transform.position = hit.transform.gameObject.transform.position;
 
-                Tile tile = hit.transform.gameObject.transform.parent.GetComponent<Tile>();
-
                 // Let the buildingManager decide if the selected action on the current tile can be performed by the current player
-                if (actionManager.IsCurrentActionAllowedOnTile(tile, currentPlayer))
+                if (actionManager.IsCurrentActionAllowedOnTile(tileManager, currentPlayer))
                 {
                     // If the buildmanager allows the current action on selected tile, show a green marker 
                     tileHighlighter.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialBuildAllowed;
@@ -90,7 +88,7 @@ public class InputHandler : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         // If the player clicks on the tile, the currently selected action will be executed
-                        actionManager.PerformAction(tile, currentPlayer);
+                        actionManager.PerformAction(tileManager, currentPlayer);
                         uiManager.UpdateResources(
                             currentPlayer.GetStone(), 
                             currentPlayer.GetWood(), 
