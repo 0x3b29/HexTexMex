@@ -128,19 +128,12 @@ public class ActionManager : MonoBehaviour
                 currentPlayer.addTrader(newTraderBehaviour);
                 break;
             case ActionType.Dragon:
-                
-                // Get random tile from each border
-                string option1 = "Tile" + 0 + "-" + Random.Range(0, GameManager.Instance.BoardSizeY);
-                string option2 = "Tile" + (GameManager.Instance.BoardSizeX - 1) + "-" + Random.Range(0, GameManager.Instance.BoardSizeY);
-                string option3 = "Tile" + Random.Range(0, GameManager.Instance.BoardSizeX) + "-" + 0;
-                string option4 = "Tile" + Random.Range(0, GameManager.Instance.BoardSizeX) + "-" + (GameManager.Instance.BoardSizeY - 1);
 
-                // Select one random tile
-                string[] options = new string[4] { option1, option2, option3, option4 };
-                int index = Random.Range(0, options.Length);
+                // Get random tile from border
+                TileManager edgeTile = GameManager.Instance.spawnTiles.edgeTileManagers[Random.Range(0, GameManager.Instance.spawnTiles.edgeTileManagers.Count)];
 
                 // Get position of boarder tile and set heigt for dragon to spawn
-                Vector3 dragonSpawnPosition = GameObject.Find(options[index]).transform.position;
+                Vector3 dragonSpawnPosition = edgeTile.transform.position;
                 dragonSpawnPosition.y = 5;
                 
                 // Spawn dragon over this border tile

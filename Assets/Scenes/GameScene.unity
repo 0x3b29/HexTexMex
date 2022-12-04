@@ -2946,18 +2946,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabc8994da6a5343b6c23705b6132ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileManagersList: []
   waterTiles: []
   boats: []
   tileContainers: []
   recreateMap: 0
   customBreak: 0
-  mapSize: 20
+  mapSize: 40
   roundishShape: 1
   perlinNoiseHfScale: 1
   perlinNoiseHfFactor: 0.2
   perlinNoiseLfScale: 0.1
   perlinNoiseLfFactor: 10
   verticalOffset: 2
+  snowLevel: 4
+  beachLevel: 1
+  seed: 0
 --- !u!114 &1727378334
 MonoBehaviour:
   m_ObjectHideFlags: 0

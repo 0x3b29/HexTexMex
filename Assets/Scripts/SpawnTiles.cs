@@ -19,6 +19,10 @@ public class SpawnTiles : MonoBehaviour
     private const int maxBoatCount = 15;
 
     public TileManager[,] tileManagers;
+    public List<TileManager> tileManagersList;
+
+    public List<TileManager> activeTileManagers;
+    public List<TileManager> edgeTileManagers;
     public List<TileManager> waterTiles;
     public List<GameObject> boats = new List<GameObject>();
     public List<GameObject> tileContainers = new List<GameObject>();
@@ -38,6 +42,9 @@ public class SpawnTiles : MonoBehaviour
     public float perlinNoiseLfFactor = 2;
 
     public float verticalOffset = 0.5f;
+
+    public float snowLevel;
+    public float beachLevel;
 
     public int seed;
 
@@ -95,29 +102,31 @@ public class SpawnTiles : MonoBehaviour
         stoneTile[1] = stone;
 
         // Create Tiles 
-        for (int i = 0; i < boardSizeX; i++)
+        for (int x = 0; x < boardSizeX; x++)
         {
-            for (int j = 0; j < boardSizeY; j++)
+            for (int y = 0; y < boardSizeY; y++)
             {
                 // Every second line of tiles needs to be shifted by half the horizontal tile 
                 // offset to make the hexagons match.
                 GameObject newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hexagon") as GameObject,
-                    new Vector3(j * horizontalTileOffset + (i % 2 * (horizontalTileOffset / 2)), 0, i * verticalTileOffset), Quaternion.identity);
+                    new Vector3(y * horizontalTileOffset + (x % 2 * (horizontalTileOffset / 2)), 0, x * verticalTileOffset), Quaternion.identity);
 
                 // Attach tile script
-                TileManager tileBehaviour = newTile.AddComponent<TileManager>();
-                tileManagers[i, j] = tileBehaviour;
-                tileManagers[i, j].SetInitialValues(i, j, newTile.GetComponent<MeshRenderer>());
+                TileManager tileManager = newTile.AddComponent<TileManager>();
+                tileManagers[x, y] = tileManager;
+                tileManagers[x, y].SetInitialValues(x, y, newTile.GetComponent<MeshRenderer>());
 
                 tileContainers.Add(newTile);
 
-                newTile.name = "Tile" + i + "-" + j;
+                newTile.name = "Tile" + x + "-" + y;
                 newTile.transform.parent = tilesContainer.transform;
 
                 int grassKind = Mathf.RoundToInt(Random.Range(1f, 3f));
-                Material[] tileMats = tileBehaviour.meshRenderer.materials;
+                Material[] tileMats = tileManager.meshRenderer.materials;
                 tileMats[1] = Resources.Load(Constants.materialsFolder + "Grass" + grassKind, typeof(Material)) as Material;
                 newTile.GetComponent<Renderer>().materials = tileMats;
+
+                tileManagersList.Add(tileManager);
             }
         }
 
@@ -183,9 +192,30 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
+        foreach (TileManager tileManager in tileManagersList)
+        {
+            if (tileManager.gameObject.activeSelf == false)
+                continue;
+
+            activeTileManagers.Add(tileManager);
+
+            if  (tileManager.leftTileManager == null || tileManager.leftTileManager.gameObject.activeSelf == false ||
+                tileManager.rightTileManager == null || tileManager.rightTileManager.gameObject.activeSelf == false ||
+                tileManager.topLeftTileManager == null || tileManager.topLeftTileManager.gameObject.activeSelf == false ||
+                tileManager.topRightTileManager == null || tileManager.topRightTileManager.gameObject.activeSelf == false ||
+                tileManager.lowerLeftTileManager == null || tileManager.lowerLeftTileManager.gameObject.activeSelf == false ||
+                tileManager.lowerRightTileManager == null || tileManager.lowerRightTileManager.gameObject.activeSelf == false)
+            {
+                tileManager.isEdgeTile = true;
+                edgeTileManagers.Add(tileManager);
+            }
+        }
+
         // Add Mountains
         if (mountains)
         {
+            Material snow = Resources.Load(Constants.materialsFolder + "Snow", typeof(Material)) as Material;
+
             for (int i = 0; i < boardSizeX; i++)
             {
                 for (int j = 0; j < boardSizeY; j++)
@@ -198,7 +228,16 @@ public class SpawnTiles : MonoBehaviour
                         Mathf.PerlinNoise((i * perlinNoiseHfScale) + perlinNoiseOffset, (j * perlinNoiseHfScale) + perlinNoiseOffset)
                             * perlinNoiseHfFactor - (perlinNoiseHfFactor / 2);
 
-                    tileManagers[i, j].SetHeight(lfHeight + hfHeight + verticalOffset);
+                    float height = lfHeight + hfHeight + verticalOffset;
+
+                    tileManagers[i, j].SetHeight(height);
+
+                    if (height > snowLevel)
+                    {
+                        Material[] materials = tileManagers[i, j].meshRenderer.materials;
+                        materials[1] = snow;
+                        tileManagers[i, j].meshRenderer.materials = materials;
+                    }
                 }
             }
         }
@@ -219,6 +258,23 @@ public class SpawnTiles : MonoBehaviour
                     waterTiles.Add(tileManager);
                 }
             }
+        }
+
+        // Set Beach
+        Material beach = Resources.Load(Constants.materialsFolder + "Beach", typeof(Material)) as Material;
+
+        foreach (TileManager tileManager in tileManagersList)
+        {
+            if (tileManager.isWater)
+                continue;
+
+            if (tileManager.NeighboursWaterCount() > 0 && tileManager.height < beachLevel)
+            {
+                Material[] materials = tileManager.meshRenderer.materials;
+                materials[1] = beach;
+                tileManager.meshRenderer.materials = materials;
+            }
+
         }
 
         if (waterTiles.Count != 0)

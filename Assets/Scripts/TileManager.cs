@@ -41,6 +41,8 @@ public class TileManager : MonoBehaviour
     public float health = 0;
     public float height = 0;
 
+    public bool isEdgeTile;
+
     public void SetInitialValues(int xCoordinate, int yCoordinate, MeshRenderer meshRenderer)
     {
         this.isActive = true;
@@ -398,9 +400,11 @@ public class TileManager : MonoBehaviour
         gameObject.transform.position = position;
 
         // Enlarge the hexagon to give them all the same bottom level
+        /*
         Vector3 scale = gameObject.transform.localScale;
         scale.y = 1 + height / 2;
         gameObject.transform.localScale = scale;
+        */
     }
 
     
