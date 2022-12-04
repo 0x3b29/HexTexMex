@@ -43,6 +43,71 @@ public class TileManager : MonoBehaviour
 
     public bool isEdgeTile;
 
+    public float xOffset;
+    public float zOffset;
+
+    public bool connectedLeftTileMesh = false;
+    public bool connectedRightTileMesh = false;
+    public bool connectedTopLeftTileMesh = false;
+    public bool connectedTopRightTileMesh = false;
+    public bool connectedLowerLeftTileMesh = false;
+    public bool connectedLowerRightTileMesh = false;
+
+    public int topTileMeshIndex;
+    public int lowerTileMeshIndex;
+
+    public Vector3[] topVertices = new Vector3[6] 
+    { 
+        // Blender X = Sidewards
+        // Blender Y = Forwards
+        // Blender Z = Height
+
+        // Unity X = Sidewards
+        // Unity Z = forward
+        // Unity Y = Height
+
+        new Vector3(0, 0, 1),
+        new Vector3(0.866025f, 0, 0.5f),
+        new Vector3(0.866025f, 0, -0.5f),
+        new Vector3(0, 0, -1),
+        new Vector3(-0.866025f, 0, -0.5f),
+        new Vector3(-0.866025f, 0, 0.5f),
+    };
+
+    public int[] topTriangles = new int[]
+    {
+        0,1,2,
+        2,3,4,
+        4,5,0,
+        0,2,4
+    };
+
+    public Vector3[] lowerVertices = new Vector3[6]
+    { 
+        // Blender X = Sidewards
+        // Blender Y = Forwards
+        // Blender Z = Height
+
+        // Unity X = Sidewards
+        // Unity Z = forward
+        // Unity Y = Height
+
+        new Vector3(0, 0, 1),
+        new Vector3(0.866025f, 0, 0.5f),
+        new Vector3(0.866025f, 0, -0.5f),
+        new Vector3(0, 0, -1),
+        new Vector3(-0.866025f, 0, -0.5f),
+        new Vector3(-0.866025f, 0, 0.5f),
+    };
+
+    public int[] lowerTriangles = new int[]
+    {
+        2,1,0,
+        4,3,2,
+        0,5,4,
+        4,2,0
+    };
+
     public void SetInitialValues(int xCoordinate, int yCoordinate, MeshRenderer meshRenderer)
     {
         this.isActive = true;
