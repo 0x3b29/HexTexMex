@@ -3004,9 +3004,9 @@ MonoBehaviour:
   waterTiles: []
   boats: []
   tileContainers: []
-  recreateMap: 0
+  recreateMap: 1
   customBreak: 0
-  mapSize: 10
+  mapSize: 6
   roundishShape: 1
   perlinNoiseHfScale: 1
   perlinNoiseHfFactor: 0.2

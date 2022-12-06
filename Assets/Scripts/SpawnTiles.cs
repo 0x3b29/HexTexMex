@@ -49,7 +49,7 @@ public class SpawnTiles : MonoBehaviour
     public int seed;
 
     // Hexagon Vertice Count
-    private const int HVC = 6;
+    private const int HVC = 12;
 
     public void Update()
     {
@@ -86,7 +86,7 @@ public class SpawnTiles : MonoBehaviour
             return;
 
         GameObject tilesContainer = GameObject.Find("Tiles");
-        
+
         Random.InitState(seed);
 
         float perlinNoiseOffset = Random.Range(-1000f, 1000f);
@@ -113,6 +113,7 @@ public class SpawnTiles : MonoBehaviour
         int meshIndex = 0;
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
+        List<Vector3> normals = new List<Vector3>();
 
         // Create Tiles 
         for (int x = 0; x < boardSizeX; x++)
@@ -204,7 +205,7 @@ public class SpawnTiles : MonoBehaviour
                         (boardSizeX / 2 + boardSizeY / 2)
                         / 2
                         - distanceToCenter
-                        - 0.5f 
+                        - 0.5f
                         - Random.Range(0f, 1f));
 
                     tileManagers[x, y].CheckHealth();
@@ -219,7 +220,7 @@ public class SpawnTiles : MonoBehaviour
 
             activeTileManagers.Add(tileManager);
 
-            if  (tileManager.leftTileManager == null || tileManager.leftTileManager.gameObject.activeSelf == false ||
+            if (tileManager.leftTileManager == null || tileManager.leftTileManager.gameObject.activeSelf == false ||
                 tileManager.rightTileManager == null || tileManager.rightTileManager.gameObject.activeSelf == false ||
                 tileManager.topLeftTileManager == null || tileManager.topLeftTileManager.gameObject.activeSelf == false ||
                 tileManager.topRightTileManager == null || tileManager.topRightTileManager.gameObject.activeSelf == false ||
@@ -240,8 +241,8 @@ public class SpawnTiles : MonoBehaviour
             {
                 for (int j = 0; j < boardSizeY; j++)
                 {
-                    float lfHeight = 
-                        Mathf.PerlinNoise((i * perlinNoiseLfScale) + perlinNoiseOffset,(j * perlinNoiseLfScale) + perlinNoiseOffset)
+                    float lfHeight =
+                        Mathf.PerlinNoise((i * perlinNoiseLfScale) + perlinNoiseOffset, (j * perlinNoiseLfScale) + perlinNoiseOffset)
                             * perlinNoiseLfFactor - (perlinNoiseLfFactor / 2);
 
                     float hfHeight =
@@ -319,7 +320,7 @@ public class SpawnTiles : MonoBehaviour
 
                 if (!tileManager.gameObject.activeSelf)
                     continue;
-                
+
                 Vector3 position = tileManager.gameObject.transform.position;
                 position.y -= 10;
                 tileManager.gameObject.transform.position = position;
@@ -372,143 +373,190 @@ public class SpawnTiles : MonoBehaviour
 
         foreach (TileManager tileManager in activeTileManagers)
         {
-            // Conntect Meshes to their left neighbours
-            if (tileManager.leftTileManager != null 
+            if (tileManager.leftTileManager != null
                 && tileManager.leftTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedLeftTileMesh)
             {
-                a++;
-
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.leftTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.leftTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 5 + topTileIndex * HVC, 4 + topTileIndex * HVC, 2 + topNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 2 + topNeighbourIndex * HVC, 1 + topNeighbourIndex * HVC, 5 + topTileIndex * HVC });
 
-                sides.AddRange(new int[] { 5 + lowerTileIndex * HVC, 2 + lowerTileIndex * HVC, 4 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 2 + lowerNeighbourIndex * HVC, 5 + lowerNeighbourIndex * HVC, 1 + lowerTileIndex * HVC });
-                
+                sides.AddRange(new int[] { 11 + topTileIndex * HVC, 10 + topTileIndex * HVC, 8 + topNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 8 + topNeighbourIndex * HVC, 7 + topNeighbourIndex * HVC, 11 + topTileIndex * HVC });
+
+                sides.AddRange(new int[] { 11 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 8 + lowerNeighbourIndex * HVC, 11 + lowerNeighbourIndex * HVC, 7 + lowerTileIndex * HVC });
+
                 tileManager.connectedLeftTileMesh = true;
                 tileManager.leftTileManager.connectedRightTileMesh = true;
             }
+            else if (tileManager.leftTileManager == null ||
+                    (tileManager.leftTileManager != null && tileManager.leftTileManager.gameObject.activeSelf == false) &&
+                    !tileManager.connectedLeftTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
 
-            // Conntect Meshes to their right neighbours
+                sides.AddRange(new int[] { 10 + topTileIndex * HVC, 10 + lowerTileIndex * HVC, 11 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 10 + lowerTileIndex * HVC, 11 + lowerTileIndex * HVC, 11 + topTileIndex * HVC });
+            }
+
             if (tileManager.rightTileManager != null
                 && tileManager.rightTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedRightTileMesh)
             {
-                b++;
-
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.rightTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.rightTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 1 + topTileIndex * HVC, 5 + topNeighbourIndex * HVC, 2 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 2 + topTileIndex * HVC, 5 + topNeighbourIndex * HVC, 4 + topNeighbourIndex * HVC });
 
-                sides.AddRange(new int[] { 1 + lowerTileIndex * HVC, 2 + lowerTileIndex * HVC, 5 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 2 + lowerTileIndex * HVC, 4 + lowerNeighbourIndex * HVC, 5 + lowerNeighbourIndex * HVC });
-                
+                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 11 + topNeighbourIndex * HVC, 8 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 11 + topNeighbourIndex * HVC, 10 + topNeighbourIndex * HVC });
+
+                sides.AddRange(new int[] { 7 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC, 11 + lowerNeighbourIndex * HVC });
+
                 tileManager.connectedRightTileMesh = true;
                 tileManager.rightTileManager.connectedLeftTileMesh = true;
             }
+            else if (tileManager.rightTileManager == null ||
+                    (tileManager.rightTileManager != null && tileManager.rightTileManager.gameObject.activeSelf == false) &&
+                    !tileManager.connectedRightTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
 
-            // Conntect Meshes to their top right neighbours
+                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 7 + lowerTileIndex * HVC, 8 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 7 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC });
+            }
+
             if (tileManager.topRightTileManager != null
                 && tileManager.topRightTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedTopRightTileMesh)
             {
-                c++;
-
                 int toptileIndex = tileManager.topTileMeshIndex;
                 int topneighbourIndex = tileManager.topRightTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.topRightTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 0 + toptileIndex * HVC, 4 + topneighbourIndex * HVC, 1 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 1 + toptileIndex * HVC, 4 + topneighbourIndex * HVC, 3 + topneighbourIndex * HVC });
 
-                sides.AddRange(new int[] { 0 + lowerTileIndex * HVC, 1 + lowerTileIndex * HVC, 4 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 1 + lowerTileIndex * HVC, 3 + lowerNeighbourIndex * HVC, 4 + lowerNeighbourIndex * HVC });
-                
+                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 10 + topneighbourIndex * HVC, 7 + toptileIndex * HVC });
+                sides.AddRange(new int[] { 7 + toptileIndex * HVC, 10 + topneighbourIndex * HVC, 9 + topneighbourIndex * HVC });
+
+                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 7 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 7 + lowerTileIndex * HVC, 9 + lowerNeighbourIndex * HVC, 10 + lowerNeighbourIndex * HVC });
+
                 tileManager.connectedTopRightTileMesh = true;
                 tileManager.topRightTileManager.connectedLowerLeftTileMesh = true;
             }
+            else if (tileManager.topRightTileManager == null ||
+                (tileManager.topRightTileManager != null && tileManager.topRightTileManager.gameObject.activeSelf == false) &&
+                !tileManager.connectedTopRightTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
 
-            // Conntect Meshes to their top left neighbours
+                sides.AddRange(new int[] { 6 + topTileIndex * HVC, 6 + lowerTileIndex * HVC, 7 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 6 + lowerTileIndex * HVC, 7 + lowerTileIndex * HVC });
+            }
+
             if (tileManager.topLeftTileManager != null
                 && tileManager.topLeftTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedTopRightTileMesh)
             {
-                d++;
-
                 int toptileIndex = tileManager.topTileMeshIndex;
                 int topneighbourIndex = tileManager.topLeftTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.topLeftTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 0 + toptileIndex * HVC, 5 + toptileIndex * HVC, 3 + topneighbourIndex * HVC });
-                sides.AddRange(new int[] { 0 + toptileIndex * HVC, 3 + topneighbourIndex * HVC, 2 + topneighbourIndex * HVC });
 
-                sides.AddRange(new int[] { 0 + lowerTileIndex * HVC, 2 + lowerNeighbourIndex * HVC, 3 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 0 + lowerTileIndex * HVC, 3 + lowerNeighbourIndex * HVC, 5 + lowerTileIndex * HVC });
-                
+                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 11 + toptileIndex * HVC, 9 + topneighbourIndex * HVC });
+                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 9 + topneighbourIndex * HVC, 8 + topneighbourIndex * HVC });
+
+                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 8 + lowerNeighbourIndex * HVC, 9 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 9 + lowerNeighbourIndex * HVC, 11 + lowerTileIndex * HVC });
+
                 tileManager.connectedTopLeftTileMesh = true;
                 tileManager.topLeftTileManager.connectedLowerRightTileMesh = true;
             }
+            else if (tileManager.topLeftTileManager == null ||
+                    (tileManager.topLeftTileManager != null && tileManager.topLeftTileManager.gameObject.activeSelf == false) &&
+                    !tileManager.connectedTopLeftTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
 
-            // Conntect Meshes to their lower right neighbours
+                sides.AddRange(new int[] { 6 + topTileIndex * HVC, 11 + topTileIndex * HVC, 11 + lowerTileIndex * HVC });
+                sides.AddRange(new int[] { 11 + lowerTileIndex * HVC, 6 + lowerTileIndex * HVC, 6 + topTileIndex * HVC });
+
+                tileManager.connectedTopLeftTileMesh = true;
+            }
+
             if (tileManager.lowerRightTileManager != null
                 && tileManager.lowerRightTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedLowerRightTileMesh)
             {
-                e++;
-
                 int toptileIndex = tileManager.topTileMeshIndex;
                 int topneighbourIndex = tileManager.lowerRightTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.lowerRightTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 2 + toptileIndex * HVC, 0 + topneighbourIndex * HVC, 3 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 0 + topneighbourIndex * HVC, 5 + topneighbourIndex * HVC, 3 + toptileIndex * HVC });
 
-                sides.AddRange(new int[] { 2 + lowerTileIndex * HVC, 3 + lowerTileIndex * HVC, 0 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 3 + lowerTileIndex * HVC, 5 + lowerNeighbourIndex * HVC, 0 + lowerNeighbourIndex * HVC });
-                
+                sides.AddRange(new int[] { 8 + toptileIndex * HVC, 6 + topneighbourIndex * HVC, 9 + toptileIndex * HVC });
+                sides.AddRange(new int[] { 6 + topneighbourIndex * HVC, 11 + topneighbourIndex * HVC, 9 + toptileIndex * HVC });
+
+                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC, 6 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC, 6 + lowerNeighbourIndex * HVC });
+
                 tileManager.connectedLowerRightTileMesh = true;
                 tileManager.lowerRightTileManager.connectedTopLeftTileMesh = true;
             }
+            else if (tileManager.lowerRightTileManager == null ||
+                    (tileManager.lowerRightTileManager != null && tileManager.lowerRightTileManager.gameObject.activeSelf == false) &&
+                    !tileManager.connectedLowerRightTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
 
-            // Conntect Meshes to their lower left neighbours
+                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 8 + lowerTileIndex * HVC, 9 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 9 + topTileIndex * HVC, 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC });
+
+                tileManager.connectedLowerRightTileMesh = true;
+            }
+
             if (tileManager.lowerLeftTileManager != null
                 && tileManager.lowerLeftTileManager.gameObject.activeSelf == true
                 && !tileManager.connectedLowerLeftTileMesh)
             {
-                f++;
-
                 int toptileIndex = tileManager.topTileMeshIndex;
                 int topneighbourIndex = tileManager.lowerLeftTileManager.topTileMeshIndex;
 
                 int lowerTileIndex = tileManager.lowerTileMeshIndex;
                 int lowerNeighbourIndex = tileManager.lowerLeftTileManager.lowerTileMeshIndex;
-                
-                sides.AddRange(new int[] { 3 + toptileIndex * HVC, 1 + topneighbourIndex * HVC, 4 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 1 + topneighbourIndex * HVC, 0 + topneighbourIndex * HVC, 4 + toptileIndex * HVC });
 
-                sides.AddRange(new int[] { 2 + lowerTileIndex * HVC, 3 + lowerTileIndex * HVC, 0 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 3 + lowerTileIndex * HVC, 5 + lowerNeighbourIndex * HVC, 0 + lowerNeighbourIndex * HVC });
-                
+                sides.AddRange(new int[] { 9 + toptileIndex * HVC, 7 + topneighbourIndex * HVC, 10 + toptileIndex * HVC });
+                sides.AddRange(new int[] { 7 + topneighbourIndex * HVC, 6 + topneighbourIndex * HVC, 10 + toptileIndex * HVC });
+
+                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC, 6 + lowerNeighbourIndex * HVC });
+                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC, 6 + lowerNeighbourIndex * HVC });
+
                 tileManager.connectedLowerLeftTileMesh = true;
                 tileManager.lowerLeftTileManager.connectedTopRightTileMesh = true;
+            } 
+            else if(tileManager.lowerLeftTileManager == null ||
+                    (tileManager.lowerLeftTileManager != null && tileManager.lowerLeftTileManager.gameObject.activeSelf == false) &&
+                    !tileManager.connectedLowerLeftTileMesh)
+            {
+                int topTileIndex = tileManager.topTileMeshIndex;
+                int lowerTileIndex = tileManager.lowerTileMeshIndex;
+
+                sides.AddRange(new int[] { 9 + topTileIndex * HVC, 9 + lowerTileIndex * HVC, 10 + topTileIndex * HVC });
+                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 10 + lowerTileIndex * HVC, 10 + topTileIndex * HVC });
             }
+
         }
 
         Debug.Log(a + " " + b + " " + c + " " + d + " " + e + " " + f);

@@ -56,7 +56,7 @@ public class TileManager : MonoBehaviour
     public int topTileMeshIndex;
     public int lowerTileMeshIndex;
 
-    public Vector3[] topVertices = new Vector3[6] 
+    public Vector3[] topVertices = new Vector3[12] 
     { 
         // Blender X = Sidewards
         // Blender Y = Forwards
@@ -65,6 +65,13 @@ public class TileManager : MonoBehaviour
         // Unity X = Sidewards
         // Unity Z = forward
         // Unity Y = Height
+
+        new Vector3(0, 0, 1),
+        new Vector3(0.866025f, 0, 0.5f),
+        new Vector3(0.866025f, 0, -0.5f),
+        new Vector3(0, 0, -1),
+        new Vector3(-0.866025f, 0, -0.5f),
+        new Vector3(-0.866025f, 0, 0.5f),
 
         new Vector3(0, 0, 1),
         new Vector3(0.866025f, 0, 0.5f),
@@ -82,7 +89,7 @@ public class TileManager : MonoBehaviour
         0,2,4
     };
 
-    public Vector3[] lowerVertices = new Vector3[6]
+    public Vector3[] lowerVertices = new Vector3[12]
     { 
         // Blender X = Sidewards
         // Blender Y = Forwards
@@ -91,6 +98,13 @@ public class TileManager : MonoBehaviour
         // Unity X = Sidewards
         // Unity Z = forward
         // Unity Y = Height
+
+        new Vector3(0, 0, 1),
+        new Vector3(0.866025f, 0, 0.5f),
+        new Vector3(0.866025f, 0, -0.5f),
+        new Vector3(0, 0, -1),
+        new Vector3(-0.866025f, 0, -0.5f),
+        new Vector3(-0.866025f, 0, 0.5f),
 
         new Vector3(0, 0, 1),
         new Vector3(0.866025f, 0, 0.5f),
