@@ -8,16 +8,22 @@ public class TileManager : MonoBehaviour
     public MeshRenderer meshRenderer;
     public TileManager leftTileManager;
     public TileManager rightTileManager;
-    public TileManager topLeftTileManager;
-    public TileManager topRightTileManager;
-    public TileManager lowerLeftTileManager;
-    public TileManager lowerRightTileManager;
+    public TileManager frontLeftTileManager;
+    public TileManager frontRightTileManager;
+    public TileManager backLeftTileManager;
+    public TileManager backRightTileManager;
 
     public int xCoordinate;
     public int yCoordinate;
 
     public bool isActive;
     public bool isWater;
+    public bool isSnow;
+    public bool isSand;
+
+    public bool isGrass1;
+    public bool isGrass2;
+    public bool isGrass3;
 
     public Player owner;
 
@@ -31,10 +37,10 @@ public class TileManager : MonoBehaviour
     public GameObject roadCenter;
     public GameObject roadToLeft;
     public GameObject roadToRight;
-    public GameObject roadToTopLeft;
-    public GameObject roadToTopRight;
-    public GameObject roadToLowerLeft;
-    public GameObject roadToLowerRight;
+    public GameObject roadToFrontLeft;
+    public GameObject roadToFrontRight;
+    public GameObject roadToBackLeft;
+    public GameObject roadToBackRight;
 
     public GameObject fire;
 
@@ -48,79 +54,13 @@ public class TileManager : MonoBehaviour
 
     public bool connectedLeftTileMesh = false;
     public bool connectedRightTileMesh = false;
-    public bool connectedTopLeftTileMesh = false;
-    public bool connectedTopRightTileMesh = false;
-    public bool connectedLowerLeftTileMesh = false;
-    public bool connectedLowerRightTileMesh = false;
+    public bool connectedFrontLeftTileMesh = false;
+    public bool connectedFrontRightTileMesh = false;
+    public bool connectedBackLeftTileMesh = false;
+    public bool connectedBackRightTileMesh = false;
 
     public int topTileMeshIndex;
     public int lowerTileMeshIndex;
-
-    public Vector3[] topVertices = new Vector3[12] 
-    { 
-        // Blender X = Sidewards
-        // Blender Y = Forwards
-        // Blender Z = Height
-
-        // Unity X = Sidewards
-        // Unity Z = forward
-        // Unity Y = Height
-
-        new Vector3(0, 0, 1),
-        new Vector3(0.866025f, 0, 0.5f),
-        new Vector3(0.866025f, 0, -0.5f),
-        new Vector3(0, 0, -1),
-        new Vector3(-0.866025f, 0, -0.5f),
-        new Vector3(-0.866025f, 0, 0.5f),
-
-        new Vector3(0, 0, 1),
-        new Vector3(0.866025f, 0, 0.5f),
-        new Vector3(0.866025f, 0, -0.5f),
-        new Vector3(0, 0, -1),
-        new Vector3(-0.866025f, 0, -0.5f),
-        new Vector3(-0.866025f, 0, 0.5f),
-    };
-
-    public int[] topTriangles = new int[]
-    {
-        0,1,2,
-        2,3,4,
-        4,5,0,
-        0,2,4
-    };
-
-    public Vector3[] lowerVertices = new Vector3[12]
-    { 
-        // Blender X = Sidewards
-        // Blender Y = Forwards
-        // Blender Z = Height
-
-        // Unity X = Sidewards
-        // Unity Z = forward
-        // Unity Y = Height
-
-        new Vector3(0, 0, 1),
-        new Vector3(0.866025f, 0, 0.5f),
-        new Vector3(0.866025f, 0, -0.5f),
-        new Vector3(0, 0, -1),
-        new Vector3(-0.866025f, 0, -0.5f),
-        new Vector3(-0.866025f, 0, 0.5f),
-
-        new Vector3(0, 0, 1),
-        new Vector3(0.866025f, 0, 0.5f),
-        new Vector3(0.866025f, 0, -0.5f),
-        new Vector3(0, 0, -1),
-        new Vector3(-0.866025f, 0, -0.5f),
-        new Vector3(-0.866025f, 0, 0.5f),
-    };
-
-    public int[] lowerTriangles = new int[]
-    {
-        2,1,0,
-        4,3,2,
-        0,5,4,
-        4,2,0
-    };
 
     public void SetInitialValues(int xCoordinate, int yCoordinate, MeshRenderer meshRenderer)
     {
@@ -138,10 +78,10 @@ public class TileManager : MonoBehaviour
 
         if (leftTileManager != null) neighbouringTileManagers.Add(leftTileManager);
         if (rightTileManager != null) neighbouringTileManagers.Add(rightTileManager);
-        if (topLeftTileManager != null) neighbouringTileManagers.Add(topLeftTileManager);
-        if (topRightTileManager != null) neighbouringTileManagers.Add(topRightTileManager);
-        if (lowerLeftTileManager != null) neighbouringTileManagers.Add(lowerLeftTileManager);
-        if (lowerRightTileManager != null) neighbouringTileManagers.Add(lowerRightTileManager);
+        if (frontLeftTileManager != null) neighbouringTileManagers.Add(frontLeftTileManager);
+        if (frontRightTileManager != null) neighbouringTileManagers.Add(frontRightTileManager);
+        if (backLeftTileManager != null) neighbouringTileManagers.Add(backLeftTileManager);
+        if (backRightTileManager != null) neighbouringTileManagers.Add(backRightTileManager);
 
         return neighbouringTileManagers;
     }
@@ -222,12 +162,12 @@ public class TileManager : MonoBehaviour
         // If so, delete that road
 
         // Top Left
-        if (topLeftTileManager && topLeftTileManager.roadToLowerRight)
-            DestroyAndUnset(topLeftTileManager.roadToLowerRight);
+        if (frontLeftTileManager && frontLeftTileManager.roadToBackRight)
+            DestroyAndUnset(frontLeftTileManager.roadToBackRight);
 
         // Top Right
-        if (topRightTileManager && topRightTileManager.roadToLowerLeft)
-            DestroyAndUnset(topRightTileManager.roadToLowerLeft);
+        if (frontRightTileManager && frontRightTileManager.roadToBackLeft)
+            DestroyAndUnset(frontRightTileManager.roadToBackLeft);
 
         // Left
         if (leftTileManager && leftTileManager.roadToRight)
@@ -238,12 +178,12 @@ public class TileManager : MonoBehaviour
             DestroyAndUnset(rightTileManager.roadToLeft);
 
         // Lower left
-        if (lowerLeftTileManager && lowerLeftTileManager.roadToTopRight)
-            DestroyAndUnset(lowerLeftTileManager.roadToTopRight);
+        if (backLeftTileManager && backLeftTileManager.roadToFrontRight)
+            DestroyAndUnset(backLeftTileManager.roadToFrontRight);
 
         // Lower right
-        if (lowerRightTileManager && lowerRightTileManager.roadToTopLeft)
-            DestroyAndUnset(lowerRightTileManager.roadToTopLeft);
+        if (backRightTileManager && backRightTileManager.roadToFrontLeft)
+            DestroyAndUnset(backRightTileManager.roadToFrontLeft);
     }
 
     private void DeleteRoadsConnectingFromThisTile()
@@ -252,12 +192,12 @@ public class TileManager : MonoBehaviour
         // If so, delete that road
 
         // Top Left
-        if (roadToTopLeft)
-            DestroyAndUnset(roadToTopLeft);
+        if (roadToFrontLeft)
+            DestroyAndUnset(roadToFrontLeft);
 
         // Top Right
-        if (roadToTopRight)
-            DestroyAndUnset(roadToTopRight);
+        if (roadToFrontRight)
+            DestroyAndUnset(roadToFrontRight);
 
         // Left
         if (roadToLeft)
@@ -268,12 +208,12 @@ public class TileManager : MonoBehaviour
             DestroyAndUnset(roadToRight);
 
         // Lower left
-        if (roadToLowerLeft)
-            DestroyAndUnset(roadToLowerLeft);
+        if (roadToBackLeft)
+            DestroyAndUnset(roadToBackLeft);
 
         // Lower right
-        if (roadToLowerRight)
-            DestroyAndUnset(roadToLowerRight);
+        if (roadToBackRight)
+            DestroyAndUnset(roadToBackRight);
     }
 
     public void SetOnFire()
@@ -369,12 +309,12 @@ public class TileManager : MonoBehaviour
             return false;
 
         // Test if there is already a road to the neighbour tile
-        if ((neighbouringTileManager == topLeftTileManager && roadToTopLeft) ||
-            (neighbouringTileManager == topRightTileManager && roadToTopRight) ||
+        if ((neighbouringTileManager == frontLeftTileManager && roadToFrontLeft) ||
+            (neighbouringTileManager == frontRightTileManager && roadToFrontRight) ||
             (neighbouringTileManager == leftTileManager && roadToLeft) ||
             (neighbouringTileManager == rightTileManager && roadToRight) ||
-            (neighbouringTileManager == lowerLeftTileManager && roadToLowerLeft) ||
-            (neighbouringTileManager == lowerRightTileManager && roadToLowerRight))
+            (neighbouringTileManager == backLeftTileManager && roadToBackLeft) ||
+            (neighbouringTileManager == backRightTileManager && roadToBackRight))
             return false;
 
         // Only if all of these tests pass, we need to put a roadpiece
@@ -400,20 +340,20 @@ public class TileManager : MonoBehaviour
             roadToLeft = SpawnRoad(0);
 
         // Check upper right
-        if (NeedsConnection(topRightTileManager))
-            roadToTopRight = SpawnRoad(120);
+        if (NeedsConnection(frontRightTileManager))
+            roadToFrontRight = SpawnRoad(120);
 
         // Check upper left
-        if (NeedsConnection(topLeftTileManager))
-            roadToTopLeft = SpawnRoad(60);
+        if (NeedsConnection(frontLeftTileManager))
+            roadToFrontLeft = SpawnRoad(60);
 
         // Check lower right
-        if (NeedsConnection(lowerRightTileManager))
-            roadToLowerRight= SpawnRoad(-120);
+        if (NeedsConnection(backRightTileManager))
+            roadToBackRight= SpawnRoad(-120);
 
         // Check lower left
-        if (NeedsConnection(lowerLeftTileManager))
-            roadToLowerLeft = SpawnRoad(-60);
+        if (NeedsConnection(backLeftTileManager))
+            roadToBackLeft = SpawnRoad(-60);
 
         // Check all the neighbour tiles in a floodfill manner
         foreach (TileManager tile in GetNeighbouringTileManagers())

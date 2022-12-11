@@ -34,6 +34,7 @@ public class SpawnTiles : MonoBehaviour
     public int mapSize = 40;
 
     public bool roundishShape = true;
+    public bool mountains = true;
 
     public float perlinNoiseHfScale = 1;
     public float perlinNoiseHfFactor = 0.2f;
@@ -47,9 +48,6 @@ public class SpawnTiles : MonoBehaviour
     public float beachLevel;
 
     public int seed;
-
-    // Hexagon Vertice Count
-    private const int HVC = 12;
 
     public void Update()
     {
@@ -76,7 +74,7 @@ public class SpawnTiles : MonoBehaviour
                 waterTiles.Clear();
             }
 
-            CreateMap(mapSize, mapSize, seed, true, true);
+            CreateMap(mapSize, mapSize, seed, roundishShape, mountains);
         }
     }
 
@@ -110,11 +108,6 @@ public class SpawnTiles : MonoBehaviour
         stoneTile[0] = earth;
         stoneTile[1] = stone;
 
-        int meshIndex = 0;
-        List<Vector3> vertices = new List<Vector3>();
-        List<int> triangles = new List<int>();
-        List<Vector3> normals = new List<Vector3>();
-
         // Create Tiles 
         for (int x = 0; x < boardSizeX; x++)
         {
@@ -128,6 +121,8 @@ public class SpawnTiles : MonoBehaviour
 
                 GameObject newTile = Instantiate(Resources.Load(Constants.prefabFolder + "Hexagon") as GameObject,
                     new Vector3(xOffset, 0, zOffset), Quaternion.identity);
+
+                newTile.GetComponent<MeshRenderer>().enabled = false;
 
                 // Attach tile script
                 TileManager tileManager = newTile.AddComponent<TileManager>();
@@ -147,6 +142,13 @@ public class SpawnTiles : MonoBehaviour
                 tileMats[1] = Resources.Load(Constants.materialsFolder + "Grass" + grassKind, typeof(Material)) as Material;
                 newTile.GetComponent<Renderer>().materials = tileMats;
 
+                if (grassKind == 1)
+                    tileManager.isGrass1 = true;
+                else if (grassKind == 2)
+                    tileManager.isGrass2 = true;
+                else if (grassKind == 3)
+                    tileManager.isGrass3 = true;
+
                 tileManagersList.Add(tileManager);
             }
         }
@@ -160,10 +162,10 @@ public class SpawnTiles : MonoBehaviour
 
                 TileManager leftTileManager = null;
                 TileManager rightTileManager = null;
-                TileManager topLeftTileManager = null;
-                TileManager topRightTileManager = null;
-                TileManager lowerLeftTileManager = null;
-                TileManager lowerRightTileManager = null;
+                TileManager frontLeftTileManager = null;
+                TileManager frontRightTileManager = null;
+                TileManager backLeftTileManager = null;
+                TileManager backRightTileManager = null;
 
                 if ((y - 1) > 0)
                     leftTileManager = tileManagers[x, (y - 1)];
@@ -172,23 +174,23 @@ public class SpawnTiles : MonoBehaviour
                     rightTileManager = tileManagers[x, (y + 1)];
 
                 if ((x + 1) < boardSizeX && ((y - 1) + (x % 2)) > 0)
-                    topLeftTileManager = tileManagers[(x + 1), (y - 1) + (x % 2)];
+                    frontLeftTileManager = tileManagers[(x + 1), (y - 1) + (x % 2)];
 
                 if ((x + 1) < boardSizeX && (y + (x % 2)) < boardSizeY)
-                    topRightTileManager = tileManagers[(x + 1), (y + (x % 2))];
+                    frontRightTileManager = tileManagers[(x + 1), (y + (x % 2))];
 
                 if ((x - 1) > 0 && ((y - 1) + (x % 2)) > 0)
-                    lowerLeftTileManager = tileManagers[(x - 1), ((y - 1) + (x % 2))];
+                    backLeftTileManager = tileManagers[(x - 1), ((y - 1) + (x % 2))];
 
                 if ((x - 1) > 0 && (y + (x % 2)) < boardSizeY)
-                    lowerRightTileManager = tileManagers[(x - 1), (y + (x % 2))];
+                    backRightTileManager = tileManagers[(x - 1), (y + (x % 2))];
 
                 if (leftTileManager) currentTileManager.leftTileManager = leftTileManager;
                 if (rightTileManager) currentTileManager.rightTileManager = rightTileManager;
-                if (topLeftTileManager) currentTileManager.topLeftTileManager = topLeftTileManager;
-                if (topRightTileManager) currentTileManager.topRightTileManager = topRightTileManager;
-                if (lowerLeftTileManager) currentTileManager.lowerLeftTileManager = lowerLeftTileManager;
-                if (lowerRightTileManager) currentTileManager.lowerRightTileManager = lowerRightTileManager;
+                if (frontLeftTileManager) currentTileManager.frontLeftTileManager = frontLeftTileManager;
+                if (frontRightTileManager) currentTileManager.frontRightTileManager = frontRightTileManager;
+                if (backLeftTileManager) currentTileManager.backLeftTileManager = backLeftTileManager;
+                if (backRightTileManager) currentTileManager.backRightTileManager = backRightTileManager;
             }
         }
 
@@ -213,6 +215,7 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
+        // Classify tiles into active and edges
         foreach (TileManager tileManager in tileManagersList)
         {
             if (tileManager.gameObject.activeSelf == false)
@@ -222,10 +225,10 @@ public class SpawnTiles : MonoBehaviour
 
             if (tileManager.leftTileManager == null || tileManager.leftTileManager.gameObject.activeSelf == false ||
                 tileManager.rightTileManager == null || tileManager.rightTileManager.gameObject.activeSelf == false ||
-                tileManager.topLeftTileManager == null || tileManager.topLeftTileManager.gameObject.activeSelf == false ||
-                tileManager.topRightTileManager == null || tileManager.topRightTileManager.gameObject.activeSelf == false ||
-                tileManager.lowerLeftTileManager == null || tileManager.lowerLeftTileManager.gameObject.activeSelf == false ||
-                tileManager.lowerRightTileManager == null || tileManager.lowerRightTileManager.gameObject.activeSelf == false)
+                tileManager.frontLeftTileManager == null || tileManager.frontLeftTileManager.gameObject.activeSelf == false ||
+                tileManager.frontRightTileManager == null || tileManager.frontRightTileManager.gameObject.activeSelf == false ||
+                tileManager.backLeftTileManager == null || tileManager.backLeftTileManager.gameObject.activeSelf == false ||
+                tileManager.backRightTileManager == null || tileManager.backRightTileManager.gameObject.activeSelf == false)
             {
                 tileManager.isEdgeTile = true;
                 edgeTileManagers.Add(tileManager);
@@ -257,6 +260,7 @@ public class SpawnTiles : MonoBehaviour
                     {
                         Material[] materials = tileManagers[i, j].meshRenderer.materials;
                         materials[1] = snow;
+                        tileManagers[i, j].isSnow = true;
                         tileManagers[i, j].meshRenderer.materials = materials;
                     }
                 }
@@ -294,13 +298,14 @@ public class SpawnTiles : MonoBehaviour
                 Material[] materials = tileManager.meshRenderer.materials;
                 materials[1] = beach;
                 tileManager.meshRenderer.materials = materials;
+                tileManager.isSand = true;
             }
 
         }
 
+        // Add boats
         if (waterTiles.Count != 0)
         {
-            // Add boats
             for (int i = 0; i < Random.Range(minBoatCount, maxBoatCount); i++)
             {
                 // Spawn boat at a random active water tile
@@ -311,278 +316,6 @@ public class SpawnTiles : MonoBehaviour
                 boats.Add(boat);
             }
         }
-
-        for (int x = 0; x < boardSizeX; x++)
-        {
-            for (int y = 0; y < boardSizeY; y++)
-            {
-                TileManager tileManager = tileManagers[x, y];
-
-                if (!tileManager.gameObject.activeSelf)
-                    continue;
-
-                Vector3 position = tileManager.gameObject.transform.position;
-                position.y -= 10;
-                tileManager.gameObject.transform.position = position;
-
-                tileManager.topTileMeshIndex = meshIndex;
-
-                // Add the top surface
-                for (int i = 0; i < HVC; i++)
-                {
-                    Vector3 topVertice = tileManager.topVertices[i];
-                    topVertice.x += tileManager.xOffset;
-                    topVertice.z += tileManager.zOffset;
-                    topVertice.y = tileManager.height;
-
-                    vertices.Add(topVertice);
-                }
-
-                for (int i = 0; i < 12; i++)
-                {
-                    triangles.Add(tileManager.topTriangles[i] + meshIndex * HVC);
-                }
-
-                meshIndex++;
-
-                tileManager.lowerTileMeshIndex = meshIndex;
-
-                // Add the bottom surface
-                for (int i = 0; i < HVC; i++)
-                {
-                    Vector3 lowerVertice = tileManager.lowerVertices[i];
-                    lowerVertice.x += tileManager.xOffset;
-                    lowerVertice.z += tileManager.zOffset;
-                    lowerVertice.y = tileManager.gameObject.transform.localScale.y * -1;
-
-                    vertices.Add(lowerVertice);
-                }
-
-                for (int i = 0; i < 12; i++)
-                {
-                    triangles.Add(tileManager.lowerTriangles[i] + meshIndex * HVC);
-                }
-
-                meshIndex++;
-            }
-        }
-
-        List<int> sides = new List<int>();
-
-        int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
-
-        foreach (TileManager tileManager in activeTileManagers)
-        {
-            if (tileManager.leftTileManager != null
-                && tileManager.leftTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedLeftTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int topNeighbourIndex = tileManager.leftTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.leftTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 11 + topTileIndex * HVC, 10 + topTileIndex * HVC, 8 + topNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 8 + topNeighbourIndex * HVC, 7 + topNeighbourIndex * HVC, 11 + topTileIndex * HVC });
-
-                sides.AddRange(new int[] { 11 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 8 + lowerNeighbourIndex * HVC, 11 + lowerNeighbourIndex * HVC, 7 + lowerTileIndex * HVC });
-
-                tileManager.connectedLeftTileMesh = true;
-                tileManager.leftTileManager.connectedRightTileMesh = true;
-            }
-            else if (tileManager.leftTileManager == null ||
-                    (tileManager.leftTileManager != null && tileManager.leftTileManager.gameObject.activeSelf == false) &&
-                    !tileManager.connectedLeftTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 10 + topTileIndex * HVC, 10 + lowerTileIndex * HVC, 11 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 10 + lowerTileIndex * HVC, 11 + lowerTileIndex * HVC, 11 + topTileIndex * HVC });
-            }
-
-            if (tileManager.rightTileManager != null
-                && tileManager.rightTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedRightTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int topNeighbourIndex = tileManager.rightTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.rightTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 11 + topNeighbourIndex * HVC, 8 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 11 + topNeighbourIndex * HVC, 10 + topNeighbourIndex * HVC });
-
-                sides.AddRange(new int[] { 7 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC, 11 + lowerNeighbourIndex * HVC });
-
-                tileManager.connectedRightTileMesh = true;
-                tileManager.rightTileManager.connectedLeftTileMesh = true;
-            }
-            else if (tileManager.rightTileManager == null ||
-                    (tileManager.rightTileManager != null && tileManager.rightTileManager.gameObject.activeSelf == false) &&
-                    !tileManager.connectedRightTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 7 + lowerTileIndex * HVC, 8 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 7 + lowerTileIndex * HVC, 8 + lowerTileIndex * HVC });
-            }
-
-            if (tileManager.topRightTileManager != null
-                && tileManager.topRightTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedTopRightTileMesh)
-            {
-                int toptileIndex = tileManager.topTileMeshIndex;
-                int topneighbourIndex = tileManager.topRightTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.topRightTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 10 + topneighbourIndex * HVC, 7 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 7 + toptileIndex * HVC, 10 + topneighbourIndex * HVC, 9 + topneighbourIndex * HVC });
-
-                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 7 + lowerTileIndex * HVC, 10 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 7 + lowerTileIndex * HVC, 9 + lowerNeighbourIndex * HVC, 10 + lowerNeighbourIndex * HVC });
-
-                tileManager.connectedTopRightTileMesh = true;
-                tileManager.topRightTileManager.connectedLowerLeftTileMesh = true;
-            }
-            else if (tileManager.topRightTileManager == null ||
-                (tileManager.topRightTileManager != null && tileManager.topRightTileManager.gameObject.activeSelf == false) &&
-                !tileManager.connectedTopRightTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 6 + topTileIndex * HVC, 6 + lowerTileIndex * HVC, 7 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 7 + topTileIndex * HVC, 6 + lowerTileIndex * HVC, 7 + lowerTileIndex * HVC });
-            }
-
-            if (tileManager.topLeftTileManager != null
-                && tileManager.topLeftTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedTopRightTileMesh)
-            {
-                int toptileIndex = tileManager.topTileMeshIndex;
-                int topneighbourIndex = tileManager.topLeftTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.topLeftTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 11 + toptileIndex * HVC, 9 + topneighbourIndex * HVC });
-                sides.AddRange(new int[] { 6 + toptileIndex * HVC, 9 + topneighbourIndex * HVC, 8 + topneighbourIndex * HVC });
-
-                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 8 + lowerNeighbourIndex * HVC, 9 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 6 + lowerTileIndex * HVC, 9 + lowerNeighbourIndex * HVC, 11 + lowerTileIndex * HVC });
-
-                tileManager.connectedTopLeftTileMesh = true;
-                tileManager.topLeftTileManager.connectedLowerRightTileMesh = true;
-            }
-            else if (tileManager.topLeftTileManager == null ||
-                    (tileManager.topLeftTileManager != null && tileManager.topLeftTileManager.gameObject.activeSelf == false) &&
-                    !tileManager.connectedTopLeftTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 6 + topTileIndex * HVC, 11 + topTileIndex * HVC, 11 + lowerTileIndex * HVC });
-                sides.AddRange(new int[] { 11 + lowerTileIndex * HVC, 6 + lowerTileIndex * HVC, 6 + topTileIndex * HVC });
-
-                tileManager.connectedTopLeftTileMesh = true;
-            }
-
-            if (tileManager.lowerRightTileManager != null
-                && tileManager.lowerRightTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedLowerRightTileMesh)
-            {
-                int toptileIndex = tileManager.topTileMeshIndex;
-                int topneighbourIndex = tileManager.lowerRightTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.lowerRightTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 8 + toptileIndex * HVC, 6 + topneighbourIndex * HVC, 9 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 6 + topneighbourIndex * HVC, 11 + topneighbourIndex * HVC, 9 + toptileIndex * HVC });
-
-                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC, 6 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC, 6 + lowerNeighbourIndex * HVC });
-
-                tileManager.connectedLowerRightTileMesh = true;
-                tileManager.lowerRightTileManager.connectedTopLeftTileMesh = true;
-            }
-            else if (tileManager.lowerRightTileManager == null ||
-                    (tileManager.lowerRightTileManager != null && tileManager.lowerRightTileManager.gameObject.activeSelf == false) &&
-                    !tileManager.connectedLowerRightTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 8 + topTileIndex * HVC, 8 + lowerTileIndex * HVC, 9 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 9 + topTileIndex * HVC, 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC });
-
-                tileManager.connectedLowerRightTileMesh = true;
-            }
-
-            if (tileManager.lowerLeftTileManager != null
-                && tileManager.lowerLeftTileManager.gameObject.activeSelf == true
-                && !tileManager.connectedLowerLeftTileMesh)
-            {
-                int toptileIndex = tileManager.topTileMeshIndex;
-                int topneighbourIndex = tileManager.lowerLeftTileManager.topTileMeshIndex;
-
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-                int lowerNeighbourIndex = tileManager.lowerLeftTileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 9 + toptileIndex * HVC, 7 + topneighbourIndex * HVC, 10 + toptileIndex * HVC });
-                sides.AddRange(new int[] { 7 + topneighbourIndex * HVC, 6 + topneighbourIndex * HVC, 10 + toptileIndex * HVC });
-
-                sides.AddRange(new int[] { 8 + lowerTileIndex * HVC, 9 + lowerTileIndex * HVC, 6 + lowerNeighbourIndex * HVC });
-                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 11 + lowerNeighbourIndex * HVC, 6 + lowerNeighbourIndex * HVC });
-
-                tileManager.connectedLowerLeftTileMesh = true;
-                tileManager.lowerLeftTileManager.connectedTopRightTileMesh = true;
-            } 
-            else if(tileManager.lowerLeftTileManager == null ||
-                    (tileManager.lowerLeftTileManager != null && tileManager.lowerLeftTileManager.gameObject.activeSelf == false) &&
-                    !tileManager.connectedLowerLeftTileMesh)
-            {
-                int topTileIndex = tileManager.topTileMeshIndex;
-                int lowerTileIndex = tileManager.lowerTileMeshIndex;
-
-                sides.AddRange(new int[] { 9 + topTileIndex * HVC, 9 + lowerTileIndex * HVC, 10 + topTileIndex * HVC });
-                sides.AddRange(new int[] { 9 + lowerTileIndex * HVC, 10 + lowerTileIndex * HVC, 10 + topTileIndex * HVC });
-            }
-
-        }
-
-        Debug.Log(a + " " + b + " " + c + " " + d + " " + e + " " + f);
-
-        Mesh mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-
-        mesh.subMeshCount = 2;
-
-        mesh.SetTriangles(triangles, 0);
-        mesh.SetTriangles(sides, 1);
-
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-        mesh.RecalculateTangents();
-
-        tilesContainer.GetComponent<MeshFilter>().mesh = mesh;
-
-        List<Material> meshMaterials = new List<Material>();
-        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Grass1", typeof(Material)) as Material);
-        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Earth", typeof(Material)) as Material);
-
-        tilesContainer.GetComponent<MeshRenderer>().materials = meshMaterials.ToArray();
 
         // Set Trees
         for (int x = 0; x < boardSizeX; x++)
@@ -622,6 +355,7 @@ public class SpawnTiles : MonoBehaviour
                 }
             }
         }
+
         // Set Wheat
         for (int x = 0; x < boardSizeX; x++)
         {
@@ -685,12 +419,19 @@ public class SpawnTiles : MonoBehaviour
             }
         }
 
-        for (int x = 0; x < boardSizeX; x++)
-        {
-            for (int y = 0; y < boardSizeY; y++)
-            {
-                tileManagers[x, y].gameObject.SetActive(false);
-            }
-        }
+        // Generate a mesh from all the data we gathered so far
+        tilesContainer.GetComponent<MeshFilter>().mesh = GenerateMesh.Generate(boardSizeX, boardSizeY, tileManagers, activeTileManagers);
+
+        List<Material> meshMaterials = new List<Material>();
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Earth", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Water", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Beach", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Snow", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Stone", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Grass1", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Grass2", typeof(Material)) as Material);
+        meshMaterials.Add(Resources.Load(Constants.materialsFolder + "Grass3", typeof(Material)) as Material);
+
+        tilesContainer.GetComponent<MeshRenderer>().materials = meshMaterials.ToArray();
     }
 }

@@ -3006,8 +3006,9 @@ MonoBehaviour:
   tileContainers: []
   recreateMap: 1
   customBreak: 0
-  mapSize: 6
+  mapSize: 80
   roundishShape: 1
+  mountains: 1
   perlinNoiseHfScale: 1
   perlinNoiseHfFactor: 0.2
   perlinNoiseLfScale: 0.1
