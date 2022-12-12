@@ -11,7 +11,7 @@ public static class GenerateMesh
         List<TileManager> activeTileManagers)
     {
         List<Vector3> vertices = new List<Vector3>();
-        List<int> sidesTriangles = new List<int>();
+        List<int> dirtTriangles = new List<int>();
         List<int> waterTriangles = new List<int>();
         List<int> sandTriangles = new List<int>();
         List<int> snowTriangles = new List<int>();
@@ -22,12 +22,14 @@ public static class GenerateMesh
 
         int meshIndex = 0;
     
+        // Generate all the top and bottom faces
         for (int x = 0; x < boardSizeX; x++)
         {
             for (int y = 0; y < boardSizeY; y++)
             {
                 TileManager tileManager = tileManagers[x, y];
 
+                // For active tiles
                 if (!tileManager.gameObject.activeSelf)
                     continue;
 
@@ -46,12 +48,13 @@ public static class GenerateMesh
                     vertices.Add(topVertice);
                 }
 
+                // Sort the top faces into the right list for submesh generation
                 for (int i = 0; i < 12; i++)
                 {
                     if (tileManager.isWater)
                         waterTriangles.Add(Hexagon.topTriangles[i] + meshIndex * HexagonVertexOffset);
                     else if (tileManager.isSand)
-                    sandTriangles.Add(Hexagon.topTriangles[i] + meshIndex * HexagonVertexOffset);
+                        sandTriangles.Add(Hexagon.topTriangles[i] + meshIndex * HexagonVertexOffset);
                     else if (tileManager.isSnow)
                         snowTriangles.Add(Hexagon.topTriangles[i] + meshIndex * HexagonVertexOffset);
                     else if (tileManager.rock)
@@ -81,7 +84,7 @@ public static class GenerateMesh
 
                 for (int i = 0; i < 12; i++)
                 {
-                    grass1Triangles.Add(Hexagon.lowerTriangles[i] + meshIndex * HexagonVertexOffset);
+                    dirtTriangles.Add(Hexagon.lowerTriangles[i] + meshIndex * HexagonVertexOffset);
                 }
 
                 meshIndex++;
@@ -103,7 +106,8 @@ public static class GenerateMesh
         int backRightBottomConnections = 0;
         int backLeftBottomConnections = 0;
 
-        // Start with mesh generation
+        // Generate the sides (Tile to tile connections and world sides)
+        // Note that the sides are not using the same vertices as the top and bottom faces to avoid shading issues
         foreach (TileManager tileManager in activeTileManagers)
         {
             // Connect to the left
@@ -116,12 +120,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.leftTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + topNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset });
@@ -130,12 +134,12 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.leftTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontLeft + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset });
@@ -153,12 +157,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset });
@@ -175,12 +179,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.rightTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topNeighbourIndex * HexagonVertexOffset });
@@ -189,12 +193,12 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.rightTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomNeighbourIndex * HexagonVertexOffset });
@@ -212,12 +216,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset });
@@ -235,12 +239,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.frontRightTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topNeighbourIndex * HexagonVertexOffset });
@@ -249,12 +253,12 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.frontRightTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomNeighbourIndex * HexagonVertexOffset });
@@ -272,8 +276,8 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { Hexagon.SideFront + topTileIndex * HexagonVertexOffset, Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset });
-                sidesTriangles.AddRange(new int[] { Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset, Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset });
+                dirtTriangles.AddRange(new int[] { Hexagon.SideFront + topTileIndex * HexagonVertexOffset, Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset });
+                dirtTriangles.AddRange(new int[] { Hexagon.SideFrontRight + topTileIndex * HexagonVertexOffset, Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, Hexagon.SideFrontRight + bottomTileIndex * HexagonVertexOffset });
 
                 frontRightBottomConnections++;
             }
@@ -288,12 +292,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.frontLeftTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + topNeighbourIndex * HexagonVertexOffset });
@@ -302,11 +306,11 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.frontLeftTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomNeighbourIndex * HexagonVertexOffset });
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomTileIndex * HexagonVertexOffset });
@@ -324,12 +328,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFrontLeft + bottomTileIndex * HexagonVertexOffset,
                     Hexagon.SideFront + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + topTileIndex * HexagonVertexOffset });
@@ -349,12 +353,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.backRightTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideFront + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset });
@@ -363,12 +367,12 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.backRightTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + bottomNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontLeft + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + bottomNeighbourIndex * HexagonVertexOffset });
@@ -386,12 +390,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBackRight + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackRight + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset });
@@ -412,12 +416,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int topNeighbourIndex = tileManager.backLeftTileManager.topTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + topNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + topNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topTileIndex * HexagonVertexOffset });
@@ -426,12 +430,12 @@ public static class GenerateMesh
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
                 int bottomNeighbourIndex = tileManager.backLeftTileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + bottomNeighbourIndex * HexagonVertexOffset, 
                     Hexagon.SideFrontRight + bottomNeighbourIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideFront + bottomNeighbourIndex * HexagonVertexOffset });
@@ -449,12 +453,12 @@ public static class GenerateMesh
                 int topTileIndex = tileManager.topTileMeshIndex;
                 int bottomTileIndex = tileManager.lowerTileMeshIndex;
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + topTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topTileIndex * HexagonVertexOffset });
 
-                sidesTriangles.AddRange(new int[] { 
+                dirtTriangles.AddRange(new int[] { 
                     Hexagon.SideBack + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + bottomTileIndex * HexagonVertexOffset, 
                     Hexagon.SideBackLeft + topTileIndex * HexagonVertexOffset });
@@ -478,7 +482,7 @@ public static class GenerateMesh
 
         mesh.subMeshCount = 8;
 
-        mesh.SetTriangles(sidesTriangles, 0);
+        mesh.SetTriangles(dirtTriangles, 0);
         mesh.SetTriangles(waterTriangles, 1);
         mesh.SetTriangles(sandTriangles, 2);
         mesh.SetTriangles(snowTriangles, 3);
