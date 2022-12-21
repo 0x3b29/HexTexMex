@@ -77,7 +77,10 @@ public static class GenerateMesh
                     Vector3 lowerVertice = Hexagon.lowerVertices[i];
                     lowerVertice.x += tileManager.xOffset;
                     lowerVertice.z += tileManager.zOffset;
-                    lowerVertice.y = tileManager.gameObject.transform.localScale.y * -1;
+
+                    // -1 because the scale is positive, but we want to bottom tile to go towards -y
+                    // *2 because of the pivot of the tile, that is at the top. *1 would only go half way down
+                    lowerVertice.y = tileManager.gameObject.transform.localScale.y * -1 * 2;
 
                     vertices.Add(lowerVertice);
                 }
