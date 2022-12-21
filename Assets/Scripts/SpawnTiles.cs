@@ -42,6 +42,9 @@ public class SpawnTiles : MonoBehaviour
     public float perlinNoiseLfScale = 0.1f;
     public float perlinNoiseLfFactor = 2;
 
+    public float perlinNoiseULfScale = 0.01f;
+    public float perlinNoiseULfFactor = 10;
+
     public float verticalOffset = 0.5f;
 
     public float snowLevel;
@@ -244,6 +247,10 @@ public class SpawnTiles : MonoBehaviour
             {
                 for (int j = 0; j < boardSizeY; j++)
                 {
+                    float ulfHeight =
+                        Mathf.PerlinNoise((i * perlinNoiseULfScale) + perlinNoiseOffset, (j * perlinNoiseULfScale) + perlinNoiseOffset)
+                            * perlinNoiseULfFactor - (perlinNoiseULfFactor / 2);
+
                     float lfHeight =
                         Mathf.PerlinNoise((i * perlinNoiseLfScale) + perlinNoiseOffset, (j * perlinNoiseLfScale) + perlinNoiseOffset)
                             * perlinNoiseLfFactor - (perlinNoiseLfFactor / 2);
@@ -252,7 +259,7 @@ public class SpawnTiles : MonoBehaviour
                         Mathf.PerlinNoise((i * perlinNoiseHfScale) + perlinNoiseOffset, (j * perlinNoiseHfScale) + perlinNoiseOffset)
                             * perlinNoiseHfFactor - (perlinNoiseHfFactor / 2);
 
-                    float height = lfHeight + hfHeight + verticalOffset;
+                    float height = ulfHeight + lfHeight + hfHeight + verticalOffset;
 
                     tileManagers[i, j].SetHeight(height);
 
