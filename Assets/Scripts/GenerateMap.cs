@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnTiles : MonoBehaviour
+public class GenerateMap : MonoBehaviour
 {
     private const float horizontalTileOffset = 1.732f;
     private const float verticalTileOffset = 1.5f;

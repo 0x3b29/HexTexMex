@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public SpawnTiles spawnTiles;
+    public GenerateMap spawnTiles;
     public ActionManager actionManager;
     public UIManager uiManager;
     public TurnManager turnManager;
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         // Fetch Scripts
         GameObject gameScripts = GameObject.Find("GameScripts");
 
-        spawnTiles = gameScripts.GetComponent<SpawnTiles>();
+        spawnTiles = gameScripts.GetComponent<GenerateMap>();
         actionManager = gameScripts.GetComponent<ActionManager>();
         turnManager = gameScripts.GetComponent<TurnManager>();
         uiManager = gameScripts.GetComponent<UIManager>();
