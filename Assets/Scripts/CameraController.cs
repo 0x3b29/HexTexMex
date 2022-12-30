@@ -1,6 +1,16 @@
 using System;
 using UnityEngine;
 
+public struct CameraSetup
+{
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3 offset;
+    public Quaternion tilt;
+
+    public int zoomLevel;
+}
+
 // Inspired by https://gist.github.com/JohannesMP/e15fe61386d4381d4441c3c324d96c56
 public class CameraController : MonoBehaviour {
       
@@ -10,10 +20,9 @@ public class CameraController : MonoBehaviour {
     public float cameraRotationLerpSpeed = 3f;
     public float cameraPositionLerpSpeed = 3f;
 
-    public int minZoomSteps = 3;
-    public int maxZoomSteps = 10;
-    public int currentStep = 8;
-
+    public int minZoomLevels = 3;
+    public int maxZoomLevels = 10;
+    
     public float zoomTiltStep = 2f;
     public float zoomOffsetYStep = 5f;
     public float zoomOffsetZStep = -10f;
@@ -30,25 +39,18 @@ public class CameraController : MonoBehaviour {
 
     public GameObject cameraHitPoint;
 
-    private Vector3 currentPosition;
-    private Vector3 targetPosition;
-
-    private Quaternion currentRotation;
-    private Quaternion targetRotation;
-
-    private Vector3 targetOffset;
-    private Vector3 currentOffset;
-
-    private Quaternion currentTilt;
-    private Quaternion targetTilt;
+    private CameraSetup currentCameraSetup;
+    private CameraSetup targetCameraSetup;
 
     private void Awake()
     {
-        currentRotation = cameraCenter.transform.rotation;
-        targetRotation = cameraCenter.transform.rotation;
+        currentCameraSetup.rotation = cameraCenter.transform.rotation;
+        targetCameraSetup.rotation = cameraCenter.transform.rotation;
 
-        currentPosition = cameraCenter.transform.position;
-        targetPosition = cameraCenter.transform.position;
+        currentCameraSetup.position = cameraCenter.transform.position;
+        targetCameraSetup.position = cameraCenter.transform.position;
+
+        targetCameraSetup.zoomLevel = 8;
     }
 
     void Update ()
@@ -69,7 +71,7 @@ public class CameraController : MonoBehaviour {
                     LayerMask.LayerToName(Constants.tileLayer))))
         {
             cameraHitPoint.transform.position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-            targetPosition.y = hit.point.y;
+            targetCameraSetup.position.y = hit.point.y;
         }
 
         // Reset position on mouse btn down to prevent jumps
@@ -89,17 +91,17 @@ public class CameraController : MonoBehaviour {
             float yMovement = mouseDelta.x * mouseSensitivity;
 
             // Set to new rotation
-            targetRotation = targetRotation *= Quaternion.Euler(0, yMovement, 0);
+            targetCameraSetup.rotation = targetCameraSetup.rotation *= Quaternion.Euler(0, yMovement, 0);
         }
 
         // Select the current zoomlevel based on scroll
-        if (Input.mouseScrollDelta.y > 0.0f && currentStep > minZoomSteps)
+        if (Input.mouseScrollDelta.y > 0.0f && targetCameraSetup.zoomLevel > minZoomLevels)
         {
-            currentStep -= 1;
+            targetCameraSetup.zoomLevel -= 1;
         }
-        else if (Input.mouseScrollDelta.y < 0.0f && currentStep < maxZoomSteps)
+        else if (Input.mouseScrollDelta.y < 0.0f && targetCameraSetup.zoomLevel < maxZoomLevels)
         {
-            currentStep += 1;
+            targetCameraSetup.zoomLevel += 1;
         }
 
         // Keyboard movement of the camera container
@@ -112,26 +114,26 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKey(KeyCode.A)) cameraTranslation += cameraOffsetTarget.transform.right * -1;
 
         // Rotate Camera with Q & E
-        if (Input.GetKey(KeyCode.E)) targetRotation *= Quaternion.Euler(0, 1, 0);
-        if (Input.GetKey(KeyCode.Q)) targetRotation *= Quaternion.Euler(0, -1, 0);
+        if (Input.GetKey(KeyCode.E)) targetCameraSetup.rotation *= Quaternion.Euler(0, 1, 0);
+        if (Input.GetKey(KeyCode.Q)) targetCameraSetup.rotation *= Quaternion.Euler(0, -1, 0);
 
         // Add translation to position
         cameraTranslation.Normalize();
-        targetPosition += cameraTranslation * speed * Time.deltaTime;
+        targetCameraSetup.position += cameraTranslation * speed * Time.deltaTime;
 
         // Calculate absolute offset based on zoom step
-        targetOffset = new Vector3(0,
-            zoomOffsetYStep * currentStep,
-            zoomOffsetZStep * currentStep);
+        targetCameraSetup.offset = new Vector3(0,
+            zoomOffsetYStep * targetCameraSetup.zoomLevel,
+            zoomOffsetZStep * targetCameraSetup.zoomLevel);
 
         // Calculate absolute camera tilt based on zoom step
-        targetTilt = Quaternion.Euler(zoomTiltStep * currentStep, 0, 0);
+        targetCameraSetup.tilt = Quaternion.Euler(zoomTiltStep * targetCameraSetup.zoomLevel, 0, 0);
 
         // Set the target objects
-        cameraCenterTarget.transform.localPosition = targetPosition;
-        cameraCenterTarget.transform.localRotation = targetRotation;
-        cameraOffsetTarget.transform.localPosition = targetOffset;
-        mainCameraTarget.transform.localRotation = targetTilt;
+        cameraCenterTarget.transform.localPosition = targetCameraSetup.position;
+        cameraCenterTarget.transform.localRotation = targetCameraSetup.rotation;
+        cameraOffsetTarget.transform.localPosition = targetCameraSetup.offset;
+        mainCameraTarget.transform.localRotation = targetCameraSetup.tilt;
 
         // Get a position above the actual camera position
         Vector3 mainCameraRaycastStart = new Vector3(
@@ -148,64 +150,34 @@ public class CameraController : MonoBehaviour {
                                 LayerMask.LayerToName(Constants.tileLayer))))
         {
             // Check if the camera below the terrain. If so, move up
-            if (hit.point.y > targetPosition.y )
+            if (hit.point.y > targetCameraSetup.position.y )
             {
-                targetPosition.y = hit.point.y;
-                cameraCenterTarget.transform.localPosition = targetPosition;
+                targetCameraSetup.position.y = hit.point.y;
+                cameraCenterTarget.transform.localPosition = targetCameraSetup.position;
                 Debug.Log("Adding height");
             }
         }
 
         // Calculate the interpolated positions
-        currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * cameraPositionLerpSpeed);
-        currentRotation = Quaternion.Lerp(currentRotation, targetRotation , Time.deltaTime * cameraRotationLerpSpeed);
-        currentOffset = Vector3.Lerp(currentOffset, targetOffset, Time.deltaTime * cameraPositionLerpSpeed);
-        currentTilt = Quaternion.Lerp(currentTilt, targetTilt, Time.deltaTime * cameraRotationLerpSpeed);
+        currentCameraSetup.position = Vector3.Lerp(currentCameraSetup.position, targetCameraSetup.position, Time.deltaTime * cameraPositionLerpSpeed);
+        currentCameraSetup.rotation = Quaternion.Lerp(currentCameraSetup.rotation, targetCameraSetup.rotation , Time.deltaTime * cameraRotationLerpSpeed);
+        currentCameraSetup.offset = Vector3.Lerp(currentCameraSetup.offset, targetCameraSetup.offset, Time.deltaTime * cameraPositionLerpSpeed);
+        currentCameraSetup.tilt = Quaternion.Lerp(currentCameraSetup.tilt, targetCameraSetup.tilt, Time.deltaTime * cameraRotationLerpSpeed);
 
         // Move actual camera
-        cameraCenter.transform.localPosition = currentPosition;
-        cameraCenter.transform.localRotation = currentRotation;
-        cameraOffset.transform.localPosition = currentOffset;
-        mainCamera.transform.localRotation = currentTilt;
+        cameraCenter.transform.localPosition = currentCameraSetup.position;
+        cameraCenter.transform.localRotation = currentCameraSetup.rotation;
+        cameraOffset.transform.localPosition = currentCameraSetup.offset;
+        mainCamera.transform.localRotation = currentCameraSetup.tilt;
     }
 
-    public void SetCameraRotation(Quaternion cameraRotation)    
+    public void SetTargetCameraSetup(CameraSetup cameraSetup)    
     {
-        targetRotation = cameraRotation;
+        targetCameraSetup = cameraSetup;
     }
 
-    public Quaternion GetCameraRotation()
+    public CameraSetup GetTargetCameraSetup()
     {
-        return targetRotation;
-    }
-
-    public void SetCameraContainerPosition(Vector3 cameraContainerPosition)
-    {
-        targetPosition = cameraContainerPosition;
-    }
-
-    public Vector3 GetCameraContainerPosition()
-    {
-        return targetPosition;
-    }
-
-    public void SetCameraContainerRotation(Quaternion cameraContainerRotation)
-    {
-        targetRotation = cameraContainerRotation;
-    }
-
-    public Quaternion GetCameraContainerRotation()
-    {
-        return targetRotation;
-    }
-
-    public void SetZoomLevel(int zoomLevel)
-    {
-        currentStep = zoomLevel;
-    }
-
-    public int GetZoomLevel()
-    {
-        return currentStep;
+        return targetCameraSetup;
     }
 }

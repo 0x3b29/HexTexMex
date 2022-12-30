@@ -39,10 +39,7 @@ public class TurnManager : MonoBehaviour
         {
         }
 
-        player.SaveCamera(cameraController.GetCameraContainerPosition(), 
-            cameraController.GetCameraContainerRotation(), 
-            cameraController.GetZoomLevel(), 
-            cameraController.GetCameraRotation());
+        player.SetCameraSetup(cameraController.GetTargetCameraSetup());
         players.Add(player);
 
         if (currentPlayer == null)
@@ -65,10 +62,7 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         // Store camera position and rotation of the player finishing his turn
-        currentPlayer.SaveCamera(cameraController.GetCameraContainerPosition(),
-            cameraController.GetCameraContainerRotation(),
-            cameraController.GetZoomLevel(),
-            cameraController.GetCameraRotation());
+        currentPlayer.SetCameraSetup(cameraController.GetTargetCameraSetup());
 
         if (gamePhase.Equals(GamePhase.BuildPhase))
         {
@@ -177,12 +171,7 @@ public class TurnManager : MonoBehaviour
         GameManager.Instance.uiManager.SetActionType(currentPlayer.GetSelectedActionType());
 
         // Reset Camera
-        Tuple<Vector3, Quaternion, int, Quaternion> cameraPositionRotationAndZoom = currentPlayer.RetrieveCameraPositionRotationAndZoom();
-
-        cameraController.SetCameraContainerPosition(cameraPositionRotationAndZoom.Item1);
-        cameraController.SetCameraContainerRotation(cameraPositionRotationAndZoom.Item2);
-        cameraController.SetZoomLevel(cameraPositionRotationAndZoom.Item3);
-        cameraController.SetCameraRotation(cameraPositionRotationAndZoom.Item4);
+        cameraController.SetTargetCameraSetup(currentPlayer.GetCameraSetup());
     }
 
     public Player GetCurrentPlayer()

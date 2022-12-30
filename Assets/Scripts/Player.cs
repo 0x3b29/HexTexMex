@@ -14,10 +14,7 @@ public class Player
     private int coins;
     private int remainingDragonAttacks;
 
-    private Vector3 cameraContainerPosition;
-    private Quaternion cameraContainerRotation;
-    private int zoomLevel;
-    private Quaternion cameraRotation;
+    private CameraSetup cameraSetup;
     private ActionType selectedActionType;
     
     public List<TileManager> tilesWithHouses;
@@ -145,17 +142,14 @@ public class Player
         }
     }
 
-    public void SaveCamera(Vector3 cameraContainerPosition, Quaternion cameraContainerRotation, int zoomLevel, Quaternion cameraRotation)
+    public void SetCameraSetup(CameraSetup cameraSetup)
     {
-        this.cameraContainerPosition = cameraContainerPosition;
-        this.cameraContainerRotation = cameraContainerRotation;
-        this.zoomLevel = zoomLevel;
-        this.cameraRotation = cameraRotation;
+        this.cameraSetup = cameraSetup;
     }
     
-    public Tuple<Vector3, Quaternion, int, Quaternion> RetrieveCameraPositionRotationAndZoom()
+    public CameraSetup GetCameraSetup()
     {
-        return Tuple.Create(cameraContainerPosition, cameraContainerRotation, zoomLevel, cameraRotation);
+        return cameraSetup;
     }
 
     public int GetDragonAttacks()
