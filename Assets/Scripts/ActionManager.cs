@@ -130,7 +130,7 @@ public class ActionManager : MonoBehaviour
             case ActionType.Dragon:
 
                 // Get random tile from border
-                TileManager edgeTile = GameManager.Instance.spawnTiles.edgeTileManagers[Random.Range(0, GameManager.Instance.spawnTiles.edgeTileManagers.Count)];
+                TileManager edgeTile = GameManager.Instance.generateMap.edgeTileManagers[Random.Range(0, GameManager.Instance.generateMap.edgeTileManagers.Count)];
 
                 // Get position of boarder tile and set heigt for dragon to spawn
                 Vector3 dragonSpawnPosition = edgeTile.transform.position;

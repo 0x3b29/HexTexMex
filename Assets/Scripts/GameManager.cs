@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public GenerateMap spawnTiles;
+    public GenerateMap generateMap;
     public ActionManager actionManager;
     public UIManager uiManager;
     public TurnManager turnManager;
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         // Fetch Scripts
         GameObject gameScripts = GameObject.Find("GameScripts");
 
-        spawnTiles = gameScripts.GetComponent<GenerateMap>();
+        generateMap = gameScripts.GetComponent<GenerateMap>();
         actionManager = gameScripts.GetComponent<ActionManager>();
         turnManager = gameScripts.GetComponent<TurnManager>();
         uiManager = gameScripts.GetComponent<UIManager>();
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         cameraController = gameScripts.GetComponent<CameraController>();
 
         // Create Map to play on
-        spawnTiles.CreateMap(GameManager.Instance.BoardSizeX, GameManager.Instance.BoardSizeY, Seed, RoundMap, Mountains);
+        generateMap.CreateMap(GameManager.Instance.BoardSizeX, GameManager.Instance.BoardSizeY, Seed, RoundMap, Mountains);
 
         // Initialize scripts in a certain order
         actionManager.Initialize();
@@ -108,6 +108,6 @@ public class GameManager : MonoBehaviour
 
     public TileManager GetRandomTile()
     {
-        return GameManager.Instance.spawnTiles.activeTileManagers[Random.Range(0, GameManager.Instance.spawnTiles.activeTileManagers.Count)];
+        return GameManager.Instance.generateMap.activeTileManagers[Random.Range(0, GameManager.Instance.generateMap.activeTileManagers.Count)];
     }
 }
