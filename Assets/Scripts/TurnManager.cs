@@ -62,6 +62,7 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         // Store camera position and rotation of the player finishing his turn
+        cameraController.NormalizeCameraRotation();
         currentPlayer.SetCameraSetup(cameraController.GetTargetCameraSetup());
 
         if (gamePhase.Equals(GamePhase.BuildPhase))

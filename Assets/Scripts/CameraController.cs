@@ -96,8 +96,6 @@ public class CameraController : MonoBehaviour {
 
             // Set to new rotation
             targetCameraSetup.rotation += yMovement;
-
-            Debug.Log(Time.frameCount + " " + yMovement);
         }
 
         // Select the current zoomlevel based on scroll
@@ -161,7 +159,6 @@ public class CameraController : MonoBehaviour {
             {
                 targetCameraSetup.position.y = hit.point.y;
                 cameraCenterTarget.transform.localPosition = targetCameraSetup.position;
-                Debug.Log("Adding height (hit.point.y " + hit.point.y + " > targetCameraSetup.position.y " + targetCameraSetup.position.y + ")");
             }
         }
 
@@ -180,7 +177,18 @@ public class CameraController : MonoBehaviour {
 
     public void SetTargetCameraSetup(CameraSetup cameraSetup)    
     {
+        cameraSetup.rotation = cameraSetup.rotation % 360f;
         targetCameraSetup = cameraSetup;
+    }
+
+    public void NormalizeCameraRotation()
+    {
+        targetCameraSetup.rotation = targetCameraSetup.rotation % 360f;
+
+        if (targetCameraSetup.rotation < 0)
+            targetCameraSetup.rotation += 360f;
+
+        currentCameraSetup.rotation = targetCameraSetup.rotation;
     }
 
     public CameraSetup GetTargetCameraSetup()
