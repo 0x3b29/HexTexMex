@@ -22,7 +22,11 @@ public class CameraController : MonoBehaviour {
 
     public int minZoomLevels = 3;
     public int maxZoomLevels = 10;
-    
+
+    public float initialZoomTilt = 2f;
+    public float initialZoomOffsetY = 5f;
+    public float initialZoomOffsetZ = -10f;
+
     public float zoomTiltStep = 2f;
     public float zoomOffsetYStep = 5f;
     public float zoomOffsetZStep = -10f;
@@ -127,11 +131,11 @@ public class CameraController : MonoBehaviour {
 
         // Calculate absolute offset based on zoom step
         targetCameraSetup.offset = new Vector3(0,
-            zoomOffsetYStep * targetCameraSetup.zoomLevel,
-            zoomOffsetZStep * targetCameraSetup.zoomLevel);
+            initialZoomOffsetY + zoomOffsetYStep * targetCameraSetup.zoomLevel,
+            initialZoomOffsetZ + zoomOffsetZStep * targetCameraSetup.zoomLevel);
 
         // Calculate absolute camera tilt based on zoom step
-        targetCameraSetup.tilt = Quaternion.Euler(zoomTiltStep * targetCameraSetup.zoomLevel, 0, 0);
+        targetCameraSetup.tilt = Quaternion.Euler(initialZoomTilt + zoomTiltStep * targetCameraSetup.zoomLevel, 0, 0);
 
         // Set the target objects
         cameraCenterTarget.transform.localPosition = targetCameraSetup.position;
@@ -177,7 +181,6 @@ public class CameraController : MonoBehaviour {
 
     public void SetTargetCameraSetup(CameraSetup cameraSetup)    
     {
-        cameraSetup.rotation = cameraSetup.rotation % 360f;
         targetCameraSetup = cameraSetup;
     }
 

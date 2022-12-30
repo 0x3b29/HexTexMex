@@ -3518,7 +3518,7 @@ MonoBehaviour:
   waterTiles: []
   boats: []
   tileContainers: []
-  recreateMap: 1
+  recreateMap: 0
   customBreak: 0
   mapSize: 20
   roundishShape: 1
@@ -3585,12 +3585,15 @@ MonoBehaviour:
   mouseSensitivity: 0.5
   cameraRotationLerpSpeed: 6
   cameraPositionLerpSpeed: 5
-  minZoomSteps: 1
-  maxZoomSteps: 5
-  currentStep: 4
+  minZoomLevels: 3
+  maxZoomLevels: 10
+  initialZoomTilt: 30
+  initialZoomOffsetY: -8
+  initialZoomOffsetZ: 5
   zoomTiltStep: 2
-  zoomOffsetYStep: 2
+  zoomOffsetYStep: 5
   zoomOffsetZStep: -5
+  rotationToAddEveryFrame: 0
   cameraCenter: {fileID: 1596536610}
   cameraOffset: {fileID: 511333357}
   mainCamera: {fileID: 963194225}

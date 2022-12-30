@@ -52,6 +52,14 @@ public class GenerateMap : MonoBehaviour
 
     public int seed;
 
+    private void Awake()
+    {
+        if (recreateMap)
+        {
+            Debug.LogWarning("recreateMap = true. If you try to launch from main menu, this will lead to overwritten settings");
+        }
+    }
+
     public void Update()
     {
         if (recreateMap)
@@ -87,7 +95,6 @@ public class GenerateMap : MonoBehaviour
             return;
 
         GameObject tilesContainer = GameObject.Find("Tiles");
-
         Random.InitState(seed);
 
         float perlinNoiseOffset = Random.Range(-1000f, 1000f);
